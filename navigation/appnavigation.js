@@ -36,7 +36,7 @@ const HomeTabs = () => (
       name="Payment"
       component={PaymentScreen}
       options={{
-        tabBarLabel: 'Updates',
+        tabBarLabel: 'payment',
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="bell" color={color} size={size} />
         ),
@@ -46,7 +46,7 @@ const HomeTabs = () => (
       name="Deatail"
       component={DetailsScreen}
       options={{
-        tabBarLabel: 'Profile',
+        tabBarLabel: 'Details',
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="account" color={color} size={size} />
         ),
