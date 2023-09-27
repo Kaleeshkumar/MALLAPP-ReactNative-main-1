@@ -1,28 +1,64 @@
 import React, { useState } from 'react';
 import { View, Text, SafeAreaView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Modal, Portal, Button, Dialog, Provider as PaperProvider } from 'react-native-paper';
+import 'react-native-gesture-handler';
+import { Picker } from '@react-native-picker/picker';
 
 
-
-
-export default function DetailsScreen({ navigation }){
+export default function DetailsScreen({ navigation }) {
   const [name, setName] = useState('');
   const [nameOnParcel, setNameOnParcel] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
-  const [category, setCategory] = useState('');
   const [count, setCount] = useState('');
+  //AMOUNT
   const [amount, setAmount] = useState('');
   const [visible, setVisible] = useState(false);
+  const [category, setCategory] = useState('');
+
+  //SELECT TYPE CATEGORY
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const categories = ['HOMELESS-25', 'EGG&MILK', 'CHICKEN BIRIYANI', 'VEG BIRIYANI', 'ORPHANAGE', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING'];
+
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
   const handleSave = () => {
-    // Add logic to handle saving the details
+    const data = {
+      name,
+      nameOnParcel,
+      mobileNumber,
+      category,
+      count,
+      amount,
+    };
+  
+    fetch('https://game-seriously-feline.ngrok-free.app/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(responseData => {
+      console.log('Response from API:', responseData);
+      showDialog();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  
     showDialog();
   }
-
+  
   const handlePreview = () => {
+    console.log('category:', category);
     navigation.navigate('Preview', {
       name,
       nameOnParcel,
@@ -32,11 +68,12 @@ export default function DetailsScreen({ navigation }){
       amount,
     });
   }
-  
+
 
   return (
     <PaperProvider>
       <SafeAreaView style={styles.container}>
+
         <Text style={styles.heading}>Details Entry Screen</Text>
         <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
@@ -69,12 +106,15 @@ export default function DetailsScreen({ navigation }){
           </View>
           <View style={styles.inputContainer}>
             <Text>Category:</Text>
-            <TextInput
-              style={styles.input}
-              value={category}
-              onChangeText={text => setCategory(text)}
-              placeholder="Enter category"
-            />
+            <Picker
+              selectedValue={selectedCategory}
+              onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+            >
+              <Picker.Item label="Select a category" value="" />
+              {categories.map((category, index) => (
+                <Picker.Item key={index} label={category} value={category} />
+              ))}
+            </Picker>
           </View>
           <View style={styles.inputContainer}>
             <Text>Count:</Text>
@@ -99,13 +139,10 @@ export default function DetailsScreen({ navigation }){
           <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>Save</Text>
           </TouchableOpacity>
-         
-          
-          
         </View>
         <TouchableOpacity onPress={handlePreview} style={styles.saveButton}>
-  <Text style={styles.saveButtonText}>Preview</Text>
-</TouchableOpacity>
+          <Text style={styles.saveButtonText}>Preview</Text>
+        </TouchableOpacity>
 
         <Portal>
           <Dialog visible={visible} onDismiss={hideDialog}>
@@ -115,8 +152,13 @@ export default function DetailsScreen({ navigation }){
             </Dialog.Actions>
           </Dialog>
         </Portal>
+
       </SafeAreaView>
     </PaperProvider>
+
+
+
+
   );
 }
 

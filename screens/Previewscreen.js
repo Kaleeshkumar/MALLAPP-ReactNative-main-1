@@ -21,7 +21,7 @@ export default function PreviewScreen({ route }) {
           <Text style={styles.detailValue}>{mobileNumber}</Text>
 
           <Text style={styles.detailLabel}>Category:</Text>
-          <Text style={styles.detailValue}>{category}</Text>
+          <Text style={styles.detailValue}>{ category}</Text>
 
           <Text style={styles.detailLabel}>Count:</Text>
           <Text style={styles.detailValue}>{count}</Text>
