@@ -2,15 +2,14 @@ import { View, Text, StyleSheet, } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Card } from 'react-native-paper';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 import Carousel from 'react-native-snap-carousel';
 import DetailsScreen from './Detailsscreen';
+import 'react-native-gesture-handler';
  // for develop time, first add:>>    yarn add react-native-snap-carousel
 
  
 
- 
 
  
    
@@ -47,7 +46,7 @@ import DetailsScreen from './Detailsscreen';
       <SafeAreaView style={styles.body}>
      
       
-      {/* ... rest of your code ... */}
+     
     </SafeAreaView>
         {/* Line */}
         <View style={styles.lineStyle}>

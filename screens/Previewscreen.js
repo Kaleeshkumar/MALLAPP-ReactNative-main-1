@@ -1,8 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import  { useState } from 'react';
+import { Button, Modal, TouchableOpacity } from 'react-native-paper';
+
 
 export default function PreviewScreen({ route }) {
-  const { name, nameOnParcel, mobileNumber, category, count, amount } = route.params;
+  const { name, nameOnParcel, mobileNumber, category, count, amount, nameOfrm, Date_of_Donation } = route.params;
+  const [isActionsheetVisible, setActionsheetVisible] = useState(false);
+
+  const openActionsheet = () => setActionsheetVisible(true);
+  const closeActionsheet = () => setActionsheetVisible(false);
 
   return (
     <View style={styles.container}>
@@ -21,16 +28,55 @@ export default function PreviewScreen({ route }) {
           <Text style={styles.detailValue}>{mobileNumber}</Text>
 
           <Text style={styles.detailLabel}>Category:</Text>
-          <Text style={styles.detailValue}>{ category}</Text>
+          <Text style={styles.detailValue}>{category}</Text>
 
           <Text style={styles.detailLabel}>Count:</Text>
           <Text style={styles.detailValue}>{count}</Text>
 
           <Text style={styles.detailLabel}>Amount:</Text>
           <Text style={styles.detailValue}>{amount}</Text>
+
+          <Text style={styles.detailLabel}>Name Of Rm:</Text>
+          <Text style={styles.detailValue}>{nameOfrm}</Text>
+
+          <Text style={styles.detailLabel}>Date of Donation:</Text>
+          <Text style={styles.detailValue}>{Date_of_Donation}</Text>
+
+          <Text style={styles.detailLabel}>Name On Parcel:</Text>
+          <Text style={styles.detailValue}>{nameOnParcel}</Text>
+
         </View>
-      </View>
+        <Button onPress={openActionsheet}>Open Actionsheet</Button>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isActionsheetVisible}
+        onRequestClose={closeActionsheet}
+      >
+        <View style={styles.actionsheetContainer}>
+          <View style={styles.actionsheet}>
+            <TouchableOpacity onPress={closeActionsheet}>
+              <Text style={styles.actionsheetItem}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={styles.actionsheetItem}>Delete</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={styles.actionsheetItem}>Share</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={styles.actionsheetItem}>Play</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={styles.actionsheetItem}>Favourite</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
+      </View>
+      
   );
 }
 
@@ -70,5 +116,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
     textAlign: 'right', // Aligns the text to the right
+  },
+  actionsheetContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  actionsheet: {
+    backgroundColor: '#fff',
+    width: '100%',
+    padding: 16,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  actionsheetItem: {
+    fontSize: 18,
+    padding: 10,
   },
 });

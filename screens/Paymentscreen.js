@@ -12,7 +12,7 @@ export default function Paymentscreen() {
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: 'white', padding: 80 };
+  const containerStyle = { backgroundColor: 'skyblue', padding: 10  };
 
   
   //razor user qr code
@@ -20,11 +20,11 @@ export default function Paymentscreen() {
   return (
     <PaperProvider>
       <Portal style={styles.container}>
-        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+        <Modal visible={visible} onDismiss={hideModal} style={styles.container}contentContainerStyle={containerStyle}>
           <SafeAreaView style={styles.QR}>
           
               <QRCode
-                value="upi://pay?pa=recipient@example.com&pn=Recipient Name&am=100.00&cu=INR"
+                value="upi://pay?pa=recipient@example.com&pn=Recipient"
                 size={250}
               />
             <Text style={styles.QR}>pay through this Qr.</Text>
@@ -41,12 +41,14 @@ export default function Paymentscreen() {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
-    backgroundColor: '#fff',
+    flex: 1,
+    backgroundColor: 'black',
+    
 
   },
   QR: {
     padding: 10,
+    
     fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
