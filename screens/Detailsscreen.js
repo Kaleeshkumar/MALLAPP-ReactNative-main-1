@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Portal, Button, Dialog, Provider as PaperProvider } from 'react-native-paper';
 import 'react-native-gesture-handler';
 import { Picker } from '@react-native-picker/picker';
 import { TextInput } from 'react-native-paper';
+import AppHeader from '../components/Appheader'; 
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function DetailsScreen({ navigation }) {
@@ -73,11 +75,25 @@ const handlePreview = () => {
   });
 }
 
- 
-
   return (
-    <ScrollView>
+    
+       
       <PaperProvider>
+      <SafeAreaView>
+      <AppHeader
+    title={"Details"}
+    headerBg={"skyblue"}
+    iconColor={"black"}
+    menu //or back
+    optionalBadge={7}
+    navigation={navigation} 
+    right="more-vertical"
+    rightFunction={() => console.log('right')}
+    optionalIcon="bell"
+    optionalFunc={() => console.log('optional')}
+/>
+      </SafeAreaView>
+      <ScrollView>
       <View style={styles.detailscontainer}>
         <SafeAreaView style={styles.container}>
 
@@ -160,12 +176,13 @@ const handlePreview = () => {
               </Dialog.Actions>
             </Dialog>
           </Portal>
-
+          
         </SafeAreaView>
         </View>
+        </ScrollView>
       </PaperProvider>
 
-    </ScrollView>
+    
 
 
   );

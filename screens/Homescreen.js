@@ -6,6 +6,8 @@ import { Card } from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
 import DetailsScreen from './Detailsscreen';
 import 'react-native-gesture-handler';
+import AppHeader from '../components/Appheader'; // Adjust the path accordingly
+
  // for develop time, first add:>>    yarn add react-native-snap-carousel
 
  
@@ -13,7 +15,7 @@ import 'react-native-gesture-handler';
 
  
    
- const Homescreen = () => {
+ const Homescreen = ({ navigation}) => {
   const carouselItems = [
     {
       image: 'https://picsum.photos/700',
@@ -22,6 +24,14 @@ import 'react-native-gesture-handler';
     {
       image: 'https://picsum.photos/701',
       id: 2
+    },
+    {
+      image: 'https://picsum.photos/701',
+      id: 3
+    },
+    {
+      image: 'https://picsum.photos/701',
+      id: 4
     },
     // Add more items as needed
   ];
@@ -35,7 +45,20 @@ import 'react-native-gesture-handler';
   }
 
   return (
+    
     <SafeAreaView style={styles.body}>
+      <AppHeader
+    title={"Home"}
+    headerBg={"skyblue"}
+    iconColor={"black"}
+    menu //or back
+    optionalBadge={5}
+    navigation={navigation} 
+    right="more-vertical"
+    rightFunction={() => console.log('right')}
+    optionalIcon="bell"
+    optionalFunc={() => console.log('optional')}
+/>
       <Carousel
         layout={'default'}
         data={carouselItems}
@@ -51,7 +74,7 @@ import 'react-native-gesture-handler';
         {/* Line */}
         <View style={styles.lineStyle}>
                 <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
-                <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
+              
             </View>
      
       <Card style={styles.Card1}>
@@ -85,7 +108,7 @@ const styles = StyleSheet.create({
   },
   lineStyle: {
     flexDirection: 'row',
-    marginTop: 10,
+    marginTop: 1,
     
     alignItems: 'center'
 },
@@ -95,7 +118,7 @@ const styles = StyleSheet.create({
     fontsize:10,
     marginLeft: 15,
     marginRight: 15,
-    marginTop:5,
+    marginTop:10,
     backgroundColor:"gold"
   },
   Card2: {

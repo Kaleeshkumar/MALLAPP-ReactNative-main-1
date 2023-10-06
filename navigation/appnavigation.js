@@ -52,6 +52,7 @@ const HomeTabs = () => (
       component={homescreen}
       options={{
         tabBarLabel: 'Home',
+         headerShown: false ,
         tabBarIcon: ({ color, size ,focused}) => (
           <MaterialCommunityIcons name="home" color={color} size={size} />
         ),
@@ -61,7 +62,7 @@ const HomeTabs = () => (
       name="Payment"
       component={PaymentScreen}
       options={{
-
+        headerShown: false ,
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="wallet" color={color} size={size} />
         ),
@@ -72,6 +73,7 @@ const HomeTabs = () => (
       component={DetailsScreen}
       options={{
         tabBarLabel: 'Details',
+        headerShown: false ,
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="account" color={color} size={size} />
         ),
@@ -82,6 +84,7 @@ const HomeTabs = () => (
       component={PreviewScreen}
       options={{
         tabBarLabel: 'Preview',
+        headerShown: false ,
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="account" color={color} size={size} />
         ),
