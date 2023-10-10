@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Input, NativeBaseProvider, Button, Icon, Box} from 'native-base';
+import { Input, NativeBaseProvider, Button, Icon, Box, NumberInput} from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,7 +12,7 @@ function Login() {
     const navigation = useNavigation();
     return (
         <View style={styles.container}>
-            <View style={styles.container2}>
+            <View style={styles.container}>
             <View style={styles.Middle}>
                 <Text style={styles.LoginText}>Login</Text>
             </View>
@@ -35,11 +35,13 @@ function Login() {
                                     color: "black",
                                 }}
                                 _dark={{
-                                    color: "gray.300",
+                                    color: "gray.300",                                                                                  
                                 }}
                             />
                         }
                         variant="outline"
+                        value={NumberInput}
+                        onChangeText={(number)=> setnumber(NumberInput)  }
                         placeholder="Mobile number"
                         _light={{
                             placeholderTextColor: "blueGray.400",
@@ -98,6 +100,7 @@ function Login() {
                 </View>
                 <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
             </View>
+            
 {/*
           
             <View style={styles.boxStyle}>

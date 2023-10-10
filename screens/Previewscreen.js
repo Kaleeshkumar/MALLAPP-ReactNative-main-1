@@ -1,21 +1,43 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet ,Dimensions} from 'react-native';
 import  { useState } from 'react';
 import { Button, Modal, TouchableOpacity } from 'react-native-paper';
+import LottieView from 'lottie-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Center } from 'native-base';
 
-
+const { width, height } = Dimensions.get('window');
 export default function PreviewScreen({ route }) {
-  const { name, nameOnParcel, mobileNumber, category, count, amount, nameOfrm, Date_of_Donation } = route.params;
+    // Check if route.params is defined
+   if (!route.params) {
+  return (
+    <SafeAreaView>
+    <View style={styles.lottie}>
+   
+      <LottieView source={require('../assets/animations/animation_no data.json')} autoPlay loop />
+    </View>
+    <Text>No data available</Text>
+    </SafeAreaView>
+  );
+}
+
+  
+  
+    const { name, nameOnParcel, mobileNumber, category, count, amount, nameOfrm, Date_of_Donation } = route.params;
   const [isActionsheetVisible, setActionsheetVisible] = useState(false);
 
   const openActionsheet = () => setActionsheetVisible(true);
   const closeActionsheet = () => setActionsheetVisible(false);
+ 
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.invoiceContainer}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Donor Deatails Preview</Text>
+          <Text style={styles.detailLabel}>Amounted donated:</Text>
+          <Text style={styles.detailValue}>{amount}</Text>
         </View>
         <View style={styles.invoiceDetails}>
           <Text style={styles.detailLabel}>Name:</Text>
@@ -44,10 +66,10 @@ export default function PreviewScreen({ route }) {
 
           <Text style={styles.detailLabel}>Name On Parcel:</Text>
           <Text style={styles.detailValue}>{nameOnParcel}</Text>
-
+          
         </View>
+       
         <Button onPress={openActionsheet}>Open Actionsheet</Button>
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -87,6 +109,12 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: 'center',
   },
+  lottie: {
+    width: width*0.9,
+    height: width,
+    alignItems:'center',
+    
+  },
   invoiceContainer: {
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -102,15 +130,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   invoiceDetails: {
-    backgroundColor: '#f9f9f9',
+    
     borderRadius: 10,
     elevation: 3,
     padding: 15,
+    backgroundColor: '#f0f0f0',
   },
   detailLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 10,
   },
   detailValue: {
     fontSize: 16,

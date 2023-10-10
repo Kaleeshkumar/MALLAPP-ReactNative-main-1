@@ -12,7 +12,7 @@ export default function OnboardingScreen() {
   const navigation = useNavigation();
 
   const handleDone =()=>{
-    navigation.navigate ('Home');
+    navigation.navigate ('Login');
     setItem ('onboarded','1');
     }
     const doneButton =({...props})=>{

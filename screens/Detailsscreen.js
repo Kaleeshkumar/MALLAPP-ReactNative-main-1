@@ -18,7 +18,6 @@ export default function DetailsScreen({ navigation }) {
   const [visible, setVisible] = useState(false);
 
   //SELECT TYPE CATEGORY
-  const [category, setCategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const categories = ['HOMELESS-25', 'EGG&MILK', 'CHICKEN BIRIYANI', 'VEG BIRIYANI', 'ORPHANAGE', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING'];
   //navigate to preveiw screen
@@ -32,7 +31,7 @@ export default function DetailsScreen({ navigation }) {
       name,
       nameOnParcel,
       mobileNumber,
-      category,
+      selectedCategory,
       count,
       amount,
     };
@@ -64,20 +63,18 @@ export default function DetailsScreen({ navigation }) {
   }
 //previw function
 const handlePreview = () => {
-  console.log('category:', category);
+  console.log('selectedCategory:', selectedCategory);
   navigation.navigate('Preview', {
     name,
     nameOnParcel,
     mobileNumber,
-    category,
+    selectedCategory,
     count,
     amount,
   });
 }
 
-  return (
-    
-       
+  return (   
       <PaperProvider>
       <SafeAreaView>
       <AppHeader
@@ -164,14 +161,14 @@ const handlePreview = () => {
               
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={handlePreview} style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Preview</Text>
+          <TouchableOpacity onPress={handlePreview} style={styles.previewButton}>
+            <Text style={styles.previewButtonText}>Preview</Text>
           </TouchableOpacity>
 
           <Portal>
             <Dialog visible={visible} onDismiss={hideDialog}>
               <Dialog.Actions>
-                <Text style={styles.alert}>saved</Text>
+                <Text style={styles.alert}>Details Saved</Text>
                 <Button onPress={hideDialog}>Ok</Button>
               </Dialog.Actions>
             </Dialog>
@@ -182,9 +179,6 @@ const handlePreview = () => {
         </ScrollView>
       </PaperProvider>
 
-    
-
-
   );
 }
 
@@ -192,7 +186,7 @@ const handlePreview = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 30,
     backgroundColor: '#f0f0f0',
   },
   detailscontainer: {
@@ -210,21 +204,23 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputContainer: {
-    marginBottom: 10,
-    
+    marginBottom: 20,
+    borderRadius: 10,
+    fontSize:20,
+    fontWeight:'bold'
    
   },
   input: {
-    padding: 10,
+    padding: 4,
     borderWidth: 1,
-    
+    fontSize:15,
     borderColor: '#888',
     borderRadius: 5,
     color: 'blue',
     elevation: 5,
   },
   saveButton: {
-    borderWidth: 1,
+    borderWidth: 2,
    borderRadius:20,
     padding: 10,
     width:100,
@@ -234,7 +230,30 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontWeight: 'bold',
-    color: 'white',
+    color: 'black',
+  },
+  alert:{
+    fontWeight:'bold',
+    fontSize:20,
+    textAlign:'justify',
+    justifyContent:'flex-start',
+    padding:15,
+    flex:1
+  },
+  previewButton: {
+    borderWidth: 2,
+   borderRadius:20,
+    padding: 10,
+    width:100,
+    alignItems: 'center',
+    justifyContent:'flex-end',
+    borderColor: 'green', // Change border color to green
+    backgroundColor: 'lightgreen',
+    flex:1
+  },
+  previewButtonText: {
+    fontWeight: 'bold',
+    color: 'black',
   },
   
 });

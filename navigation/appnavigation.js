@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import OnboardingScreen from '../screens/onboardingscreen';
 import homescreen from '../screens/Homescreen';
 import login from '../screens/login';
@@ -15,32 +14,12 @@ import PreviewScreen from '../screens/Previewscreen';
 import 'react-native-gesture-handler';
 import { getItem } from '../screens/utils/asysncStorage';
 import { useState } from 'react';
-
-
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
-
-const DrawerScreens = () => (
-  <Drawer.Navigator>
-    <Drawer.Screen name="Home"
-      component={homescreen}
-      options={{
-        drawerLabel: 'Home',
-        drawerIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="home" color={color} size={size} />
-        ),
-      }}
-    />
-    <Drawer.Screen name="Home" component={DrawerScreens} />
-    <Drawer.Screen name="Overall" component={Overall} />
-    {/* Add more screens as needed */}
-  </Drawer.Navigator>
-);
-
 const HomeTabs = () => (
-
   <Tab.Navigator
     initialRouteName="home"
     screenOptions={{
@@ -93,11 +72,20 @@ const HomeTabs = () => (
   </Tab.Navigator>
 );
 
+const Drawernav = () => (
+  <NavigationContainer>
+  <Drawer.Navigator initialRouteName="Home">
+    <Drawer.Screen name="Home" component={Homescreen} />
+    {/* Add more screens as needed */}
+  </Drawer.Navigator>
+  </NavigationContainer>
+  
+);
 
 
 export default function AppNavigation() {
-
   
+
   const [showOnboarding, setShowOnboarding] = useState(null);
 
   useEffect(() => {
@@ -120,6 +108,7 @@ export default function AppNavigation() {
     
     return (
       <NavigationContainer>
+        
       <Stack.Navigator initialRouteName='Onboarding'>
         <Stack.Screen name="Onboarding" options={{ headerShown: false }} component={OnboardingScreen} />
         <Stack.Screen name="Login" options={{ headerShown: false }} component={login} />
@@ -135,7 +124,8 @@ export default function AppNavigation() {
   }else{
     return (
       <NavigationContainer>
-      <Stack.Navigator initialRouteName='Home'>   
+      <Stack.Navigator initialRouteName='home'> 
+     
       <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeTabs} />
         <Stack.Screen name='Payment' component={PaymentScreen} />
         <Stack.Screen name='Signup' component={Signup} />

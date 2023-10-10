@@ -4,13 +4,16 @@ import { Badge, Surface, Title } from 'react-native-paper'
 import Feather from 'react-native-vector-icons/Feather'
 import Colors from './constants/colors';
 
+
+
 const IconSize = 24;
 
-const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn, optionalBtnPress, rightComponent, headerBg, iconColor, titleAlight, optionalBadge }) => {
+
+const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn, optionalBtnPress, rightComponent, headerBg, iconColor, titleAlight, optionalBadge ,navigation }) => {
 
   const LeftView = () => (
     <View style={styles.view}>
-      {menu && <TouchableOpacity onPress={() => { }}>
+      {menu && <TouchableOpacity onPress={() => navigation.toggleDrawer() }>
         <Feather name="menu" size={IconSize} color={iconColor} />
       </TouchableOpacity>}
       {back && <TouchableOpacity onPress={() => { }}>
@@ -32,8 +35,11 @@ const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn,
   )
   const TitleView = () => (
     <View style={styles.titleView}>
+       
       <Title style={{ color: iconColor, textAlign: titleAlight }}>{title}</Title>
+
     </View>
+    
   )
   return (
     <Surface style={[styles.header, style, { backgroundColor: headerBg }]}>
