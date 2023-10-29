@@ -13,11 +13,12 @@ export default function PreviewScreen({ route }) {
   return (
     <SafeAreaView>
     <View style={styles.lottie}>
-   
       <LottieView source={require('../assets/animations/animation_no data.json')} autoPlay loop />
     </View>
-    <Text>No data available</Text>
+    <Text style={styles.lottie}>No data available</Text>
+    
     </SafeAreaView>
+    
   );
 }
 
@@ -113,6 +114,11 @@ const styles = StyleSheet.create({
     width: width*0.9,
     height: width,
     alignItems:'center',
+    marginLeft:20,
+    textAlign:'center',
+    fontStyle:'italic',
+    fontWeight:'bold',
+    fontSize:20
     
   },
   invoiceContainer: {
@@ -140,11 +146,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
+    flexDirection:'row',
+   
   },
   detailValue: {
     fontSize: 16,
-    marginBottom: 10,
-    textAlign: 'right', // Aligns the text to the right
+    marginBottom: 8,
+    textAlign: 'right',
+    flexDirection:'row',
+    // Aligns the text to the right
   },
   actionsheetContainer: {
     flex: 1,

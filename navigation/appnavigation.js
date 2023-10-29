@@ -69,7 +69,19 @@ const HomeTabs = () => (
         ),
       }}
     />
+     <Tab.Screen
+      name="OVERALL"
+      component={Overall}
+      options={{
+        tabBarLabel: 'TESTING',
+        headerShown: false ,
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="account" color={color} size={size} />
+        ),
+      }}
+    />
   </Tab.Navigator>
+  
 );
 
 const Drawernav = () => (

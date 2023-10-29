@@ -6,6 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import { TextInput } from 'react-native-paper';
 import AppHeader from '../components/Appheader'; 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { flexWrap } from 'styled-system';
 
 
 export default function DetailsScreen({ navigation }) {
@@ -38,10 +39,12 @@ export default function DetailsScreen({ navigation }) {
 
 
     //api to post 
-    fetch('https://game-seriously-feline.ngrok-free.app/', {
+    fetch('http://127.0.0.1:8081/handle_data/',
+     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-CSRFToken': 'your_csrf_token_here',
       },
       body: JSON.stringify(data),
     })
@@ -93,11 +96,10 @@ const handlePreview = () => {
       <ScrollView>
       <View style={styles.detailscontainer}>
         <SafeAreaView style={styles.container}>
-
           <Text style={styles.heading}>Details Entry Screen</Text>
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
-              <Text>Name:</Text>
+              <Text style={styles.label}>Name:</Text>
               <TextInput
                 style={styles.input}
                 value={name}
@@ -106,7 +108,7 @@ const handlePreview = () => {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text>Name On Parcel:</Text>
+              <Text style={styles.label}>Name On Parcel:</Text>
               <TextInput
                 style={styles.input}
                 value={nameOnParcel}
@@ -115,7 +117,7 @@ const handlePreview = () => {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text>Mobile Number:</Text>
+              <Text style={styles.label}>Mobile Number:</Text>
               <TextInput
                 style={styles.input}
                 value={mobileNumber}
@@ -125,7 +127,7 @@ const handlePreview = () => {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text>Category:</Text>
+              <Text style={styles.label}>Category:</Text>
               <Picker
                 selectedValue={selectedCategory}
                 onValueChange={(itemValue) => setSelectedCategory(itemValue)}
@@ -137,7 +139,7 @@ const handlePreview = () => {
               </Picker>
             </View>
             <View style={styles.inputContainer}>
-              <Text>Count:</Text>
+              <Text style={styles.label}>Count:</Text>
               <TextInput
                 style={styles.input}
                 value={count}
@@ -147,7 +149,7 @@ const handlePreview = () => {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Text>Amount:</Text>
+              <Text style={styles.label}>Amount:</Text>
               <TextInput
                 style={styles.input}
                 value={amount}
@@ -189,6 +191,11 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: '#f0f0f0',
   },
+  label: {
+    fontSize: 16,  // Adjust font size
+    marginRight: 10,  // Add some spacing between label and input
+    fontWeight: 'bold',
+  },
   detailscontainer: {
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -208,13 +215,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize:20,
     fontWeight:'bold'
-   
   },
   input: {
     padding: 4,
+    flex: 1, 
     borderWidth: 1,
+   
     fontSize:15,
     borderColor: '#888',
+    
     borderRadius: 5,
     color: 'blue',
     elevation: 5,

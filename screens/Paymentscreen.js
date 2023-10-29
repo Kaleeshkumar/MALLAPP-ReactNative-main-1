@@ -35,8 +35,8 @@ const createRazorpayOrder = async () => {
       }
     }, {
       auth: {
-        username: 'YOUR_RAZORPAY_KEY_ID',
-        password: 'YOUR_RAZORPAY_KEY_SECRET'
+        username: 'rzp_test_2h8n68Dp5BnsgZ',
+        password: 'RadEymMn08SuR4yGSXsvp4qJ'
       }
     });
 
@@ -57,6 +57,25 @@ const generatePaymentLink = async () => {
 generatePaymentLink();
 
 
+// Define your payment data
+const handlePayment = () => {
+const paymenthandler = {
+  razorpay_payment_id: '...',
+  razorpay_order_id: '...',
+  razorpay_signature: '...'
+};
+
+axios.post('http://127.0.0.1:8081/paymenthandler', paymenthandler)
+  .then(response => {
+    console.log('Payment processed successfully:', response.data);
+    // Handle success
+  })
+  .catch(error => {
+    console.error('Error processing payment:', error);
+    // Handle error
+  });
+
+};
 
   const qrCodeData = `upi://pay?pa=user@example.com&pn=Recipient&am=1&mc=123&tid=456&tr=789`;
   //razor user qr code
@@ -149,7 +168,5 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'skyblue',
     borderRadius: 40,
-   
-    
   },
 })
