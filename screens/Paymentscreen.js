@@ -64,18 +64,33 @@ const paymenthandler = {
   razorpay_order_id: '...',
   razorpay_signature: '...'
 };
+//api section
+fetch('http://127.0.0.1:8081/paymenthandler/',
+{
+ paymenthandler,
+ method: 'POST',
+ headers: {
+   'Content-Type': 'application/json',
+   'X-CSRFToken': 'your_csrf_token_here',
+ },
+ body: JSON.stringify(data),
+})
+ .then(response => {
+   if (!response.ok) {
+     throw new Error('Network response was not ok');
+   }
+   return response.json();
+ })
+ .then(responseData => {
+   console.log('Response from API:', response.Data);
+   showDialog();
+ })
+ .catch(error => {
+   console.error('Error processing payment:', error);
+ });
 
-axios.post('http://127.0.0.1:8081/paymenthandler', paymenthandler)
-  .then(response => {
-    console.log('Payment processed successfully:', response.data);
-    // Handle success
-  })
-  .catch(error => {
-    console.error('Error processing payment:', error);
-    // Handle error
-  });
-
-};
+showDialog();
+}
 
   const qrCodeData = `upi://pay?pa=user@example.com&pn=Recipient&am=1&mc=123&tid=456&tr=789`;
   //razor user qr code
