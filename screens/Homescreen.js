@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,ScrollView,Animated, } from 'react-native'
+import { View, Text, StyleSheet,ScrollView,Animated, Dimensions} from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Card, Avatar, IconButton } from 'react-native-paper';
@@ -6,10 +6,12 @@ import { useState } from 'react';
 import Carousel from 'react-native-snap-carousel';
 import DetailsScreen from './Detailsscreen';
 import 'react-native-gesture-handler';
-import AppHeader from '../components/Appheader';
+import Appheader from '../components/Appheader';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-
+import LottieView from 'lottie-react-native';
+import drawernavigation from '../navigation/DrawerNavigator';
+import routes from '../constants/routes';
 
 import {Svg} from 'react-native-svg';
 import  { useRef } from "react";
@@ -17,38 +19,62 @@ import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 
 
 
+const { width, height } = Dimensions.get('window');
 
-const Homescreen = () => {
-  const [todayCollection, setTodayCollection] = useState(null);
+function Homescreen ({ navigation }) {
+  const [todayCollection, setTodayCollection] = useState();
   const [thisMonthCollection, setThisMonthCollection] = useState(null);
-  const navigation = useNavigation();
+
+
 
 
   //api section
   useEffect(() => {
     // Fetch Today Collection
-    fetch('http://your-backend-api/today_collection/')
-      .then((response) => response.json())
-      .then((data) => setTodayCollection(data))
-      .catch((error) => console.error('Error:', error));
-
+    fetch('http://127.0.0.1:8081/today_collection/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any additional headers if required
+      },
+      body: JSON.stringify({}),
+    }) // Replace with your Django backend URL and endpoint
+      .then(response => response.json())
+      .then(data => {
+        console.log('Today Collection:', data.TodayCollection);
+        const todayCollectionData = data.TodayCollection;
+        setTodayCollection(todayCollectionData);
+      })
+      .catch(error => console.error('Error:', error));
+  },[]);
+/*
     // Fetch This Month Collection
-    fetch('http://your-backend-api/this_month_collection/')
-      .then((response) => response.json())
+    fetch('http://127.0.0.1:8081/ThisMonthCollection/')
+      .then((response) => {
+        if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
       .then((data) => setThisMonthCollection(data))
       .catch((error) => console.error('Error:', error));
   }, []);
   //fetch categories section
   useEffect(() => {
     // Fetch category data 
-    fetch('http://your-backend-api/categories/')
-      .then((response) => response.json())
+    fetch('http://127.0.0.1:8081/categories/')
+      .then((response) => {
+        if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
       .then((data) => setCategories(data))
       .catch((error) => console.error('Error:', error));
   }, []);
+*/
 
 
-  
   const carouselItems = [
 
     {
@@ -94,13 +120,14 @@ const Homescreen = () => {
 
   return (
     <SafeAreaView style={styles.body}>
-      <AppHeader
-        title={"Home"}
-        headerBg={"skyblue"}
+      <Appheader 
+        title={"HOME"}
+       
+        headerBg={"gold"}
         iconColor={"black"}
+        navigation={navigation} 
         menu //or back
         optionalBadge={5}
-        navigation={navigation}
         right="more-vertical"
         rightFunction={() => console.log('right')}
         optionalIcon="bell"
@@ -113,9 +140,8 @@ const Homescreen = () => {
         sliderWidth={400}
         itemWidth={300}
         renderItem={_renderItem}
+        
       />
-
-
 
       <SafeAreaView style={styles.body}>
       </SafeAreaView>
@@ -143,9 +169,10 @@ const Homescreen = () => {
         </Card.Content>
       </Card>
 
-
-    
-      
+      <View style={styles.lottie}>
+      <LottieView source={require('../assets/animations/su1.json')} autoPlay loop />
+    </View>
+    <Text style={styles.lottie}>No data available contact backend team</Text>
       </ScrollView>
      
     </SafeAreaView>
@@ -153,12 +180,10 @@ const Homescreen = () => {
   )
   
 }
-
-
 export default Homescreen;
 const styles = StyleSheet.create({
   container: {
-    marginTop: 0,
+    marginTop: 2,
     padding: 2,
     backgroundColor: '#fff',
   },
@@ -173,16 +198,17 @@ const styles = StyleSheet.create({
   lineStyle: {
     flexDirection: 'row',
     marginTop: 1,
-
     alignItems: 'center'
   },
   Card1: {
     alignItems: 'left',
-    padding: 2,
+    padding: 3,
     fontsize: 10,
     marginLeft: 15,
     marginRight: 15,
-    backgroundColor: "gold"
+    marginTop: 10,
+    backgroundColor: "gold",
+    
   },
   Card2: {
     alignItems: 'left',
@@ -190,12 +216,12 @@ const styles = StyleSheet.create({
     fontsize: 10,
     marginLeft: 15,
     marginRight: 15,
-    marginTop: 5,
+    marginTop: 10,
     backgroundColor: "pink"
 
   },
   carouselItem: {
-    borderRadius: 8,
+    borderRadius: 10,
     overflow: 'hidden',
     marginVertical: 5,
   },
@@ -222,11 +248,22 @@ const styles = StyleSheet.create({
   categoryCard: {
     marginVertical: 10,
   },
+  lottie: {
+    width: width*0.9,
+    height: width,
+    alignItems:'center',
+    marginLeft:20,
+    textAlign:'center',
+    fontStyle:'italic',
+    fontWeight:'bold',
+    fontSize:20
+    
+  },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
-        width: 2,
-        height: 2,
+        width: 3,
+        height: 10,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,

@@ -11,6 +11,7 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -36,6 +37,14 @@ const CustomDrawer = props => {
             }}>
             kaleesh kumar
           </Text>
+          <TouchableOpacity onPress={() => props.navigation.navigate('EditProfile')}>
+  <View style={{ flexDirection: 'row', alignItems: 'right' }}>
+    <Ionicons name="person-circle-outline" size={22} color={'white'}/>
+    <Text style={{ fontSize: 15, fontFamily: 'Roboto-Medium', marginLeft: 5 ,color:'white'}}>
+      Edit Profile
+    </Text>
+  </View>
+</TouchableOpacity>
           <View style={{flexDirection: 'row'}}>
             <Text
               style={{
@@ -43,7 +52,7 @@ const CustomDrawer = props => {
                 fontFamily: 'Roboto-Regular',
                 marginRight: 5,
               }}>
-              280 Coins
+              1,25,000 Rs
             </Text>
             <FontAwesome5 name="coins" size={14} color="#fff" />
           </View>

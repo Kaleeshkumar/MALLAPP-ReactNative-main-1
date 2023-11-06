@@ -5,6 +5,7 @@ import { Button, Modal, TouchableOpacity } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Center } from 'native-base';
+import SaveComponent from '../components/SaveComponent';
 
 const { width, height } = Dimensions.get('window');
 export default function PreviewScreen({ route }) {
@@ -22,9 +23,7 @@ export default function PreviewScreen({ route }) {
   );
 }
 
-  
-  
-    const { name, nameOnParcel, mobileNumber, category, count, amount, nameOfrm, Date_of_Donation } = route.params;
+  const { name, nameOnParcel, mobileNumber, category, count, amount, nameOfrm, Date_of_Donation } = route.params;
   const [isActionsheetVisible, setActionsheetVisible] = useState(false);
 
   const openActionsheet = () => setActionsheetVisible(true);
@@ -67,6 +66,7 @@ export default function PreviewScreen({ route }) {
 
           <Text style={styles.detailLabel}>Name On Parcel:</Text>
           <Text style={styles.detailValue}>{nameOnParcel}</Text>
+          
           
         </View>
        

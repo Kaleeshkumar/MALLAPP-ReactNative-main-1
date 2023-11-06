@@ -1,15 +1,42 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Input, NativeBaseProvider, Button, Icon, Box, NumberInput} from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
 
 
-
+const handleLogin = ({navigation, mobileNumber, password}) => {
+    // Send a POST request to your Django backend
+    fetch('http://127.0.0.1:8081/handle_login/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ mobile_number: mobileNumber, password: password }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Authentication successful, navigate to home screen
+          navigation.navigate('Home');
+        } else {
+          // Authentication failed, show an alert
+          Alert.alert('Error', 'Invalid credentials');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
 
 function Login() {
-    const navigation = useNavigation();
+
+    const [mobileNumber, setMobileNumber] = useState('');
+    const [password, setPassword] = useState('');
+const navigation= useNavigation();
+    
     return (
         <View style={styles.container}>
             <View style={styles.container}>
@@ -40,8 +67,8 @@ function Login() {
                             />
                         }
                         variant="outline"
-                        value={NumberInput}
-                        onChangeText={(number)=> setnumber(NumberInput)  }
+                        value={mobileNumber}
+                        onChangeText={text => setMobileNumber(text)}
                         placeholder="Mobile number"
                         _light={{
                             placeholderTextColor: "blueGray.400",
@@ -74,6 +101,8 @@ function Login() {
                         }
                         variant="outline"
                         secureTextEntry={true}
+                        value={password}
+                        onChangeText={text => setPassword(text)}
                         placeholder="Password/Emp id"
                         _light={{
                             placeholderTextColor: "blueGray.400",
@@ -87,7 +116,7 @@ function Login() {
 
             {/* Button */}
             <View style={styles.buttonStyle}>
-                <Button style={styles.buttonDesign}>
+                <Button style={styles.buttonDesign} onPress={handleLogin}>
                     LOGIN
                 </Button>
             </View>

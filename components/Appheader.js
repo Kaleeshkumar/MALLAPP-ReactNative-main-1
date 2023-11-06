@@ -2,18 +2,23 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Badge, Surface, Title } from 'react-native-paper'
 import Feather from 'react-native-vector-icons/Feather'
-import Colors from './constants/colors';
+import { useNavigation} from '@react-navigation/native'
+
+
 
 
 
 const IconSize = 24;
 
 
-const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn, optionalBtnPress, rightComponent, headerBg, iconColor, titleAlight, optionalBadge ,navigation }) => {
+const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn, optionalBtnPress, rightComponent, headerBg, iconColor, titleAlight, optionalBadge  }) => {
+  const navigation = useNavigation();
+
 
   const LeftView = () => (
     <View style={styles.view}>
-      {menu && <TouchableOpacity onPress={() => navigation.toggleDrawer() }>
+      {menu &&   
+      <TouchableOpacity onPress={() => navigation.toggleDrawer() }>
         <Feather name="menu" size={IconSize} color={iconColor} />
       </TouchableOpacity>}
       {back && <TouchableOpacity onPress={() => { }}>
@@ -28,7 +33,7 @@ const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn,
           <Feather name={optionalBtn} size={IconSize} color={iconColor} />
           {optionalBadge && <Badge style={{ position: 'absolute', top: -5, right: -10 }}>{optionalBadge}</Badge>}
         </TouchableOpacity>}
-        {right && <TouchableOpacity onPress={onRightPress}>
+        {right && <TouchableOpacity onPress={() => navigation.rightComponent()}>
           <Feather name={right} size={IconSize} color={iconColor} />
         </TouchableOpacity>}
       </View>
@@ -59,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    backgroundColor: Colors.black,
+    backgroundColor: 'black',
   },
   view: {
     marginHorizontal: 16,

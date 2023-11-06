@@ -7,6 +7,10 @@ import { TextInput } from 'react-native-paper';
 import AppHeader from '../components/Appheader'; 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { flexWrap } from 'styled-system';
+import axios from 'axios';
+import ImagePicker from 'react-native-image-picker';
+
+
 
 
 export default function DetailsScreen({ navigation }) {
@@ -39,15 +43,15 @@ export default function DetailsScreen({ navigation }) {
 
 
     //api to post 
-    
-    fetch('http://127.0.0.1:8081/handle_data/',
+   //handle Data
+   axios.post('http://127.0.0.1:8081/handle_data/', JSON.stringify(data),
      {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': 'your_csrf_token_here',
+        
       },
-      body: JSON.stringify(data),
+      
     })
       .then(response => {
         if (!response.ok) {
@@ -62,8 +66,12 @@ export default function DetailsScreen({ navigation }) {
       .catch(error => {
         console.error('Error:', error);
       });
+     
+
+      
 
     showDialog();
+    
   }
 //previw function
 const handlePreview = () => {
@@ -77,13 +85,34 @@ const handlePreview = () => {
     amount,
   });
 }
+const handleImageUpload = () => {
+  const options = {
+    title: 'Select Image',
+    storageOptions: {
+      skipBackup: true,
+      path: 'images',
+    },
+  };
+
+  ImagePicker.showImagePicker(options, (response) => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else {
+      const source = { uri: response.uri };
+      // Set the source of the image to the state or use it as needed
+      // For example: setImageSource(source);
+    }
+  });
+};
 
   return (   
       <PaperProvider>
       <SafeAreaView>
       <AppHeader
     title={"Details"}
-    headerBg={"skyblue"}
+    headerBg={"red"}
     iconColor={"black"}
     menu //or back
     optionalBadge={7}
@@ -100,25 +129,36 @@ const handlePreview = () => {
           <Text style={styles.heading}>Details Entry Screen</Text>
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Name:</Text>
+              </View>
+              <View style={styles.inputFieldContainer}>
               <TextInput
                 style={styles.input}
                 value={name}
                 onChangeText={text => setName(text)}
                 placeholder="Enter Donar name"
               />
+                </View>
             </View>
             <View style={styles.inputContainer}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Name On Parcel:</Text>
+              </View>
+              <View style={styles.inputFieldContainer}>
               <TextInput
                 style={styles.input}
                 value={nameOnParcel}
                 onChangeText={text => setNameOnParcel(text)}
                 placeholder="Enter name on parcel"
               />
+              </View>
             </View>
             <View style={styles.inputContainer}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Mobile Number:</Text>
+              </View>
+              <View style={styles.inputFieldContainer}>
               <TextInput
                 style={styles.input}
                 value={mobileNumber}
@@ -126,9 +166,13 @@ const handlePreview = () => {
                 keyboardType="phone-pad"
                 placeholder="Enter mobile number"
               />
+              </View>
             </View>
             <View style={styles.inputContainer}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Category:</Text>
+              </View>
+              <View style={styles.inputFieldContainer}>
               <Picker
                 selectedValue={selectedCategory}
                 onValueChange={(itemValue) => setSelectedCategory(itemValue)}
@@ -138,9 +182,13 @@ const handlePreview = () => {
                   <Picker.Item key={index} label={category} value={category} />
                 ))}
               </Picker>
+              </View>
             </View>
             <View style={styles.inputContainer}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Count:</Text>
+              </View>
+              <View style={styles.inputFieldContainer}>
               <TextInput
                 style={styles.input}
                 value={count}
@@ -148,9 +196,13 @@ const handlePreview = () => {
                 keyboardType="numeric"
                 placeholder="Enter count"
               />
+              </View>
             </View>
             <View style={styles.inputContainer}>
+            <View style={styles.labelContainer}>
               <Text style={styles.label}>Amount:</Text>
+              </View>
+              <View style={styles.inputFieldContainer}>
               <TextInput
                 style={styles.input}
                 value={amount}
@@ -158,7 +210,11 @@ const handlePreview = () => {
                 keyboardType="numeric"
                 placeholder="Enter amount"
               />
+              </View>
             </View>
+            <TouchableOpacity onPress={handleImageUpload} style={styles.uploadButton}>
+  <Text style={styles.uploadButtonText}>Upload Image</Text>
+</TouchableOpacity>
             <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
               <Text style={styles.saveButtonText}>Save</Text>
               
@@ -192,52 +248,63 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: '#f0f0f0',
   },
+  labelContainer: {
+    flex: 1,
+  },
   label: {
     fontSize: 16,  // Adjust font size
-    marginRight: 10,  // Add some spacing between label and input
+    marginRight: 15, 
+    marginLeft:10, // Add some spacing between label and input
     fontWeight: 'bold',
+    color:"black"
   },
   detailscontainer: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
+    backgroundColor: 'skyblue',
+    borderRadius: 13,
     elevation: 5,
-    padding: 20,
+    padding: 7,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 25,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 30,
   },
   formContainer: {
     marginBottom: 20,
+    borderRadius: 53,
   },
   inputContainer: {
-    marginBottom: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
     borderRadius: 10,
-    fontSize:20,
-    fontWeight:'bold'
+    fontSize: 20,
+    fontWeight: 'bold',
+    backgroundColor:"white"
   },
   input: {
-    padding: 4,
-    flex: 1, 
-    borderWidth: 1,
-   
-    fontSize:15,
+    padding: 2,
+    borderWidth: 2,
+    fontSize:16,
     borderColor: '#888',
-    
-    borderRadius: 5,
+    borderRadius: 20,
     color: 'blue',
     elevation: 5,
+  },
+  inputFieldContainer: {
+    flex: 2,
   },
   saveButton: {
     borderWidth: 2,
    borderRadius:20,
     padding: 10,
     width:100,
+    
     alignItems: 'center',
     borderColor: 'green', // Change border color to green
     backgroundColor: 'lightgreen',
   },
+ 
   saveButtonText: {
     fontWeight: 'bold',
     color: 'black',
@@ -262,6 +329,21 @@ const styles = StyleSheet.create({
     flex:1
   },
   previewButtonText: {
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  uploadButton: {
+    borderWidth: 2,
+    borderRadius: 20,
+    padding: 10,
+    width: 150,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: 'blue', // Change border color to blue
+    backgroundColor: 'lightblue',
+    marginTop: 20,
+  },
+  uploadButtonText: {
     fontWeight: 'bold',
     color: 'black',
   },

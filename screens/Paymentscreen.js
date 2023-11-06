@@ -5,6 +5,10 @@ import RazorpayCheckout from 'react-native-razorpay';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import QRCode from 'react-native-qrcode-svg';
 import AppHeader from '../components/Appheader';
+import axios from 'axios';
+
+
+
 
 
 
@@ -17,8 +21,8 @@ export default function Paymentscreen({ navigation }) {
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: 'skyblue', padding: 10 };
 
-  const axios = require('axios');
-
+ 
+/*
 const createRazorpayOrder = async () => {
   try {
     const response = await axios.post('https://api.razorpay.com/v1/orders', {
@@ -45,6 +49,15 @@ const createRazorpayOrder = async () => {
     console.error('Error creating Razorpay order:', error);
   }
 };
+*/
+const createRazorpayOrder = async () => {
+  try {
+    const response = await axios.post('http://127.0.0.1:8081/create_razorpay_order/');
+    console.log(response.data);
+  } catch (error) {
+    console.error('Error creating Razorpay order:', error);
+  }
+};
 
 const generatePaymentLink = async () => {
   const orderId = await createRazorpayOrder();
@@ -58,39 +71,45 @@ generatePaymentLink();
 
 
 // Define your payment data
-const handlePayment = () => {
-const paymenthandler = {
-  razorpay_payment_id: '...',
-  razorpay_order_id: '...',
-  razorpay_signature: '...'
-};
-//api section
-fetch('http://127.0.0.1:8081/paymenthandler/',
-{
- paymenthandler,
- method: 'POST',
- headers: {
-   'Content-Type': 'application/json',
-   'X-CSRFToken': 'your_csrf_token_here',
- },
- body: JSON.stringify(data),
-})
- .then(response => {
-   if (!response.ok) {
-     throw new Error('Network response was not ok');
-   }
-   return response.json();
- })
- .then(responseData => {
-   console.log('Response from API:', response.Data);
-   showDialog();
- })
- .catch(error => {
-   console.error('Error processing payment:', error);
- });
+const handlePayment = async ( { navigation } ) => {
+  try {
+    const response = await axios.post('http://127.0.0.1:8081/paymenthandler/', {
+      razorpay_payment_id: 'PAYMENT_ID',
+      razorpay_order_id: 'ORDER_ID',
+      razorpay_signature: 'SIGNATURE',
+    });
 
-showDialog();
-}
+    // Check the response to determine if payment was successful
+    if (response.data === 'success') {
+      // Payment was successful, navigate to success screen
+      // You can use React Navigation or any navigation library you prefer
+      console.log('Payment successful');
+      navigation.navigate('PaymentSuccessScreen');
+    } else {
+      // Payment failed, navigate to failure screen
+      console.log('Payment failed');
+      navigation.navigate('PaymentFailure',{
+        name,
+        nameOnParcel,
+        mobileNumber,
+        selectedCategory,
+        count,
+        amount,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    // Handle error
+  }
+};
+// Assuming you have the payment data ready
+const paymentData = {
+  razorpay_payment_id: 'PAYMENT_ID',
+  razorpay_order_id: 'ORDER_ID',
+  razorpay_signature: 'SIGNATURE',
+};
+// Call the function with the payment data
+handlePayment(paymentData);
 
   const qrCodeData = `upi://pay?pa=user@example.com&pn=Recipient&am=1&mc=123&tid=456&tr=789`;
   //razor user qr code
@@ -99,7 +118,7 @@ showDialog();
     image: 'https://example.com/your-image.png',
     currency: 'INR',
     key: 'rzp_test_2h8n68Dp5BnsgZ',
-    amount: '', // Amount in paise (5000 paise = INR 50)
+    amount: '2000', // Amount in paise (5000 paise = INR 50)
     name: 'Thaagam Foundation',
     prefill: {
       email: 'kaleeshkumar.r@gmail.com',

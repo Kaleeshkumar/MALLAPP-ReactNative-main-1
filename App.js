@@ -1,28 +1,24 @@
-import React from 'react';
-import AppNavigation from "./navigation/appnavigation";
-import { PaperProvider } from 'react-native-paper';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as React from 'react';
+import {SafeAreaView, Text} from 'react-native';
+import {DrawerActions, NavigationContainer} from '@react-navigation/native';
+import DrawerNavigator from './navigation/DrawerNavigator';
 
 
+import AuthNavigator from './navigation/AuthNavigator';
+import { BottomNavigation } from 'react-native-paper';
 
 
-import AuthStack from './navigation/AppStack';
-import AppStack from './navigation/AppStack';
-
-
-function App() {
+export default function App() {
+  // isAuthenticated = is...
   return (
-
-    <NavigationContainer>
-        {/* <AppStack /> */}
-     <AuthStack />
-     
     
-     </NavigationContainer>
-  
+    <NavigationContainer>
+      {/* {isAuthenticated ? AuthNavigator : DrawerNavigator } */}
+      
+      <AuthNavigator/>
 
+     
+
+    </NavigationContainer>
   );
 }
-
-export default  App;

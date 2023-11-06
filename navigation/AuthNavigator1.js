@@ -13,17 +13,21 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import PreviewScreen from '../screens/Previewscreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import PaymentFailureScreen from '../screens/PaymentFailureScreen';
 
 
 import 'react-native-gesture-handler';
 import { getItem } from '../screens/utils/asysncStorage';
 import { useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import Contact from '../screens/contact';
 
 const Drawer = createDrawerNavigator();
 
-const AuthStack = () => {
+
+const AuthStack= () => {
   return (
+    
     <Drawer.Navigator
       drawerContent={props => <CustomDrawer {...props} />}
       screenOptions={{
@@ -74,6 +78,15 @@ const AuthStack = () => {
         }}
       />
       <Drawer.Screen
+        name="paymentfailure"
+        component={PaymentFailureScreen}
+        options={{
+          drawerIcon: ({color}) => (
+            <Ionicons name="timer-outline" size={22} color={color} />
+          ),
+        }}
+      />
+      <Drawer.Screen
         name="Overall Report"
         component={Overall}
         options={{
@@ -82,9 +95,22 @@ const AuthStack = () => {
           ),
         }}
       />
+      <Drawer.Screen
+        name="contact"
+        component={Contact}
+        options={{
+          drawerIcon: ({color}) => (
+            <Ionicons name="settings-outline" size={22} color={color} />
+          ),
+        }}
+      />
     </Drawer.Navigator>
+    
   );
+
+  
   
 };
 
-export default AuthStack;
+
+export default AuthStack ;
