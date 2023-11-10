@@ -11,12 +11,14 @@ import 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Contact from '../screens/contact';
 import Profile from '../screens/Profile';
+import { useNavigation } from '@react-navigation/native';
+import BottomTabNav from './BottomTabNavigator';
 
 
 const Drawer = createDrawerNavigator();
 
 
-const DrawerNavigator= (navigation) => {
+const DrawerNavigator= ( {navigation}) => {
   return (
     
     <Drawer.Navigator
@@ -41,15 +43,7 @@ const DrawerNavigator= (navigation) => {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Payment"
-        component={PaymentScreen}
-        options={{
-          drawerIcon: ({color}) => (
-            <Ionicons name="person-outline" size={22} color={color} />
-          ),
-        }}
-      />
+      
       <Drawer.Screen
         name="Details Entry"
         component={DetailsScreen}
@@ -95,9 +89,10 @@ const DrawerNavigator= (navigation) => {
           ),
         }}
       />
-        <Drawer.Screen
-        name="profile"
-        component={Profile}
+       
+       <Drawer.Screen
+        name="BottomTabNav"
+        component={BottomTabNav}
         options={{
           drawerIcon: ({color}) => (
             <Ionicons name="settings-outline" size={22} color={color} />
@@ -105,6 +100,7 @@ const DrawerNavigator= (navigation) => {
         }}
       />
     </Drawer.Navigator>
+    
     
   );
 };

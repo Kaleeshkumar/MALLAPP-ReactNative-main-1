@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet ,TouchableOpacity, COLORS} from 'react-native'
 import React from 'react'
 import { Modal, Portal, Button, PaperProvider } from 'react-native-paper';
 import RazorpayCheckout from 'react-native-razorpay';
@@ -6,6 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import QRCode from 'react-native-qrcode-svg';
 import AppHeader from '../components/Appheader';
 import axios from 'axios';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 
 
 
@@ -19,7 +21,7 @@ export default function Paymentscreen({ navigation }) {
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: 'skyblue', padding: 10 };
+  const containerStyle = { backgroundColor: 'skyblue', padding: 15 };
 
  
 /*
@@ -154,20 +156,44 @@ handlePayment(paymentData);
         />
       </SafeAreaView>
       <Portal style={styles.container}>
-
+      
         <Modal visible={visible} onDismiss={hideModal} style={styles.container} contentContainerStyle={containerStyle}>
+        <SafeAreaView>
+        
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            position: "relative",
+            left: 0,
+            marginTop:5,
+            marginLeft:10
+          }}
+        >
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={30}
+            color='white'
+          />
+          
+        </TouchableOpacity>
+        </SafeAreaView>
+          
           <SafeAreaView style={styles.QR}>
-
-
+        
             <QRCode
               value={qrCodeData}
               size={250}
             />
             <Text style={styles.QR}>Scan&pay using UPI app</Text>
+            
 
           </SafeAreaView>
+          
+        
         </Modal>
+      
       </Portal>
+      
       <Button
         style={styles.button}
         mode="contained"

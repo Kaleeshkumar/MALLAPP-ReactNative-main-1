@@ -215,14 +215,16 @@ const handleImageUpload = () => {
             <TouchableOpacity onPress={handleImageUpload} style={styles.uploadButton}>
   <Text style={styles.uploadButtonText}>Upload Image</Text>
 </TouchableOpacity>
-            <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-              <Text style={styles.saveButtonText}>Save</Text>
-              
-            </TouchableOpacity>
           </View>
+
+          <View style={styles.btncontainer}>
           <TouchableOpacity onPress={handlePreview} style={styles.previewButton}>
             <Text style={styles.previewButtonText}>Preview</Text>
           </TouchableOpacity>
+           <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
+              <Text style={styles.saveButtonText}>Save</Text>
+            </TouchableOpacity>
+            </View>
 
           <Portal>
             <Dialog visible={visible} onDismiss={hideDialog}>
@@ -294,12 +296,18 @@ const styles = StyleSheet.create({
   inputFieldContainer: {
     flex: 2,
   },
+  btncontainer:{
+    padding:2,
+    flexDirection:'row'
+
+  },
   saveButton: {
     borderWidth: 2,
+    flex:1,
+    marginLeft:5,
    borderRadius:20,
-    padding: 10,
+    padding: 13,
     width:100,
-    
     alignItems: 'center',
     borderColor: 'green', // Change border color to green
     backgroundColor: 'lightgreen',
@@ -320,8 +328,8 @@ const styles = StyleSheet.create({
   previewButton: {
     borderWidth: 2,
    borderRadius:20,
-    padding: 10,
-    width:100,
+    padding: 13,
+    
     alignItems: 'center',
     justifyContent:'flex-end',
     borderColor: 'green', // Change border color to green
@@ -338,6 +346,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 150,
     alignItems: 'center',
+   
     justifyContent: 'center',
     borderColor: 'blue', // Change border color to blue
     backgroundColor: 'lightblue',

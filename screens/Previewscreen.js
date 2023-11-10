@@ -6,6 +6,8 @@ import LottieView from 'lottie-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Center } from 'native-base';
 import SaveComponent from '../components/SaveComponent';
+import * as Sharing from 'expo-sharing';
+
 
 const { width, height } = Dimensions.get('window');
 export default function PreviewScreen({ route }) {
@@ -29,6 +31,24 @@ export default function PreviewScreen({ route }) {
   const openActionsheet = () => setActionsheetVisible(true);
   const closeActionsheet = () => setActionsheetVisible(false);
  
+  //share data through whatsapp
+
+  const shareData = () => {
+    const message = `Name: ${name}\nName On Parcel: ${nameOnParcel}\nMobile Number: ${mobileNumber}\nCategory: ${category}\nCount: ${count}\nAmount: ${amount}\nName Of Rm: ${nameOfrm}\nDate of Donation: ${Date_of_Donation}`;
+  
+    Share.open({
+      title: 'Share via',
+      message: message,
+      url: '', // You can include a URL if needed
+      subject: 'Preview Data',
+    })
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  };
   
 
   return (
@@ -70,6 +90,8 @@ export default function PreviewScreen({ route }) {
           
         </View>
        
+        <Button onPress={shareData}>Share Data</Button>
+
         <Button onPress={openActionsheet}>Open Actionsheet</Button>
       <Modal
         animationType="slide"

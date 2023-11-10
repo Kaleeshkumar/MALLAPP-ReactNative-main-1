@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet,ScrollView,Animated, Dimensions} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Animated, Dimensions } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Card, Avatar, IconButton } from 'react-native-paper';
@@ -13,24 +13,36 @@ import LottieView from 'lottie-react-native';
 import drawernavigation from '../navigation/DrawerNavigator';
 import routes from '../constants/routes';
 
-import {Svg} from 'react-native-svg';
-import  { useRef } from "react";
+import { Svg } from 'react-native-svg';
+import { useRef } from "react";
 import { COLORS, FONTS, SIZES, icons, images } from '../constants';
+import NetInfo from '@react-native-community/netinfo';
+
 
 
 
 const { width, height } = Dimensions.get('window');
 
-function Homescreen ({ navigation }) {
+
+
+function Homescreen({ navigation }) {
+  const [isConnected, setConnected] = useState(true);
+
   const [todayCollection, setTodayCollection] = useState();
   const [thisMonthCollection, setThisMonthCollection] = useState(null);
 
-
+  NetInfo.fetch().then(state => {
+    console.log('Connection type', state.type);
+    console.log('Is connected?', state.isConnected);
+  });
 
 
   //api section
   useEffect(() => {
     // Fetch Today Collection
+
+   
+
     fetch('http://127.0.0.1:8081/today_collection/', {
       method: 'POST',
       headers: {
@@ -45,34 +57,42 @@ function Homescreen ({ navigation }) {
         const todayCollectionData = data.TodayCollection;
         setTodayCollection(todayCollectionData);
       })
-      .catch(error => console.error('Error:', error));
-  },[]);
-/*
-    // Fetch This Month Collection
-    fetch('http://127.0.0.1:8081/ThisMonthCollection/')
-      .then((response) => {
-        if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-      .then((data) => setThisMonthCollection(data))
-      .catch((error) => console.error('Error:', error));
+      .catch(error => 
+        {console.error('Error:', error);
+       
+      });
+
+     
   }, []);
-  //fetch categories section
-  useEffect(() => {
-    // Fetch category data 
-    fetch('http://127.0.0.1:8081/categories/')
-      .then((response) => {
-        if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-      .then((data) => setCategories(data))
-      .catch((error) => console.error('Error:', error));
-  }, []);
-*/
+  
+  /*
+      // Fetch This Month Collection
+      fetch('http://127.0.0.1:8081/ThisMonthCollection/')
+        .then((response) => {
+          if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+        .then((data) => setThisMonthCollection(data))
+        .catch((error) => console.error('Error:', error));
+    }, []);
+    //fetch categories section
+    useEffect(() => {
+      // Fetch category data 
+      fetch('http://127.0.0.1:8081/categories/')
+        .then((response) => {
+          if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+        .then((data) => setCategories(data))
+        .catch((error) => console.error('Error:', error));
+    }, []);
+  */
+ 
+  
 
 
   const carouselItems = [
@@ -104,7 +124,7 @@ function Homescreen ({ navigation }) {
 
     );
   }
-  
+
   const renderCategory = ({ item }) => {
     return (
       <Card style={styles.card}>
@@ -117,15 +137,21 @@ function Homescreen ({ navigation }) {
     );
   };
 
+  function renderNotice(){
+    return(
+      <View>
+        <Text>xddx</Text>
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.body}>
-      <Appheader 
+      <Appheader
         title={"HOME"}
-       
         headerBg={"gold"}
         iconColor={"black"}
-        navigation={navigation} 
+        navigation={navigation}
         menu //or back
         optionalBadge={5}
         right="more-vertical"
@@ -140,45 +166,48 @@ function Homescreen ({ navigation }) {
         sliderWidth={400}
         itemWidth={300}
         renderItem={_renderItem}
-        
+        autoplay={true}  // Enable autoplay
+      autoplayInterval={4000} 
+      loop={true} // Set the autoplay interval in milliseconds (e.g., 3000ms or 3 seconds)
+
       />
 
       <SafeAreaView style={styles.body}>
       </SafeAreaView>
-<ScrollView>
-      <Card style={styles.Card1}>
-        <Card.Content>
-          <Card.Title style={styles.cardTitle}
-            title="Today Collection"
+      <ScrollView>
+        <Card style={styles.Card1} onPress={() => navigation.navigate('TodayCollection')}>
+          <Card.Content>
+            <Card.Title style={styles.cardTitle}
+              title="Today Collection"
 
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
-            right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
-          />
-          <Text style={styles.txtmain} variant="titleLarge">Today Collection: {todayCollection}</Text>
-        </Card.Content>
-      </Card>
-      <Card style={styles.Card2}>
-        <Card.Content >
-          <Card.Title style={styles.cardTitle}
-            title="This Month Collection"
+              left={(props) => <Avatar.Icon {...props} icon="folder" />}
+              right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
+            />
+            <Text style={styles.txtmain} variant="titleLarge">Today Collection: {todayCollection}</Text>
+          </Card.Content>
+        </Card>
+        <Card style={styles.Card2}onPress={() => navigation.navigate('ThisMonthCollection')}>
+          <Card.Content >
+            <Card.Title style={styles.cardTitle}
+              title="This Month Collection"
 
-            left={(props) => <Avatar.Icon {...props} icon="calendar" />}
-            right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
-          />
-          <Text style={styles.txtmain} variant="titleLarge">This Month Collection: {thisMonthCollection}</Text>
-        </Card.Content>
-      </Card>
+              left={(props) => <Avatar.Icon {...props} icon="calendar"  /> }
+              right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => navigation.navigate('Profile')} />}
+            />
+            <Text style={styles.txtmain} variant="titleLarge">This Month Collection: {thisMonthCollection}</Text>
+          </Card.Content>
+        </Card>
 
-      <View style={styles.lottie}>
-      <LottieView source={require('../assets/animations/su1.json')} autoPlay loop />
-    </View>
-    <Text style={styles.lottie}>No data available contact backend team</Text>
+        <View style={styles.lottie}>
+          <LottieView source={require('../assets/animations/su1.json')} autoPlay loop />
+        </View>
+        <Text style={styles.lottie}>No data available contact backend team</Text>
       </ScrollView>
-     
+
     </SafeAreaView>
-    
+
   )
-  
+
 }
 export default Homescreen;
 const styles = StyleSheet.create({
@@ -208,7 +237,7 @@ const styles = StyleSheet.create({
     marginRight: 15,
     marginTop: 10,
     backgroundColor: "gold",
-    
+
   },
   Card2: {
     alignItems: 'left',
@@ -224,6 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
     marginVertical: 5,
+    
   },
   card: {
     borderRadius: 10,
@@ -239,7 +269,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 1,
     color: 'black',
-    
+
   },
   cardPrice: {
     fontSize: 16,
@@ -249,24 +279,24 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   lottie: {
-    width: width*0.9,
+    width: width * 0.9,
     height: width,
-    alignItems:'center',
-    marginLeft:20,
-    textAlign:'center',
-    fontStyle:'italic',
-    fontWeight:'bold',
-    fontSize:20
-    
+    alignItems: 'center',
+    marginLeft: 20,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    fontWeight: 'bold',
+    fontSize: 20
+
   },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
-        width: 3,
-        height: 10,
+      width: 3,
+      height: 10,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 3,
-}
+  }
 })

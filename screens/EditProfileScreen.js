@@ -14,14 +14,16 @@ import { COLORS, FONTS } from "../constants";
 import { MaterialIcons } from "@expo/vector-icons";
 import { imagesDataURL } from "../constants/data";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
+import { useUser } from "../components/UserContext"
+
 
 const EditProfile = ({ navigation }) => {
+  const { userData, setUserData } = useUser();
   const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
-  const [name, setName] = useState("Melissa Peters");
+ 
   const [email, setEmail] = useState("metperters@gmail.com");
   const [password, setPassword] = useState("randompassword");
   const [country, setCountry] = useState("Nigeria");
-
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const today = new Date();
   const startDate = getFormatedDate(
@@ -31,9 +33,17 @@ const EditProfile = ({ navigation }) => {
   const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
   const [startedDate, setStartedDate] = useState("12/12/2023");
 
+ 
+
+  const handleNameChange = (value) => {
+    setUserData({ ...userData, name: value });
+  };
+
+
   const handleChangeStartDate = (propDate) => {
     setStartedDate(propDate);
   };
+  
 
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
@@ -128,21 +138,8 @@ const EditProfile = ({ navigation }) => {
           justifyContent: "center",
         }}
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{
-            position: "absolute",
-            left: 0,
-          }}
-        >
-          <MaterialIcons
-            name="keyboard-arrow-left"
-            size={24}
-            color={COLORS.black}
-          />
-        </TouchableOpacity>
-
-        <Text style={{ ...FONTS.h3 }}>Edit Profile</Text>
+       
+       
       </View>
 
       <ScrollView>
@@ -202,8 +199,8 @@ const EditProfile = ({ navigation }) => {
               }}
             >
               <TextInput
-                value={name}
-                onChangeText={(value) => setName(value)}
+                value={userData.name}
+                onChangeText={handleNameChange}
                 editable={true}
               />
             </View>

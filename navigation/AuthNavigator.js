@@ -12,8 +12,12 @@ import { getItem } from '../screens/utils/asysncStorage';
 import { useState } from 'react';
 import Homescreen from '../screens/Homescreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
-import BottomTabNavigator from './BottomTabNavigator';
 import DrawerNavigator from './DrawerNavigator';
+import BottomTabNav from './BottomTabNavigator';
+import PreviewScreen from '../screens/Previewscreen';
+import TodayCollectionscreen from '../screens/TodayCollectionscreen';
+import ThisMonthCollection from '../screens/ThisMonthCollection';
+import CombinedNavigator from './combinednavigator';
 
 
 
@@ -51,11 +55,13 @@ if(showOnboarding){
 }else{
   return (
       <Stack.Navigator initialRouteName='Onboarding'>
-   
-   <Stack.Screen name="drawernavigator" options={{headerShown:false}} component={DrawerNavigator}/>
-      <Stack.Screen name="Home" options={{ headerShown: false }} component={Homescreen} />
 
+ <Stack.Screen name='BottomTabNav'options={{ headerShown: false }} component={BottomTabNav}/>
+      <Stack.Screen name="Home" options={{ headerShown: false }} component={Homescreen} />
+      <Stack.Screen name="TodayCollection"  component={TodayCollectionscreen} />
+      <Stack.Screen name='ThisMonthCollection' component={ThisMonthCollection}/>
       <Stack.Screen name='Payment' component={PaymentScreen} />
+      <Stack.Screen name='Preview' component={PreviewScreen}/>
       <Stack.Screen name='Signup' component={Signup} />
       <Stack.Screen name='Details' options={{ headerShown: false }} component={DetailsScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />

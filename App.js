@@ -1,24 +1,35 @@
 import * as React from 'react';
-import {SafeAreaView, Text} from 'react-native';
+import {SafeAreaView, Text, View} from 'react-native';
 import {DrawerActions, NavigationContainer} from '@react-navigation/native';
 import DrawerNavigator from './navigation/DrawerNavigator';
+import { UserProvider } from "../MALLAPP-main/components/UserContext";
+
+import Profile from '../MALLAPP-main/screens/Profile';
 
 
 import AuthNavigator from './navigation/AuthNavigator';
-import { BottomNavigation } from 'react-native-paper';
+import BottomTabNav from './navigation/BottomTabNavigator';
 
 
 export default function App() {
   // isAuthenticated = is...
   return (
+   
     
-    <NavigationContainer>
+    
+       <NavigationContainer>
       {/* {isAuthenticated ? AuthNavigator : DrawerNavigator } */}
       
-      <AuthNavigator/>
+    <AuthNavigator/>
+      
 
      
-
     </NavigationContainer>
+  
+     
+       
+  
+   
+    
   );
 }

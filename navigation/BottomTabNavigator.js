@@ -1,102 +1,131 @@
-
-import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {StyleSheet, Platform, TouchableOpacity} from 'react-native';
-import {COLORS, ROUTES} from '../constants';
-import Icon from 'react-native-vector-icons/Ionicons';
-
-import {useNavigation} from '@react-navigation/native';
-import  { useEffect } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import OnboardingScreen from '../screens/onboardingscreen';
-import homescreen from '../screens/Homescreen';
-import DetailsScreen from '../screens/Detailsscreen';
-import PaymentScreen from '../screens/Paymentscreen';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import 'react-native-gesture-handler';
-import { getItem } from '../screens/utils/asysncStorage';
-import { useState } from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
-
-
+import { View, Text, Platform } from "react-native";
+import React from "react";
+import {
+  SimpleLineIcons,
+  Fontisto,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { COLORS } from "../constants";
+import Homescreen from "../screens/Homescreen";
+import Paymentscreen from "../screens/Paymentscreen";
+import DetailsScreen from "../screens/Detailsscreen";
+import PreviewScreen from "../screens/Previewscreen";
+import Profile from "../screens/Profile";
+import DrawerNavigator from "./DrawerNavigator";
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator (){
-    
-return (
-    <Tab.Navigator
-    tabBar={props => <CustomTabBar {...props} />}
-    screenOptions={({route}) => ({
-      headerShown: false,
-      tabBarShowLabel: false,
-      tabBarInactiveTintColor: COLORS.dark,
-      tabBarStyle: styles.tabBarStyle,
-      tabBarActiveTintColor: COLORS.primary,
-      tabBarIcon: ({color, size, focused}) => {
-        let iconName;
+const screenOptions = {
+  tabBarShowLabel: false,
+  headerShown: false,
+  tabBarHideOnKeyboard: true,
+  tabBarStyle: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    left: 0,
+    elevation: 0,
+    height: 60,
+    backgroundColor: COLORS.white,
+  },
+};
+const BottomTabNav = () => {
+  return (
+    <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Screen
+        name="DrawerNavigator"
+        component={DrawerNavigator}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <SimpleLineIcons
+                name="home"
+                size={24}
+                color={focused ? COLORS.primary : COLORS.black}
+              />
+            );
+          },
+        }}
+      />
 
-        if (route.name === ROUTES.HOME) {
-          iconName = focused ? 'ios-home-sharp' : 'ios-home-outline';
-        } else if (route.name === ROUTES.Details) {
-          iconName = focused ? 'settings' : 'settings-outline';
-        } else if (route.name === ROUTES.Payment) {
-          iconName = focused ? 'wallet' : 'wallet-outline';
-        }
-        return <Icon name={iconName} size={22} color={color} />;
-    },
-  })}>
       <Tab.Screen
-        name={ROUTES.HOME}
-        component={homescreen}
+        name="payment"
+        component={Paymentscreen}
         options={{
-          tabBarLabel: 'Home',
-           headerShown: false ,
-          tabBarIcon: ({ color, size ,focused}) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
+          tabBarIcon: ({ focused }) => {
+            return (
+              <MaterialCommunityIcons
+                name="message-text-outline"
+                size={24}
+                color={focused ? COLORS.primary : COLORS.black}
+              />
+            );
+          },
         }}
       />
+
       <Tab.Screen
-        name={ROUTES.Payment}
-        component={PaymentScreen}
-        options={{
-          headerShown: false ,
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="wallet" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name={ROUTES.Details}
+        name="details"
         component={DetailsScreen}
         options={{
-          tabBarLabel: 'Details',
-          headerShown: false ,
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
-          ),
+          tabBarIcon: ({ focused }) => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: COLORS.primary,
+                  height: Platform.OS == "ios" ? 50 : 60,
+                  width: Platform.OS == "ios" ? 50 : 60,
+                  top: Platform.OS == "ios" ? -10 : -20,
+                  borderRadius: Platform.OS == "ios" ? 25 : 30,
+                  borderWidth: 2,
+                  borderColor: COLORS.white,
+                }}
+              >
+                <Fontisto name="plus-a" size={24} color={COLORS.white} />
+              </View>
+            );
+          },
         }}
       />
-     
+
+      <Tab.Screen
+        name="Settings"
+        component={PreviewScreen}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <MaterialIcons
+                name="settings"
+                size={24}
+                color={focused ? COLORS.primary : COLORS.black}
+              />
+            );
+          },
+        }}
+      />
+
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <MaterialIcons
+                name="person-outline"
+                size={24}
+                color={focused ? COLORS.primary : COLORS.black}
+              />
+            );
+          },
+        }}
+      />
       
     </Tab.Navigator>
-    
   );
-    }
-  
-export default BottomTabNavigator;
+};
 
-const styles = StyleSheet.create({
-    tabBarStyle: {
-      position: 'absolute',
-      backgroundColor: COLORS.transparent,
-      borderTopWidth: 0,
-      bottom: 15,
-      right: 10,
-      left: 10,
-      height: 92,
-    },
-  });
+export default BottomTabNav;

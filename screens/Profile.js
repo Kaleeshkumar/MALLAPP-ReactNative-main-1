@@ -13,6 +13,7 @@ import {
   import { MaterialIcons } from "@expo/vector-icons";
   import { SceneMap, TabBar, TabView } from "react-native-tab-view";
   import { photos } from "../constants/data";
+  import { useUser } from "../components/UserContext";
   
   const PhotosRoutes = () => (
     <View style={{ flex: 1 }}>
@@ -35,6 +36,7 @@ import {
           </View>
         )}
       />
+      
     </View>
   );
   
@@ -52,14 +54,18 @@ import {
     second: LikesRoutes,
   });
   
-  const Profile = () => {
+  
+  const Profile = ({navigation}) => {
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
   
     const [routes] = useState([
-      { key: "first", title: "Photos" },
-      { key: "second", title: "Likes" },
+      { key: "first", title: "online collection" },
+      { key: "second", title: "offline collection" },
     ]);
+
+   
+    const { userData } = useUser();
   
     const renderTabBar = (props) => (
       <TabBar
@@ -85,6 +91,7 @@ import {
           backgroundColor: COLORS.white,
         }}
       >
+        
         <StatusBar backgroundColor={COLORS.gray} />
         <View style={{ width: "100%" }}>
           <Image
@@ -95,7 +102,24 @@ import {
               width: "100%",
             }}
           />
+           <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            position: "absolute",
+            left: 0,
+            marginTop:10,
+            marginLeft:10
+          }}
+        >
+          <MaterialIcons
+            name="keyboard-arrow-left"
+            size={30}
+            color={COLORS.black}
+          />
+        </TouchableOpacity>
+
         </View>
+        
   
         <View style={{ flex: 1, alignItems: "center" }}>
           <Image
@@ -116,9 +140,10 @@ import {
               ...FONTS.h3,
               color: COLORS.primary,
               marginVertical: 8,
+              
             }}
           >
-            KALEESH KUMAR
+            
           </Text>
           <Text
             style={{
@@ -191,7 +216,7 @@ import {
                   color: COLORS.primary,
                 }}
               >
-                67
+                6700 Rs
               </Text>
               <Text
                 style={{
@@ -246,9 +271,11 @@ import {
                   ...FONTS.body4,
                   color: COLORS.white,
                 }}
+                onPress={() => navigation.navigate('EditProfile')}
               >
                 Edit Profile
               </Text>
+              
             </TouchableOpacity>
   
             <TouchableOpacity
@@ -268,7 +295,7 @@ import {
                   color: COLORS.white,
                 }}
               >
-                Add Friend
+                Share the app
               </Text>
             </TouchableOpacity>
           </View>
