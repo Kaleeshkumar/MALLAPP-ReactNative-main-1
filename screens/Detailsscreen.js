@@ -8,7 +8,10 @@ import AppHeader from '../components/Appheader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { flexWrap } from 'styled-system';
 import axios from 'axios';
-import ImagePicker from 'react-native-image-picker';
+import { Platform } from 'react-native';
+
+import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
 
 
 
@@ -85,26 +88,36 @@ const handlePreview = () => {
     amount,
   });
 }
-const handleImageUpload = () => {
-  const options = {
-    title: 'Select Image',
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
 
-  ImagePicker.showImagePicker(options, (response) => {
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('ImagePicker Error: ', response.error);
-    } else {
-      const source = { uri: response.uri };
-      // Set the source of the image to the state or use it as needed
-      // For example: setImageSource(source);
+const handleImageUpload = async () => {
+  try {
+    // Check if permission is granted for accessing the camera roll
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      console.error('Permission to access camera roll was denied');
+      return;
     }
-  });
+
+    // Launch the image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3], // Adjust aspect ratio if needed
+      quality: 1, // Adjust image quality
+    });
+
+    if (!result.cancelled) {
+      // The URI of the selected image
+      const selectedImageUri = result.uri;
+      console.log('Selected Image URI:', selectedImageUri);
+
+      // Perform actions with the selected image URI
+      // For example, you can set it in the state or use it as needed
+      // setImageUri(selectedImageUri);
+    }
+  } catch (error) {
+    console.error('Error selecting image:', error);
+  }
 };
 
   return (   
@@ -112,7 +125,7 @@ const handleImageUpload = () => {
       <SafeAreaView>
       <AppHeader
     title={"Details"}
-    headerBg={"red"}
+    headerBg={"#AED6F1"}
     iconColor={"black"}
     menu //or back
     optionalBadge={7}

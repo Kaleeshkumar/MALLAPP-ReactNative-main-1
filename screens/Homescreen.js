@@ -4,18 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { Card, Avatar, IconButton } from 'react-native-paper';
 import { useState } from 'react';
 import Carousel from 'react-native-snap-carousel';
-import DetailsScreen from './Detailsscreen';
 import 'react-native-gesture-handler';
 import Appheader from '../components/Appheader';
 import { useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
-import drawernavigation from '../navigation/DrawerNavigator';
-import routes from '../constants/routes';
-
-import { Svg } from 'react-native-svg';
-import { useRef } from "react";
-import { COLORS, FONTS, SIZES, icons, images } from '../constants';
 import NetInfo from '@react-native-community/netinfo';
 
 
@@ -26,23 +18,18 @@ const { width, height } = Dimensions.get('window');
 
 
 function Homescreen({ navigation }) {
-  const [isConnected, setConnected] = useState(true);
 
   const [todayCollection, setTodayCollection] = useState();
   const [thisMonthCollection, setThisMonthCollection] = useState(null);
+  const [apiError, setApiError] = useState(null);
 
   NetInfo.fetch().then(state => {
     console.log('Connection type', state.type);
     console.log('Is connected?', state.isConnected);
   });
-
-
   //api section
   useEffect(() => {
     // Fetch Today Collection
-
-   
-
     fetch('http://127.0.0.1:8081/today_collection/', {
       method: 'POST',
       headers: {
@@ -56,14 +43,20 @@ function Homescreen({ navigation }) {
         console.log('Today Collection:', data.TodayCollection);
         const todayCollectionData = data.TodayCollection;
         setTodayCollection(todayCollectionData);
+        setApiError(null); // Reset API error state on success
       })
       .catch(error => 
         {console.error('Error:', error);
+        setApiError(error.message); // Set API error state on failure
        
       });
-
-     
   }, []);
+
+  const categories = [
+    { id: 1, categoryType: 'type1', /* other category data */ },
+    { id: 2, categoryType: 'type2', /* other category data */ },
+    // Add more categories as needed
+  ];
   
   /*
       // Fetch This Month Collection
@@ -92,26 +85,27 @@ function Homescreen({ navigation }) {
     }, []);
   */
  
-  
-
-
   const carouselItems = [
 
     {
       image: 'https://www.thaagam.org/donate/assets/images/cause/d_b_cake.jpg',
-      id: 1
+      id: 1,
+      style: styles.carouselItem1, // Add a style property for the first item
     },
     {
       image: 'https://www.thaagam.org/donate/assets/images/cause/d_egg_milk.jpg',
-      id: 2
+      id: 2,
+      style: styles.carouselItem2,
     },
     {
       image: 'https://www.thaagam.org/donate/assets/images/cause/d_christ.jpg',
-      id: 3
+      id: 3,
+      style: styles.carouselItem3, 
     },
     {
       image: 'https://www.thaagam.org/donate/assets/images/cause/d_orp.jpg',
-      id: 4
+      id: 4,
+      style: styles.carouselItem4, 
     },
     // Add more items as needed
   ];
@@ -124,19 +118,29 @@ function Homescreen({ navigation }) {
 
     );
   }
-
   const renderCategory = ({ item }) => {
+    let cardStyle;
+
+    switch (item.categoryType) {
+      case 'type1':
+        cardStyle = styles.categoryCardType1;
+        break;
+      case 'type2':
+        cardStyle = styles.categoryCardType2;
+        break;
+      // Add more cases for different category types
+
+      default:
+        cardStyle = styles.categoryCardDefault;
+        break;
+    }
+
     return (
-      <Card style={styles.card}>
-        <Card.Cover source={{ uri: item.image }} style={styles.cardImage} />
-        <Card.Content>
-          <Text style={styles.cardTitle}>{item.title}</Text>
-          <Text style={styles.cardPrice}>Price: {item.price}</Text>
-        </Card.Content>
+      <Card style={[styles.card, cardStyle]}>
+        {/* Rest of your card content... */}
       </Card>
     );
   };
-
   function renderNotice(){
     return(
       <View>
@@ -144,13 +148,12 @@ function Homescreen({ navigation }) {
       </View>
     )
   }
-
   return (
     <SafeAreaView style={styles.body}>
       <Appheader
         title={"HOME"}
-        headerBg={"gold"}
-        iconColor={"black"}
+        headerBg={"#000000"}
+        iconColor={"white"}
         navigation={navigation}
         menu //or back
         optionalBadge={5}
@@ -159,7 +162,6 @@ function Homescreen({ navigation }) {
         optionalIcon="bell"
         optionalFunc={() => console.log('optional')}
       />
-
       <Carousel
         layout={'default'}
         data={carouselItems}
@@ -169,9 +171,7 @@ function Homescreen({ navigation }) {
         autoplay={true}  // Enable autoplay
       autoplayInterval={4000} 
       loop={true} // Set the autoplay interval in milliseconds (e.g., 3000ms or 3 seconds)
-
       />
-
       <SafeAreaView style={styles.body}>
       </SafeAreaView>
       <ScrollView>
@@ -183,25 +183,44 @@ function Homescreen({ navigation }) {
               left={(props) => <Avatar.Icon {...props} icon="folder" />}
               right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
             />
-            <Text style={styles.txtmain} variant="titleLarge">Today Collection: {todayCollection}</Text>
+    {/* Display collection amount */}
+    <Text style={styles.cardTitle} variant="titleLarge"> Today Collection:</Text>
+     <Text style={styles.totalCollection}>₹{todayCollection}</Text>
           </Card.Content>
         </Card>
         <Card style={styles.Card2}onPress={() => navigation.navigate('ThisMonthCollection')}>
           <Card.Content >
             <Card.Title style={styles.cardTitle}
               title="This Month Collection"
-
               left={(props) => <Avatar.Icon {...props} icon="calendar"  /> }
               right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => navigation.navigate('Profile')} />}
             />
             <Text style={styles.txtmain} variant="titleLarge">This Month Collection: {thisMonthCollection}</Text>
           </Card.Content>
         </Card>
+        {/* Conditionally render Lottie animation based on API call success */}
 
-        <View style={styles.lottie}>
-          <LottieView source={require('../assets/animations/su1.json')} autoPlay loop />
+        {apiError ? (
+              <View style={styles.lottie}>
+                <LottieView source={require('../assets/animations/su1.json')} autoPlay loop />
+              </View>
+            ) : (
+              <View style={styles.lottie}>
+                <LottieView source={require('../assets/animations/animation1.json')} autoPlay loop />
+              </View>          
+            )}
+             <Text style={styles.lottietxt}>No data available contact backend team</Text>
+             
+             {/* Render Categories */}
+
+        <View style={styles.categoryContainer}>
+          {categories.map((category) => (
+            <View key={category.id}>
+              {renderCategory({ item: category })}
+            </View>
+          ))}
         </View>
-        <Text style={styles.lottie}>No data available contact backend team</Text>
+       
       </ScrollView>
 
     </SafeAreaView>
@@ -231,12 +250,21 @@ const styles = StyleSheet.create({
   },
   Card1: {
     alignItems: 'left',
-    padding: 3,
+    padding: 1,
     fontsize: 10,
     marginLeft: 15,
     marginRight: 15,
-    marginTop: 10,
+   
     backgroundColor: "gold",
+    shadowColor: "black",
+shadowOffset: {
+	width: 0,
+	height: 18,
+},
+shadowOpacity: 0.55,
+shadowRadius: 14.78,
+
+elevation: 22,
 
   },
   Card2: {
@@ -255,10 +283,21 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     
   },
+  
   card: {
     borderRadius: 10,
     marginLeft: 15,
     marginRight: 15,
+    marginBottom: 10,
+    shadowColor: "#000",
+shadowOffset: {
+	width: 0,
+	height: 11,
+},
+shadowOpacity: 0.55,
+shadowRadius: 14.78,
+
+elevation: 22,
   },
   cardImage: {
     height: 200,
@@ -268,12 +307,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 1,
+    flex:1,
+    paddingHorizontal:35,
     color: 'black',
+   
 
   },
   cardPrice: {
     fontSize: 16,
     color: 'black',
+
   },
   categoryCard: {
     marginVertical: 10,
@@ -289,6 +332,11 @@ const styles = StyleSheet.create({
     fontSize: 20
 
   },
+  lottietxt:
+  {
+    marginBottom:20,
+  
+  },
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
@@ -298,5 +346,41 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 3,
-  }
+  },
+  totalCollection: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    flex:5,
+    flexDirection:'column',
+    paddingHorizontal:155
+  },
+  // Define different styles for each carousel item
+  carouselItem1: {
+    backgroundColor: 'lightblue',
+  },
+  carouselItem2: {
+    backgroundColor: 'lightgreen',
+  },
+  carouselItem3: {
+    backgroundColor: 'lightcoral',
+  },
+  carouselItem4: {
+    backgroundColor: 'lightsalmon',
+  },
+  categoryCardType1: {
+    backgroundColor: 'lightblue',
+    // Add specific styles for type1 if needed
+  },
+  categoryCardType2: {
+    backgroundColor: 'lightgreen',
+    // Add specific styles for type2 if needed
+  },
+  // Add more category types as needed
+
+  categoryCardDefault: {
+    backgroundColor: 'lightgrey',
+    // Default styles for other category types
+  },
+
 })

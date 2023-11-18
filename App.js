@@ -16,15 +16,13 @@ export default function App() {
   return (
    
     
-    
+    <UserProvider>
        <NavigationContainer>
-      {/* {isAuthenticated ? AuthNavigator : DrawerNavigator } */}
-      
+      {/* {isAuthenticated ? AuthNavigator : DrawerNavigator } */} 
     <AuthNavigator/>
-      
-
-     
+   
     </NavigationContainer>
+    </UserProvider>
   
      
        

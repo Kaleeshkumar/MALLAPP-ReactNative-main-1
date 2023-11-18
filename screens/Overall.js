@@ -1,20 +1,44 @@
-import { View, Text,StyleSheet } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AppHeader from '../components/Appheader';
-import { Center } from 'native-base';
+import LottieView from 'lottie-react-native';
 
+export default function Overall({ navigation }) {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-export default function Overall({navigation}) {
+  useEffect(() => {
+    // Fetch data for each report when the component mounts
+    fetchData('http://127.0.0.1:8081/today_collection/');
+    fetchData('thisMonthCollection');
+    fetchData('totalCollection');
+    fetchData('collectionByCategory');
+  }, []);
+
+  const fetchData = async (reportType) => {
+    try {
+      setLoading(true);
+      // Replace the following URL with your actual API endpoint for each report
+      const response = await fetch(`https://example.com/api/${reportType}`);
+      const data = await response.json();
+      
+      // Update the state with the fetched data
+      setReports((prevReports) => [...prevReports, { type: reportType, data }]);
+    } catch (error) {
+      console.error(`Error fetching ${reportType} data:`, error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    
-        
-        <SafeAreaView style={styles.body}>
+    <SafeAreaView style={styles.body}>
       <AppHeader
         title={"OverAllReport"}
         headerBg={"lightgreen"}
         iconColor={"black"}
-        menu or back
+        menu // or back
         optionalBadge={7}
         navigation={navigation}
         right="more-vertical"
@@ -22,30 +46,88 @@ export default function Overall({navigation}) {
         optionalIcon="bell"
         optionalFunc={() => console.log('optional')}
       />
-      <Text style={styles.Text}>overallreport</Text>
-      </SafeAreaView>
+
+
+
+      {/* Render live data for each report */}
+      {loading ? (
+        <ActivityIndicator size="large" color="skyblue" />
+      ) : (
+        reports.map(({ type, data }) => (
+          <View key={type} style={styles.reportContainer}>
+            <Text style={styles.reportTitle}>{type}</Text>
+            <Text style={styles.reportText}>{JSON.stringify(data, null, 2)}</Text>
+          </View>
+        ))
+      )}
       
-   
+
+      {/* Render report selection buttons */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => fetchData('todayCollection')}
+      >
+        <Text style={styles.buttonText}>Today Collection</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => fetchData('thisMonthCollection')}
+      >
+        <Text style={styles.buttonText}>This Month Collection</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => fetchData('totalCollection')}
+      >
+        <Text style={styles.buttonText}>Total Collection</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => fetchData('collectionByCategory')}
+      >
+        <Text style={styles.buttonText}>Collection by Category</Text>
+      </TouchableOpacity>
+     
+    </SafeAreaView>
     
-  )
+  );
 }
+
 const styles = StyleSheet.create({
-  container: {
+  body: {
     flex: 1,
-    backgroundColor: 'black',
-    padding: 40
+    backgroundColor: '#fff',
+   
   },
   button: {
-    margin: 20,
+    marginVertical: 10,
     padding: 10,
     backgroundColor: 'skyblue',
     borderRadius: 40,
+    alignItems: 'center',
   },
-  Text:{
-    fontSize:25,
-    alignItems:'center',
-    justifyContent: 'center',
-    textAlign:'center',
-  }
-
-})
+  buttonText: {
+    fontSize: 18,
+    color: 'black',
+  },
+  reportContainer: {
+    marginVertical: 20,
+    padding: 10,
+    backgroundColor: 'lightgray',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  reportTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 10,
+  },
+  reportText: {
+    fontSize: 16,
+    color: 'black',
+  },
+});

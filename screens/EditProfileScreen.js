@@ -20,7 +20,6 @@ import { useUser } from "../components/UserContext"
 const EditProfile = ({ navigation }) => {
   const { userData, setUserData } = useUser();
   const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
- 
   const [email, setEmail] = useState("metperters@gmail.com");
   const [password, setPassword] = useState("randompassword");
   const [country, setCountry] = useState("Nigeria");
@@ -33,12 +32,10 @@ const EditProfile = ({ navigation }) => {
   const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
   const [startedDate, setStartedDate] = useState("12/12/2023");
 
+  const [newName, setNewName] = useState(userData.name);
+  const [newrole, setNewRole] =useState(userData.role)
+
  
-
-  const handleNameChange = (value) => {
-    setUserData({ ...userData, name: value });
-  };
-
 
   const handleChangeStartDate = (propDate) => {
     setStartedDate(propDate);
@@ -49,6 +46,7 @@ const EditProfile = ({ navigation }) => {
     setOpenStartDatePicker(!openStartDatePicker);
   };
 
+  
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -62,6 +60,19 @@ const EditProfile = ({ navigation }) => {
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
     }
+  };
+
+  const handleSave = () => {
+    // Update user data
+    setUserData({
+      ...userData,
+      name: newName,
+      role: newrole,
+      profileImage: selectedImage, // Include the new profile image URI
+    });
+
+    // Navigate back to the profile screen
+    navigation.goBack();
   };
 
   function renderDatePicker() {
@@ -199,8 +210,8 @@ const EditProfile = ({ navigation }) => {
               }}
             >
               <TextInput
-                value={userData.name}
-                onChangeText={handleNameChange}
+                 value={newName}
+                 onChangeText={(text) => setNewName(text)}
                 editable={true}
               />
             </View>
@@ -212,7 +223,7 @@ const EditProfile = ({ navigation }) => {
               marginBottom: 6,
             }}
           >
-            <Text style={{ ...FONTS.h4 }}>Email</Text>
+            <Text style={{ ...FONTS.h4 }}>Role</Text>
             <View
               style={{
                 height: 44,
@@ -226,8 +237,8 @@ const EditProfile = ({ navigation }) => {
               }}
             >
               <TextInput
-                value={email}
-                onChangeText={(value) => setEmail(value)}
+                value={newrole}
+                onChangeText={(text) => setNewRole(text)}
                 editable={true}
               />
             </View>
@@ -320,7 +331,7 @@ const EditProfile = ({ navigation }) => {
             borderRadius: 6,
             alignItems: "center",
             justifyContent: "center",
-          }}
+          }}onPress={handleSave}
         >
           <Text
             style={{

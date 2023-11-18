@@ -4,7 +4,8 @@ const UserContext =createContext();
 
 export const UserProvider = ({children})=>{
     const [userData,setUserData] =useState({
-        name:"user.name ",
+        name:"name ",
+        role:'userData.role',
         email:'user.email',
         number:'user.number',
         place_of_work:'vr mall',

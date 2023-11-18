@@ -14,6 +14,7 @@ import {
   import { SceneMap, TabBar, TabView } from "react-native-tab-view";
   import { photos } from "../constants/data";
   import { useUser } from "../components/UserContext";
+  import LoadingComponent from "../components/LoadingComponent";
   
   const PhotosRoutes = () => (
     <View style={{ flex: 1 }}>
@@ -49,6 +50,7 @@ import {
     />
   );
   
+
   const renderScene = SceneMap({
     first: PhotosRoutes,
     second: LikesRoutes,
@@ -58,6 +60,14 @@ import {
   const Profile = ({navigation}) => {
     const layout = useWindowDimensions();
     const [index, setIndex] = useState(0);
+    const { userData, setUserData } = useUser();
+
+    const updateUserData = (newUserData) => {
+      // Assuming setUserData is a function to update user data in your context
+      setUserData(newUserData);
+    };
+  
+   
   
     const [routes] = useState([
       { key: "first", title: "online collection" },
@@ -65,7 +75,11 @@ import {
     ]);
 
    
-    const { userData } = useUser();
+
+    if (!userData) {
+      // Handle the case where user data is undefined
+      return <LoadingComponent />; // Show a loading spinner or a placeholder
+    }
   
     const renderTabBar = (props) => (
       <TabBar
@@ -123,18 +137,18 @@ import {
   
         <View style={{ flex: 1, alignItems: "center" }}>
           <Image
-            source={images.profile}
+           source={{ uri: userData.profileImage }}
             resizeMode="contain"
             style={{
-              height: 155,
-              width: 155,
-              borderRadius: 999,
-              borderColor: COLORS.primary,
-              borderWidth: 2,
-              marginTop: -90,
+              height: 170,
+          width: 170,
+          borderWidth: 2,
+          borderColor: COLORS.primary,
+          marginTop: -90,
+          borderRadius: 999,
             }}
           />
-  
+ 
           <Text
             style={{
               ...FONTS.h3,
@@ -143,7 +157,7 @@ import {
               
             }}
           >
-            
+            {userData.name}
           </Text>
           <Text
             style={{
@@ -151,7 +165,7 @@ import {
               ...FONTS.body4,
             }}
           >
-            PYTHON DEVELOPER
+            {userData.role}
           </Text>
   
           <View

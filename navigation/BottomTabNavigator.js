@@ -47,6 +47,7 @@ const BottomTabNav = () => {
               />
             );
           },
+          
         }}
       />
 
@@ -58,11 +59,13 @@ const BottomTabNav = () => {
             return (
               <MaterialCommunityIcons
                 name="message-text-outline"
+                
                 size={24}
                 color={focused ? COLORS.primary : COLORS.black}
               />
             );
           },
+          tabBarLabel: 'Payment',
         }}
       />
 

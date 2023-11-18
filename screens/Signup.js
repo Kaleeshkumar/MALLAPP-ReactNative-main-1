@@ -1,14 +1,36 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity ,Alert } from 'react-native';
 import { Input, NativeBaseProvider, Button, Icon, Box, Image, AspectRatio } from 'native-base';
 import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 
 
-function Signup() {
+function Signupscreen() {
     const navigation = useNavigation();
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    
+    const  handleSignup = async () => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8081/UserCreateView/', {
+          username,
+          email,
+          password,
+        });
+  
+        // Handle success, e.g., show a success message or navigate to another screen
+        console.log('Registration successful', response.data);
+      } catch (error) {
+        // Handle error, e.g., show an error message
+        console.error('Registration failed', error);
+        Alert.alert('Registration Failed', 'Please try again.');
+      }
+    };
   return (
     <View style={styles.container}>
       <View style={styles.Middle}>
@@ -39,6 +61,7 @@ function Signup() {
             }
             variant="outline"
             placeholder="Username"
+            onChangeText={(text) => setUsername(text)}
             _light={{
               placeholderTextColor: "blueGray.400",
             }}
@@ -70,6 +93,7 @@ function Signup() {
             }
             variant="outline"
             placeholder="Email"
+            onChangeText={(text) => setEmail(text)}
             _light={{
               placeholderTextColor: "blueGray.400",
             }}
@@ -102,6 +126,7 @@ function Signup() {
             variant="outline"
             secureTextEntry={true}
             placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
             _light={{
               placeholderTextColor: "blueGray.400",
             }}
@@ -133,6 +158,7 @@ function Signup() {
             variant="outline"
             secureTextEntry={true}
             placeholder="Confirm Password"
+            onChangeText={(text) => setPassword(text)}
             _light={{
               placeholderTextColor: "blueGray.400",
             }}
@@ -145,7 +171,7 @@ function Signup() {
 
       {/* Button */}
       <View style={styles.buttonStyle}>
-        <Button style={styles.buttonDesign}>
+        <Button style={styles.buttonDesign} onPress={handleSignup}>
             REGISTER NOW
         </Button>
       </View>
@@ -162,7 +188,7 @@ function Signup() {
       {/* Box */}
       <View style={styles.boxStyle}>
       <Box 
-        onPress={() => navigation.navigate("#")}  // for navigation
+        onPress={() => navigation.navigate("google")}  // for navigation
         style={{height:80, width:80}} 
         shadow={3}
         _light={{
@@ -258,7 +284,7 @@ export default () => {
   return (
     <NativeBaseProvider>
      
-        <Signup />
+        <Signupscreen />
       
     </NativeBaseProvider>
   )

@@ -17,7 +17,7 @@ import BottomTabNav from './BottomTabNavigator';
 import PreviewScreen from '../screens/Previewscreen';
 import TodayCollectionscreen from '../screens/TodayCollectionscreen';
 import ThisMonthCollection from '../screens/ThisMonthCollection';
-import CombinedNavigator from './combinednavigator';
+import PaymentFailureScreen from '../screens/PaymentFailureScreen';
 
 
 
@@ -55,7 +55,9 @@ if(showOnboarding){
 }else{
   return (
       <Stack.Navigator initialRouteName='Onboarding'>
-
+        
+       
+        
  <Stack.Screen name='BottomTabNav'options={{ headerShown: false }} component={BottomTabNav}/>
       <Stack.Screen name="Home" options={{ headerShown: false }} component={Homescreen} />
       <Stack.Screen name="TodayCollection"  component={TodayCollectionscreen} />
@@ -65,6 +67,7 @@ if(showOnboarding){
       <Stack.Screen name='Signup' component={Signup} />
       <Stack.Screen name='Details' options={{ headerShown: false }} component={DetailsScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+      <Stack.Screen name="paymentfailure" component={PaymentFailureScreen}/>
     </Stack.Navigator>
   
   );

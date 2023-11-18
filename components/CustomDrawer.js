@@ -4,25 +4,46 @@ import {
   Text,
   ImageBackground,
   Image,
-  TouchableOpacity,
+  TouchableOpacity,Share 
 } from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import { useUser } from "../components/UserContext";
 
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
+
+
+
 const CustomDrawer = props => {
+  const { userData, setUserData } = useUser();
+
+  const updateUserData = (newUserData) => {
+    // Assuming setUserData is a function to update user data in your context
+    setUserData(newUserData);
+  };
+  
+  
+  const handleTellAFriend = () => {
+    const websiteLink = 'https://thaagam.org/'; // Replace with your actual website link
+
+    Share.share({
+      message: `Check out this amazing website: ${websiteLink}`,
+    })
+      .then(result => console.log(result))
+      .catch(error => console.log(error));
+  };
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView
         {...props}
         contentContainerStyle={{backgroundColor: '#8200d6'}}>
         <ImageBackground
-          source={require('../assets/images/menu-bg.jpeg')}
+          source={{ uri: userData.profileImage }}
           style={{padding: 20}}>
           <Image
             source={require('../assets/images/user-profile.jpg')}
@@ -57,12 +78,12 @@ const CustomDrawer = props => {
             <FontAwesome5 name="coins" size={14} color="#fff" />
           </View>
         </ImageBackground>
-        <View style={{flex: 1, backgroundColor: '#fff', paddingTop: 10}}>
+        <View style={{flex: 1, backgroundColor: '#fff', paddingTop: 15}}>
           <DrawerItemList {...props} />
         </View>
       </DrawerContentScrollView>
       <View style={{padding: 20, borderTopWidth: 1, borderTopColor: '#ccc'}}>
-        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
+        <TouchableOpacity onPress={handleTellAFriend} style={{paddingVertical: 1}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons name="share-social-outline" size={22} />
             <Text
@@ -75,7 +96,7 @@ const CustomDrawer = props => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
+        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 55}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons name="exit-outline" size={22} />
             <Text

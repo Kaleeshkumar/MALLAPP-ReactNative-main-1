@@ -10,8 +10,7 @@ import PaymentFailureScreen from '../screens/PaymentFailureScreen';
 import 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Contact from '../screens/contact';
-import Profile from '../screens/Profile';
-import { useNavigation } from '@react-navigation/native';
+import Donorlist from '../screens/Donorlist';
 import BottomTabNav from './BottomTabNavigator';
 
 
@@ -54,8 +53,8 @@ const DrawerNavigator= ( {navigation}) => {
         }}
       />
       <Drawer.Screen
-        name="Preview"
-        component={PreviewScreen}
+        name="Donorlist"
+        component={Donorlist}
         options={{
           drawerIcon: ({color}) => (
             <Ionicons name="timer-outline" size={22} color={color} />
