@@ -15,11 +15,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { imagesDataURL } from "../constants/data";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import { useUser } from "../components/UserContext"
+import axios from "axios";
 
 
 const EditProfile = ({ navigation }) => {
-  const { userData, setUserData } = useUser();
-  const [selectedImage, setSelectedImage] = useState(imagesDataURL[0]);
+  
+ 
   const [email, setEmail] = useState("metperters@gmail.com");
   const [password, setPassword] = useState("randompassword");
   const [country, setCountry] = useState("Nigeria");
@@ -32,10 +33,12 @@ const EditProfile = ({ navigation }) => {
   const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
   const [startedDate, setStartedDate] = useState("12/12/2023");
 
+  const { userData, setUserData } = useUser();
   const [newName, setNewName] = useState(userData.name);
-  const [newrole, setNewRole] =useState(userData.role)
+  const [newrole, setNewRole] =useState(userData.role);
+  const [selectedImage, setSelectedImage] = useState(userData.profileImage);
 
- 
+
 
   const handleChangeStartDate = (propDate) => {
     setStartedDate(propDate);
@@ -61,11 +64,40 @@ const EditProfile = ({ navigation }) => {
       setSelectedImage(result.assets[0].uri);
     }
   };
+  const userId = "123"; // Replace with the actual user ID
+  // Make sure userId is properly defined and not undefined or null
+  
+  // Add userId to the data being sent in the request
+  const newData = {
+    user_id: userId,
+    // Other profile update data
+  };
+  const handleSave =async ( ) => {
 
-  const handleSave = () => {
+    const userId = userData.userId; // Replace this with the actual way you get the user ID
+    const newData = {
+      name: newName,
+      role: newrole,
+      // Include other fields as needed
+    };
+    try {
+      const response = await axios.post(`http://127.0.0.1:8081/update_profile/${userId}/`, newData);
+      console.log(response.data);
+     
+    if (response.data.success) {
+      updateUserData(response.data.updatedUserData);
+      setUserData(response.data.updatedUserData);
+      // Additional logic if needed
+    } else {
+      // Handle errors from the backend
+    }
+  } catch (error) {
+    console.error('Error updating profile:', error);
+  }
     // Update user data
     setUserData({
       ...userData,
+      userId,
       name: newName,
       role: newrole,
       profileImage: selectedImage, // Include the new profile image URI

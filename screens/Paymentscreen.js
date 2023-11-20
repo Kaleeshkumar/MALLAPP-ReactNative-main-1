@@ -10,13 +10,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 
-
-
-
-
-
-
-
 export default function Paymentscreen({ navigation }) {
   // State variables for user ID and transaction details
   const [userId, setUserId] = useState('123456'); // Replace with actual user ID
@@ -26,14 +19,12 @@ export default function Paymentscreen({ navigation }) {
     status: 'Pending', // You can update this based on the payment status
   });
 
-
   //modal open
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const [transactions, setTransactions] = useState([]);
   const containerStyle = { backgroundColor: 'skyblue', padding: 15 };
-
 
   /*
   const createRazorpayOrder = async () => {
@@ -85,7 +76,6 @@ export default function Paymentscreen({ navigation }) {
     }
     return null;
   };
-
   const [enteredAmount, setEnteredAmount] = useState('');
 
   const handleAmountChange = (text) => {
@@ -173,7 +163,6 @@ export default function Paymentscreen({ navigation }) {
     },
     theme: { color: '#F37254' },
   };
-
   RazorpayCheckout.open(options).then((data) => {
     // Handle success
     console.log(`Payment success: ${data.razorpay_payment_id}`);

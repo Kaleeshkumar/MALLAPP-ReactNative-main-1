@@ -67,7 +67,20 @@ import {
       setUserData(newUserData);
     };
   
-   
+    const handleProfileUpdate = async (newUserData) => {
+      try {
+        const response = await axios.post('http://127.0.0.1:8081/update-profile/', newUserData);
+    
+        if (response.data.success) {
+          updateUserData(response.data.updatedUserData);
+          // Additional logic if needed
+        } else {
+          // Handle errors
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+      }
+    };
   
     const [routes] = useState([
       { key: "first", title: "online collection" },
@@ -285,7 +298,7 @@ import {
                   ...FONTS.body4,
                   color: COLORS.white,
                 }}
-                onPress={() => navigation.navigate('EditProfile')}
+                onPress={(handleProfileUpdate) => navigation.navigate('EditProfile')}
               >
                 Edit Profile
               </Text>

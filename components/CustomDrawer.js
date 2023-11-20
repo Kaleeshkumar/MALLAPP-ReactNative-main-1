@@ -26,7 +26,20 @@ const CustomDrawer = props => {
     // Assuming setUserData is a function to update user data in your context
     setUserData(newUserData);
   };
+const handleProfileUpdate = async (newUserData) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8081/update-profile/', newUserData);
   
+      if (response.data.success) {
+        updateUserData(response.data.updatedUserData);
+        // Additional logic if needed
+      } else {
+        // Handle errors
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
   
   const handleTellAFriend = () => {
     const websiteLink = 'https://thaagam.org/'; // Replace with your actual website link
@@ -46,7 +59,7 @@ const CustomDrawer = props => {
           source={{ uri: userData.profileImage }}
           style={{padding: 20}}>
           <Image
-            source={require('../assets/images/user-profile.jpg')}
+             source={{ uri: userData.profileImage }}
             style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
           />
           <Text

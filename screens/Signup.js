@@ -17,7 +17,7 @@ function Signupscreen() {
     
     const  handleSignup = async () => {
       try {
-        const response = await axios.post('http://127.0.0.1:8081/UserCreateView/', {
+        const response = await axios.post('http://127.0.0.1:8081/create_user_profile/', {
           username,
           email,
           password,
