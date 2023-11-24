@@ -7,26 +7,65 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 
+axios.defaults.xsrfCookieName = 'csrftoken';  // Replace with your actual cookie name
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
 
 function Signupscreen() {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [role, setRole] = useState('');
     const [password, setPassword] = useState('');
+   
 
+    const fetchCSRFToken = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8081/csrf_token/');
+        const csrfToken = response.headers['x-csrftoken'];
+    
+        // Use the retrieved CSRF token in your subsequent requests
+        // ...
+    
+        return csrfToken;
+      } catch (error) {
+        console.error('Failed to fetch CSRF token', error);
+        throw error;
+      }
+    };
     
     const  handleSignup = async () => {
-      try {
-        const response = await axios.post('http://127.0.0.1:8081/create_user_profile/', {
-          username,
-          email,
-          password,
+      const data ={
+        
+        username,
+        email,
+        role,
+        password
+       
+      }
+     
+  // Fetch CSRF token
+    const csrfToken = await fetchCSRFToken();
+            // Fetch CSRF token from your Django backend
+
+        console.log('Data to be sent:', data); // Add this line to print the data
+        const response = await axios.post('http://127.0.0.1:8081/create_user_profile/',data, 
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+          },
+
         });
-  
         // Handle success, e.g., show a success message or navigate to another screen
-        console.log('Registration successful', response.data);
+        try {
+          // ... some code ...
+          console.log('Registration successful', response.data);
+          return response.data();
+        
       } catch (error) {
         // Handle error, e.g., show an error message
+        
         console.error('Registration failed', error);
         Alert.alert('Registration Failed', 'Please try again.');
       }
@@ -40,7 +79,7 @@ function Signupscreen() {
         <Text>Already have account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("Login")} ><Text style={styles.signupText}> Login </Text></TouchableOpacity>
       </View>
-
+     
       {/* Username or Email Input Field */}
       <View style={styles.buttonStyle}>
         
@@ -124,9 +163,8 @@ function Signupscreen() {
               />
             }
             variant="outline"
-            secureTextEntry={true}
-            placeholder="Password"
-            onChangeText={(text) => setPassword(text)}
+            placeholder="role"
+            onChangeText={(text) => setRole(text)}
             _light={{
               placeholderTextColor: "blueGray.400",
             }}
@@ -157,7 +195,7 @@ function Signupscreen() {
             }
             variant="outline"
             secureTextEntry={true}
-            placeholder="Confirm Password"
+            placeholder=" Password"
             onChangeText={(text) => setPassword(text)}
             _light={{
               placeholderTextColor: "blueGray.400",

@@ -1,125 +1,125 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
-import { Input, NativeBaseProvider, Button, Icon, Box, NumberInput} from 'native-base';
+import { Input, NativeBaseProvider, Button, Icon, Box, NumberInput } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
 
-const handleLogin = ({navigation, mobileNumber, password}) => {
+const handleLogin = ({ navigation, mobileNumber, password }) => {
     // Send a POST request to your Django backend
     fetch('http://127.0.0.1:8081/handle_login/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ mobile_number: mobileNumber, password: password }),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mobile_number: mobileNumber, password: password }),
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Authentication successful, navigate to home screen
-          navigation.navigate('Home');
-        } else {
-          // Authentication failed, show an alert
-          Alert.alert('Error', 'Invalid credentials');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  };
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Authentication successful, navigate to home screen
+                navigation.navigate('Home');
+            } else {
+                // Authentication failed, show an alert
+                Alert.alert('Error', 'Invalid credentials');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+};
 
 function Login() {
 
     const [mobileNumber, setMobileNumber] = useState('');
     const [password, setPassword] = useState('');
-const navigation= useNavigation();
-    
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
             <View style={styles.container}>
-            <View style={styles.Middle}>
-                <Text style={styles.LoginText}>Login</Text>
-            </View>
-            <View style={styles.text2}>
-                <Text>Don't have an account? </Text>
-                <TouchableOpacity onPress={() => navigation.navigate("Signup")} ><Text style={styles.signupText}> Sign up</Text></TouchableOpacity>
-            </View>
-
-            {/* Username or Email Input Field */}
-            <View style={styles.buttonStyle}>
-
-                <View style={styles.emailInput}>
-                    <Input
-                        InputLeftElement={
-                            <Icon
-                                as={<FontAwesome5 name="user-secret" />}
-                                size="sm"
-                                m={2}
-                                _light={{
-                                    color: "black",
-                                }}
-                                _dark={{
-                                    color: "gray.300",                                                                                  
-                                }}
-                            />
-                        }
-                        variant="outline"
-                        value={mobileNumber}
-                        onChangeText={text => setMobileNumber(text)}
-                        placeholder="Mobile number"
-                        _light={{
-                            placeholderTextColor: "blueGray.400",
-                        }}
-                        _dark={{
-                            placeholderTextColor: "blueGray.50",
-                        }}
-
-                    />
+                <View style={styles.Middle}>
+                    <Text style={styles.LoginText}>Login</Text>
                 </View>
-            </View>
-
-            {/* Password Input Field */}
-            <View style={styles.buttonStyleX}>
-
-                <View style={styles.emailInput}>
-                    <Input
-                        InputLeftElement={
-                            <Icon
-                                as={<FontAwesome5 name="key" />}
-                                size="sm"
-                                m={2}
-                                _light={{
-                                    color: "black",
-                                }}
-                                _dark={{
-                                    color: "gray.300",
-                                }}
-                            />
-                        }
-                        variant="outline"
-                        secureTextEntry={true}
-                        value={password}
-                        onChangeText={text => setPassword(text)}
-                        placeholder="Password/Emp id"
-                        _light={{
-                            placeholderTextColor: "blueGray.400",
-                        }}
-                        _dark={{
-                            placeholderTextColor: "blueGray.50",
-                        }}
-                    />
+                <View style={styles.text2}>
+                    <Text>Don't have an account? </Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("Signup")} ><Text style={styles.signupText}> Sign up</Text></TouchableOpacity>
                 </View>
-            </View>
 
-            {/* Button */}
-            <View style={styles.buttonStyle}>
-                <Button style={styles.buttonDesign} onPress={handleLogin}>
-                    LOGIN
-                </Button>
-            </View>
+                {/* Username or Email Input Field */}
+                <View style={styles.buttonStyle}>
+
+                    <View style={styles.emailInput}>
+                        <Input
+                            InputLeftElement={
+                                <Icon
+                                    as={<FontAwesome5 name="user-secret" />}
+                                    size="sm"
+                                    m={2}
+                                    _light={{
+                                        color: "black",
+                                    }}
+                                    _dark={{
+                                        color: "gray.300",
+                                    }}
+                                />
+                            }
+                            variant="outline"
+                            value={mobileNumber}
+                            onChangeText={text => setMobileNumber(text)}
+                            placeholder="Mobile number"
+                            _light={{
+                                placeholderTextColor: "blueGray.400",
+                            }}
+                            _dark={{
+                                placeholderTextColor: "blueGray.50",
+                            }}
+
+                        />
+                    </View>
+                </View>
+
+                {/* Password Input Field */}
+                <View style={styles.buttonStyleX}>
+
+                    <View style={styles.emailInput}>
+                        <Input
+                            InputLeftElement={
+                                <Icon
+                                    as={<FontAwesome5 name="key" />}
+                                    size="sm"
+                                    m={2}
+                                    _light={{
+                                        color: "black",
+                                    }}
+                                    _dark={{
+                                        color: "gray.300",
+                                    }}
+                                />
+                            }
+                            variant="outline"
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={text => setPassword(text)}
+                            placeholder="Password/Emp id"
+                            _light={{
+                                placeholderTextColor: "blueGray.400",
+                            }}
+                            _dark={{
+                                placeholderTextColor: "blueGray.50",
+                            }}
+                        />
+                    </View>
+                </View>
+
+                {/* Button */}
+                <View style={styles.buttonStyle}>
+                    <Button style={styles.buttonDesign} onPress={handleLogin}>
+                        LOGIN
+                    </Button>
+                </View>
             </View>
             {/* Line */}
             <View style={styles.lineStyle}>
@@ -129,8 +129,8 @@ const navigation= useNavigation();
                 </View>
                 <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
             </View>
-            
-{/*
+
+            {/*
           
             <View style={styles.boxStyle}>
                 <Box
@@ -221,8 +221,8 @@ const navigation= useNavigation();
                     </AspectRatio>
                 </Box>
                         </View>*/}
-            
-          
+
+
         </View>
     );
 }
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-       
+
     },
     LoginText: {
         marginTop: 100,

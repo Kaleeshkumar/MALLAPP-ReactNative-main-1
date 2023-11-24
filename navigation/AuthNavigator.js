@@ -56,8 +56,7 @@ if(showOnboarding){
   return (
       <Stack.Navigator initialRouteName='Onboarding'>
         
-        <Stack.Screen name="Onboarding" options={{ headerShown: false }} component={OnboardingScreen} />
-        <Stack.Screen name="login" options={{ headerShown: false }} component={login} />
+        
         
  <Stack.Screen name='BottomTabNav'options={{ headerShown: false }} component={BottomTabNav}/>
       <Stack.Screen name="Home" options={{ headerShown: false }} component={Homescreen} />

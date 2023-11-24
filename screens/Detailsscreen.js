@@ -52,7 +52,6 @@ export default function DetailsScreen({ navigation }) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        
       },
       
     })

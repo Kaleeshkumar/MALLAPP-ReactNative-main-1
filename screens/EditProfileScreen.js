@@ -107,6 +107,20 @@ const EditProfile = ({ navigation }) => {
     navigation.goBack();
   };
 
+  const handleProfileUpdate = async (newUserData) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8081/update-profile/', newUserData);
+  
+      if (response.data.success) {
+        updateUserData(response.data.updatedUserData);
+        // Additional logic if needed
+      } else {
+        // Handle errors
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
   function renderDatePicker() {
     return (
       <Modal
