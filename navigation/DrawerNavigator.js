@@ -12,12 +12,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Contact from '../screens/contact';
 import Donorlist from '../screens/Donorlist';
 import BottomTabNav from './BottomTabNavigator';
+import Homescreen from '../screens/Homescreen';
 
 
 const Drawer = createDrawerNavigator();
 
 
-const DrawerNavigator= ( {navigation}) => {
+const DrawerNavigator= ( ) => {
   return (
     
     <Drawer.Navigator
@@ -35,7 +36,7 @@ const DrawerNavigator= ( {navigation}) => {
       }}>
       <Drawer.Screen
         name="Home"
-        component={homescreen}
+        component={Homescreen}
         options={{
           drawerIcon: ({color}) => (
             <Ionicons name="home-outline" size={22} color={color} />
@@ -44,7 +45,7 @@ const DrawerNavigator= ( {navigation}) => {
       />
       
       <Drawer.Screen
-        name="Details Entry"
+        name="DetailsEntry"
         component={DetailsScreen}
         options={{
           drawerIcon: ({color}) => (

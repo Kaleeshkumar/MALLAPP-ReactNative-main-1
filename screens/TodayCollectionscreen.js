@@ -3,7 +3,7 @@ import { View, Text, StyleSheet ,Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const TodayCollectionscreen = () => {
   // Mock data for hourly collection with time labels
   const hourlyCollectionData = [
@@ -80,8 +80,6 @@ const TodayCollectionscreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  
-  
     padding: 20,
   },
   chartContainer: {

@@ -1,42 +1,65 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
-import { Input, NativeBaseProvider, Button, Icon, Box, NumberInput } from 'native-base';
+import { Input, NativeBaseProvider, Button, Icon } from 'native-base';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import ViewPropTypes from 'deprecated-react-native-prop-types';
 
 
-const handleLogin = ({ navigation, mobileNumber, password }) => {
-    // Send a POST request to your Django backend
-    fetch('http://127.0.0.1:8081/handle_login/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ mobile_number: mobileNumber, password: password }),
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Authentication successful, navigate to home screen
-                navigation.navigate('Home');
-            } else {
-                // Authentication failed, show an alert
-                Alert.alert('Error', 'Invalid credentials');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+
+
+
+const handleLogin = async ({username, password, navigation}) => {
+    const cache = new WeakSet();
+
+    try {
+        const response = await fetch('http://127.0.0.1:8081/handle_login/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({username, password }, (key, value) => {
+                // Check for circular references and handle them
+                if (typeof value === 'object' && value !== null) {
+                    if (cache.has(value)) {
+                        return '[home]';
+                    }
+                    cache.add(value);
+                }
+                return value;
+            }),
         });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Authentication successful, navigate to home screen or perform any other action
+            navigation.navigate('Home');
+        } else {
+            // Authentication failed, show an alert
+            Alert.alert('Error', 'Invalid credentials');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
 };
 
+
+
 function Login() {
-
-    const [mobileNumber, setMobileNumber] = useState('');
+     const navigation = useNavigation();
+    const [username, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
-
+  
+    const handleLoginButtonPress = async () => {
+        try {
+          await handleLogin({ username, password, navigation });
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
     return (
         <View style={styles.container}>
             <View style={styles.container}>
@@ -67,9 +90,9 @@ function Login() {
                                 />
                             }
                             variant="outline"
-                            value={mobileNumber}
-                            onChangeText={text => setMobileNumber(text)}
-                            placeholder="Mobile number"
+                            value={username}
+                            onChangeText={text => setEmail(text)}
+                            placeholder="email"
                             _light={{
                                 placeholderTextColor: "blueGray.400",
                             }}
@@ -116,7 +139,7 @@ function Login() {
 
                 {/* Button */}
                 <View style={styles.buttonStyle}>
-                    <Button style={styles.buttonDesign} onPress={handleLogin}>
+                    <Button style={styles.buttonDesign} onPress={handleLoginButtonPress}>
                         LOGIN
                     </Button>
                 </View>

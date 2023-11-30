@@ -36,12 +36,10 @@ function Signupscreen() {
     
     const  handleSignup = async () => {
       const data ={
-        
         username,
         email,
         role,
         password
-       
       }
      
   // Fetch CSRF token
@@ -60,12 +58,12 @@ function Signupscreen() {
         // Handle success, e.g., show a success message or navigate to another screen
         try {
           // ... some code ...
-          console.log('Registration successful', response.data);
-          return response.data();
+          console.log('Registration successful', data);
+          Alert.alert('Registration successful', 'Now login your Account with your Useremail and password.. .');
+          navigation.navigate('login')
         
       } catch (error) {
         // Handle error, e.g., show an error message
-        
         console.error('Registration failed', error);
         Alert.alert('Registration Failed', 'Please try again.');
       }

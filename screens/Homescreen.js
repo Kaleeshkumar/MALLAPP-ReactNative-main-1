@@ -11,9 +11,7 @@ import LottieView from 'lottie-react-native';
 import NetInfo from '@react-native-community/netinfo';
 
 
-
-
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 
 
@@ -22,6 +20,17 @@ function Homescreen({ navigation }) {
   const [todayCollection, setTodayCollection] = useState();
   const [thisMonthCollection, setThisMonthCollection] = useState(null);
   const [apiError, setApiError] = useState(null);
+
+  const rmDetails = {
+    name: 'John Doe',
+    location: 'City XYZ',
+    joiningDate: '01/01/2022',
+    workingDays: 20,
+    collection: '$10,000',
+    salary: '$5,000',
+    incentive: '$500',
+    target: '$15,000',
+  };
 
   NetInfo.fetch().then(state => {
     console.log('Connection type', state.type);
@@ -45,10 +54,9 @@ function Homescreen({ navigation }) {
         setTodayCollection(todayCollectionData);
         setApiError(null); // Reset API error state on success
       })
-      .catch(error => 
-        {console.error('Error:', error);
-        setApiError(error.message); // Set API error state on failure
-       
+      .catch(error => {
+        console.error('Error:', error);
+        setApiError(error.message); // Set API error state on failure 
       });
   }, []);
 
@@ -57,36 +65,35 @@ function Homescreen({ navigation }) {
     { id: 2, categoryType: 'type2', /* other category data */ },
     // Add more categories as needed
   ];
-  
-  /*
-      // Fetch This Month Collection
-      fetch('http://127.0.0.1:8081/ThisMonthCollection/')
-        .then((response) => {
-          if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-        .then((data) => setThisMonthCollection(data))
-        .catch((error) => console.error('Error:', error));
-    }, []);
-    //fetch categories section
-    useEffect(() => {
-      // Fetch category data 
-      fetch('http://127.0.0.1:8081/categories/')
-        .then((response) => {
-          if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-        .then((data) => setCategories(data))
-        .catch((error) => console.error('Error:', error));
-    }, []);
-  */
- 
-  const carouselItems = [
 
+  /*
+    // Fetch This Month Collection
+    fetch('http://127.0.0.1:8081/ThisMonthCollection/')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => setThisMonthCollection(data))
+      .catch(error => console.error('Error:', error));
+ }, []);
+
+ // Fetch category data
+ useEffect(() => {
+    fetch('http://127.0.0.1:8081/categories/')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => setCategories(data))
+      .catch((error) => console.error('Error:', error));
+ }, []);
+*/
+
+  const carouselItems = [
     {
       image: 'https://www.thaagam.org/donate/assets/images/cause/d_b_cake.jpg',
       id: 1,
@@ -100,12 +107,12 @@ function Homescreen({ navigation }) {
     {
       image: 'https://www.thaagam.org/donate/assets/images/cause/d_christ.jpg',
       id: 3,
-      style: styles.carouselItem3, 
+      style: styles.carouselItem3,
     },
     {
       image: 'https://www.thaagam.org/donate/assets/images/cause/d_orp.jpg',
       id: 4,
-      style: styles.carouselItem4, 
+      style: styles.carouselItem4,
     },
     // Add more items as needed
   ];
@@ -113,7 +120,7 @@ function Homescreen({ navigation }) {
   const _renderItem = ({ item }) => {
     return (
       <View style={styles.carouselItem}>
-        <Card.Cover source={{ uri: item.image }} style={styles.carouselImage} />
+        <Card.Cover source={{ uri: item.image }} style={styles.carouselItem4} />
       </View>
 
     );
@@ -141,15 +148,33 @@ function Homescreen({ navigation }) {
       </Card>
     );
   };
-  function renderNotice(){
-    return(
+  function renderNotice() {
+    return (
       <View>
         <Text>xddx</Text>
       </View>
     )
   }
+  const IDCard = ({ rmDetails }) => {
+    return (
+      <Card style={styles.idCard}>
+        <Card.Content>
+          <Text style={styles.title}>ID Card</Text>
+          <Text style={styles.detail}>Name: {rmDetails.name}</Text>
+          <Text style={styles.detail}>Location: {rmDetails.location}</Text>
+          <Text style={styles.detail}>Joining Date: {rmDetails.joiningDate}</Text>
+          <Text style={styles.detail}>Working Days: {rmDetails.workingDays}</Text>
+          <Text style={styles.detail}>Collection: {rmDetails.collection}</Text>
+          <Text style={styles.detail}>Salary: {rmDetails.salary}</Text>
+          <Text style={styles.detail}>Incentive: {rmDetails.incentive}</Text>
+          <Text style={styles.detail}>Target: {rmDetails.target}</Text>
+        </Card.Content>
+      </Card>
+    );
+  };
   return (
-    <SafeAreaView style={styles.body}>
+    <SafeAreaView >
+      
       <Appheader
         title={"HOME"}
         headerBg={"#000000"}
@@ -162,19 +187,9 @@ function Homescreen({ navigation }) {
         optionalIcon="bell"
         optionalFunc={() => console.log('optional')}
       />
-      <Carousel
-        layout={'default'}
-        data={carouselItems}
-        sliderWidth={400}
-        itemWidth={300}
-        renderItem={_renderItem}
-        autoplay={true}  // Enable autoplay
-      autoplayInterval={4000} 
-      loop={true} // Set the autoplay interval in milliseconds (e.g., 3000ms or 3 seconds)
-      />
-      <SafeAreaView style={styles.body}>
-      </SafeAreaView>
-      <ScrollView>
+      <ScrollView style={styles.ScrollView}>
+         {/* Render the ID card component */}
+      <IDCard rmDetails={rmDetails} />
         <Card style={styles.Card1} onPress={() => navigation.navigate('TodayCollection')}>
           <Card.Content>
             <Card.Title style={styles.cardTitle}
@@ -183,47 +198,65 @@ function Homescreen({ navigation }) {
               left={(props) => <Avatar.Icon {...props} icon="folder" />}
               right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
             />
-    {/* Display collection amount */}
-    <Text style={styles.cardTitle} variant="titleLarge"> Today Collection:</Text>
-     <Text style={styles.totalCollection}>₹{todayCollection}</Text>
+            {/* Display collection amount */}
+            <Text style={styles.cardTitle} variant="titleLarge"> Today Collection:</Text>
+            <Text style={styles.totalCollection}>₹{todayCollection}</Text>
           </Card.Content>
         </Card>
-        <Card style={styles.Card2}onPress={() => navigation.navigate('ThisMonthCollection')}>
+
+        <Card style={styles.Card2} onPress={() => navigation.navigate('ThisMonthCollection')}>
           <Card.Content >
             <Card.Title style={styles.cardTitle}
               title="This Month Collection"
-              left={(props) => <Avatar.Icon {...props} icon="calendar"  /> }
+              left={(props) => <Avatar.Icon {...props} icon="calendar" />}
               right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => navigation.navigate('Profile')} />}
             />
             <Text style={styles.txtmain} variant="titleLarge">This Month Collection: {thisMonthCollection}</Text>
           </Card.Content>
         </Card>
+
+        <View style={styles.carouselcontainer} >
+       <Carousel
+        layout={'default'}
+        data={carouselItems}
+        sliderWidth={400}
+        itemWidth={300}
+        renderItem={_renderItem}
+        autoplay={true}  // Enable autoplay
+        autoplayInterval={4000}
+        loop={true} // Set the autoplay interval in milliseconds (e.g., 3000ms or 3 seconds)
+      />
+     </View>
         {/* Conditionally render Lottie animation based on API call success */}
-
+       
         {apiError ? (
-              <View style={styles.lottie}>
-                <LottieView source={require('../assets/animations/su1.json')} autoPlay loop />
-              </View>
-            ) : (
-              <View style={styles.lottie}>
-                <LottieView source={require('../assets/animations/animation1.json')} autoPlay loop />
-              </View>          
-            )}
-             <Text style={styles.lottietxt}>No data available contact backend team</Text>
-             
-             {/* Render Categories */}
-
+          <View style={styles.lottie}>
+            <LottieView source={require('../assets/animations/su1.json')} autoPlay loop />
+          </View>
+        ) : (
+          <View style={styles.lottie}>
+            <LottieView source={require('../assets/animations/animation1.json')} autoPlay loop />
+          </View>
+        )}
+      
+      <View style={styles.lottie}>
+            <LottieView source={require('../assets/animations/animation1.json')} autoPlay loop />
+          </View>
+      </ScrollView>
+        {/* Render Categories */}
+        
         <View style={styles.categoryContainer}>
-          {categories.map((category) => (
+          {categories && categories.map((category) => (
             <View key={category.id}>
               {renderCategory({ item: category })}
             </View>
           ))}
+          
         </View>
        
-      </ScrollView>
 
-    </SafeAreaView>
+        </SafeAreaView> 
+    
 
   )
 
@@ -254,17 +287,16 @@ const styles = StyleSheet.create({
     fontsize: 10,
     marginLeft: 15,
     marginRight: 15,
-   
     backgroundColor: "gold",
     shadowColor: "black",
-shadowOffset: {
-	width: 0,
-	height: 18,
-},
-shadowOpacity: 0.55,
-shadowRadius: 14.78,
+    shadowOffset: {
+      width: 0,
+      height: 18,
+    },
+    shadowOpacity: 0.55,
+    shadowRadius: 14.78,
 
-elevation: 22,
+    elevation: 22,
 
   },
   Card2: {
@@ -283,21 +315,21 @@ elevation: 22,
     marginVertical: 5,
     
   },
-  
+
   card: {
     borderRadius: 10,
     marginLeft: 15,
     marginRight: 15,
     marginBottom: 10,
     shadowColor: "#000",
-shadowOffset: {
-	width: 0,
-	height: 11,
-},
-shadowOpacity: 0.55,
-shadowRadius: 14.78,
+    shadowOffset: {
+      width: 0,
+      height: 11,
+    },
+    shadowOpacity: 0.55,
+    shadowRadius: 14.78,
 
-elevation: 22,
+    elevation: 22,
   },
   cardImage: {
     height: 200,
@@ -307,16 +339,13 @@ elevation: 22,
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 1,
-    flex:1,
-    paddingHorizontal:35,
+    flex: 1,
+    paddingHorizontal: 35,
     color: 'black',
-   
-
   },
   cardPrice: {
     fontSize: 16,
     color: 'black',
-
   },
   categoryCard: {
     marginVertical: 10,
@@ -334,8 +363,8 @@ elevation: 22,
   },
   lottietxt:
   {
-    marginBottom:20,
-  
+    marginBottom: 20,
+
   },
   shadow: {
     shadowColor: "#000",
@@ -351,9 +380,9 @@ elevation: 22,
     fontSize: 20,
     fontWeight: 'bold',
     color: '#4CAF50',
-    flex:5,
-    flexDirection:'column',
-    paddingHorizontal:155
+    flex: 5,
+    flexDirection: 'column',
+    paddingHorizontal: 155
   },
   // Define different styles for each carousel item
   carouselItem1: {
@@ -381,6 +410,29 @@ elevation: 22,
   categoryCardDefault: {
     backgroundColor: 'lightgrey',
     // Default styles for other category types
+  },
+  body:{
+    backgroundColor:'orange'
+  },
+  ScrollView:{ backgroundColor: 'lightyellow',
+   
+  },
+  idCard: {
+    borderRadius: 50,
+    margin: 18,
+    padding: 10,
+    backgroundColor: 'white',
+    elevation: 5,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  detail: {
+    fontSize: 13,
+    marginBottom: 5,
   },
 
 })

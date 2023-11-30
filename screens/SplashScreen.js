@@ -1,12 +1,15 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet,Dimensions } from 'react-native';
 import LottieView from 'lottie-react-native';
+import interopRequireDefault from '@babel/runtime/helpers/interopRequireDefault';
 
+
+const { width } = Dimensions.get('window');
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
       {/* Your splash screen content, e.g., logo or image */}
-      <LottieView source={require('../assets/animations/su1.json')} style={styles.logo} />
+      <LottieView source={require('../assets/animations/splash.json')} style={styles.logo} />
     </View>
   );
 };
@@ -19,8 +22,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   logo: {
-    width: 200,
-    height: 200,
+    width: width* 0.9,
+     height: '70%',
   },
 });
 

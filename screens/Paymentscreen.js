@@ -1,6 +1,6 @@
-import { Text, View, StyleSheet, TouchableOpacity, COLORS ,ScrollView} from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity, COLORS ,ScrollView, Image} from 'react-native'
 import React from 'react'
-import { Modal, Portal, Button, PaperProvider, Card,TextInput,enteredAmount } from 'react-native-paper';
+import { Modal, Portal, Button, PaperProvider, Card,TextInput } from 'react-native-paper';
 import RazorpayCheckout from 'react-native-razorpay';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import QRCode from 'react-native-qrcode-svg';
@@ -59,7 +59,9 @@ export default function Paymentscreen({ navigation }) {
     try {
       const response = await axios.post('http://127.0.0.1:8081/create_razorpay_order/');
       console.log(response.data);
-      return response.data.id; // Assuming the response contains the order ID
+       // Assuming the response contains the order ID and other necessary details
+      const orderDetails = response.data;
+      return orderDetails; // Assuming the response contains the order ID
     } catch (error) {
       console.error('Error creating Razorpay order:', error);
       return null;
@@ -67,17 +69,9 @@ export default function Paymentscreen({ navigation }) {
   };
 
    // Function to generate payment link
-   const generatePaymentLink = async () => {
-    const orderId = await createRazorpayOrder();
-    if (orderId) {
-      const paymentLink = `https://checkout.razorpay.com/v1/payment-links/${orderId}`;
-      console.log('Payment Link:', paymentLink);
-      return paymentLink;
-    }
-    return null;
-  };
-  const [enteredAmount, setEnteredAmount] = useState('');
+ 
 
+  const [enteredAmount, setEnteredAmount] = useState('');
   const handleAmountChange = (text) => {
     setEnteredAmount(text);
   };
@@ -86,25 +80,34 @@ export default function Paymentscreen({ navigation }) {
   // Function to handle the "Create Order" button press
   const handleCreateOrder = async () => {
     try {
-      const orderId = await createRazorpayOrder();
-      if (orderId) {
-        const qrCodeData = `upi://pay?pa=your_live_id@upi&pn=Recipient&mc=your_merchant_code&tid=${orderId}&tr=your_reference_id&tn=Transaction%20Note&mc=your_merchant_code`;
+      const orderDetails = await createRazorpayOrder();
   
-        showModal(); // Show the modal
-        const newTransaction={
+      if (orderDetails) {
+        const { orderId, /* other details */ } = orderDetails;
+  
+        const upiId = 'kaleeshkumar1125180@okaxis';
+        const recipientName = 'Thaagamfoundation';
+        const merchantCode = 'MZpU0jiQXg4m4x';
+        const referenceId = 'your_reference_id';
+        const transactionNote = 'Transaction Note';
+  
+        const qrCodeData = `upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
+  
+        showModal();
+        const newTransaction = {
           orderId: orderId,
           amount: enteredAmount,
           status: 'Pending',
         };
-
+  
         setTransactions((prevTransactions) => [...prevTransactions, newTransaction]);
-        // Do something with the payment link if needed
         console.log('Payment Link:', qrCodeData);
       }
     } catch (error) {
       console.error('Error creating Razorpay order:', error);
     }
   };
+  
 
 
   // Function to handle the "Show QR Code" button press
@@ -141,14 +144,27 @@ export default function Paymentscreen({ navigation }) {
       // Handle error
     }
   };
+   // Function to handle the "View Details" button press
+   const handleViewDetails = (id) => {
+    // Implement navigation to a details screen or modal
+    console.log('View details for order:', id);
+  };
   // Assuming you have the payment data ready
   const paymentData = {
     razorpay_payment_id: 'PAYMENT_ID',
     razorpay_order_id: 'ORDER_ID',
     razorpay_signature: 'SIGNATURE',
   };
+
+  const orderId = "id"; // Replace with your actual order ID
+  const upiId = "kaleeshkumar1125180@okaxis"; // Replace with your actual UPI ID
+  const recipientName = "Thaagamfoundation"; // Replace with the recipient's name
+  const merchantCode = "MZpU0jiQXg4m4x"; // Replace with your actual merchant code
+  const referenceId = "your_reference_id"; // Replace with your actual reference ID
+  const transactionNote = "Transaction Note";
+
   // Call the function with the payment data
-  const qrCodeData = `upi://pay?pa=your_live_id@upi&pn=Recipient&mc=your_merchant_code&tid=your_transaction_id&tr=your_reference_id&tn=Transaction%20Note&mc=your_merchant_code`;
+    const qrCodeData =`upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
   //razor user qr code
   const options = {
     description: 'Sample Payment',
@@ -187,28 +203,36 @@ export default function Paymentscreen({ navigation }) {
           optionalFunc={() => console.log('optional')}
         />
       </SafeAreaView>
+    
       <Portal style={styles.container}>
-
         <Modal visible={visible} onDismiss={hideModal} style={styles.modalContainer} contentContainerStyle={containerStyle}>
-
           <SafeAreaView style={styles.modalContent}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.backButton}
-            >
-              <MaterialIcons
-                name="keyboard-arrow-left"
-                size={30}
-                color='white'
-              />
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+              <MaterialIcons name="keyboard-arrow-left" size={30} color="white" />
             </TouchableOpacity>
+            <TouchableOpacity onPress={hideModal} style={styles.closeButton}>
+              <MaterialIcons name="close" size={30} color="white" />
+            </TouchableOpacity>
+            <Image
+              source={require('../assets/images/thaagam.png')} // Replace with your actual logo path
+              style={styles.logo}
+              resizeMode="contain"
+            />
           </SafeAreaView>
           <SafeAreaView style={styles.QR}>
             {/* Display User ID */}
-
             {/* QR Code */}
             <QRCode value={qrCodeData} size={250} />
             <Text style={styles.QRText}>Scan & pay using UPI app</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.downloadButton}>
+                <Text style={styles.buttonText}>Download QR</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.shareButton}>
+                <Text style={styles.buttonText}>Share QR</Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.upiIdText}>Razorpay UPI ID: {upiId}</Text>
           </SafeAreaView>
         </Modal>
       </Portal>
@@ -250,21 +274,32 @@ export default function Paymentscreen({ navigation }) {
         <Text style={styles.btnText}>Transaction Details</Text>
       </LinearGradient>
     </TouchableOpacity>
-      <ScrollView>
-        <SafeAreaView>
-          
-        {transactions.map((transaction, index) => (
-          <Card key={index} style={styles.transactionCard}>
-            
-            <Card.Content>
-              <Text style={styles.cardText}>Order ID: {transaction.orderId}</Text>
-              <Text style={styles.cardText}>Amount: ₹{transaction.amount}</Text>
-              <Text style={styles.cardText}>Status: {transaction.status}</Text>
-            </Card.Content>
-          </Card>
-        ))}
-        </SafeAreaView>
-      </ScrollView>
+      
+      {/* Improved Transaction History Section */}
+      <View style={styles.transactionHistoryContainer}>
+        
+        <ScrollView>
+          {transactions.map((transaction, index) => (
+            <Card key={index} style={styles.transactionCard}>
+              <Card.Content>
+                <View style={styles.transactionHeader}>
+                  <Text style={styles.transactionDate}>{transaction.date}</Text>
+                  <Text style={styles.transactionStatus}>{transaction.status}</Text>
+                </View>
+                <Text style={styles.cardText}>Order ID: {transaction.orderId}</Text>
+                <Text style={styles.cardText}>Amount: ₹{transaction.amount}</Text>
+                {/* Add more details or buttons as needed */}
+                <TouchableOpacity
+                  style={styles.viewDetailsButton}
+                  onPress={() => handleViewDetails(transaction.orderId)}
+                >
+                  <Text style={styles.viewDetailsButtonText}>View Details</Text>
+                </TouchableOpacity>
+              </Card.Content>
+            </Card>
+          ))}
+        </ScrollView>
+      </View>
     </PaperProvider>
   )
 }
@@ -322,7 +357,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: 'black',
-    padding: 40,
+    padding: 45,
+    borderRadius:10
   },
   amountInput: {
     height: 40,
@@ -336,6 +372,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
   },
+ 
   btnGrad: {
     padding: 10,
     textAlign: 'center',
@@ -348,7 +385,106 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
   },
+  transactionHistoryContainer: {
+    marginTop: 20,
+    padding: 10,
+  },
+  transactionHistoryTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  transactionCard: {
+    marginBottom: 10,
+    borderRadius: 15,
+    elevation: 2,
+  },
+  transactionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  transactionDate: {
+    color: '#777',
+  },
+  transactionStatus: {
+    color: 'green', // Use appropriate colors for different statuses
+    fontWeight: 'bold',
+  },
+  viewDetailsButton: {
+    marginTop: 10,
+    padding: 8,
+    backgroundColor: '#5e69ee',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  viewDetailsButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+  },
+  downloadButton: {
+    backgroundColor: '#5e69ee',
+    padding: 12,
+    borderRadius: 10,
+  },
+  shareButton: {
+    backgroundColor: '#5e69ee',
+    padding: 10,
+    borderRadius: 10,
+  },
+ 
+  upiIdText: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 2,
+    right: 2,
+    padding: 5,
+    backgroundColor: 'black',
+    borderRadius: 25,
+  },
+  downloadButton: {
+    backgroundColor: '#5e69ee',
+    padding: 18,
+    borderRadius: 15,
+    marginVertical: 15,
+    marginRight:8
+  },
+  shareButton: {
+    backgroundColor: '#5e69ee',
+    padding: 18,
+    
+    borderRadius: 15,
+    marginVertical: 15,
+    marginRight:5
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  upiIdText: {
+    marginTop: 20,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center',
+  },
+  logo: {
+    height: 40, // Adjust the height as needed
+    width: '100%', // Make it take the full width
+    marginBottom: 50, // Adjust margin as needed
+  },
+});
   
   
-})

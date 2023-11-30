@@ -1,35 +1,92 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity , ActivityIndicator} from 'react-native';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-const DonorListScreen = ({ donarDetails }) => {
+const DonorListScreen = () => {
 
-  const [donorDetails, setDonorDetails] = useState([]);
+  const [donar_data, setDonarDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     // Fetch donor list data from the backend when the component mounts
-    fetchDonorList();
+    fetchDonarList();
   }, []);
 
-  const fetchDonorList = () => {
-    // Make a request to your backend to get the donor list data
-    axios.get('http://127.0.0.1:8081/get_donor_list')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log('Donor List Data:', data);
-        // Update the state with the fetched donor list data
-        setDonorDetails(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  };
+  console.log('Type of donardetails:',typeof donar_data)
+  console.log('DonorDetails:',  donar_data) 
+  useEffect(() => {
+    fetchDonarList();
+}, []);
+const fetchDonarList = async () => {
+  try {
+      const response = await axios.get('http://127.0.0.1:8081/donar_data/');
+      setDonarDetails(response.data.donor_data);
+  } catch (error) {
+      console.error('Error fetching donor data:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+const itemsPerPage = 5;
+const [currentPage, setCurrentPage] = useState(1);
+const totalPages = Math.ceil(donar_data.length / itemsPerPage);
+
+const renderRowsForPage = () => {
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, donar_data.length);
+  
+  return donar_data.slice(startIndex, endIndex).map((donarDetail, index) => (
+    <View key={index} style={styles.tableRow}>
+      <Text style={styles.column}>{donarDetail.name}</Text>
+      <Text style={styles.column}>{donarDetail.nameOnParcel}</Text>
+      <Text style={styles.column}>{donarDetail.mobileNumber}</Text>
+      <Text style={styles.column}>{donarDetail.selectedCategory}</Text>
+      <Text style={styles.column}>{donarDetail.count}</Text>
+      <Text style={styles.column}>{donarDetail.amount}</Text>
+    </View>
+  ));
+};
+
+const handleNextPage = () => {
+  setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+};
+
+const handlePrevPage = () => {
+  setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+};
+
+// Inside your render:
+<View style={styles.tableContainer}>
+  <View style={styles.tableHeader}>
+    {/* Your header content */}
+  </View>
+
+  {renderRowsForPage()}
+
+  <View style={styles.paginationContainer}>
+    <TouchableOpacity
+      style={styles.paginationButton}
+      onPress={handlePrevPage}
+      disabled={currentPage === 1}
+    >
+      <Text style={styles.paginationButtonText}>Previous</Text>
+    </TouchableOpacity>
+    <Text style={styles.currentPageText}>
+      Page {currentPage} of {totalPages}
+    </Text>
+    <TouchableOpacity
+      style={styles.paginationButton}
+      onPress={handleNextPage}
+      disabled={currentPage === totalPages}
+    >
+      <Text style={styles.paginationButtonText}>Next</Text>
+    </TouchableOpacity>
+  </View>
+</View>
 
   return (
+    
     <ScrollView style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.heading}>Donor Details</Text>
@@ -52,7 +109,9 @@ const DonorListScreen = ({ donarDetails }) => {
           </TouchableOpacity>
         </View>
       </View>
-
+      {loading ? (
+        <ActivityIndicator size="large" color="#007bff" style={styles.loadingIndicator} />
+      ) : (
       <View style={styles.tableContainer}>
         <View style={styles.tableHeader}>
           <Text style={styles.columnHeader}>Name</Text>
@@ -62,8 +121,8 @@ const DonorListScreen = ({ donarDetails }) => {
           <Text style={styles.columnHeader}>Count</Text>
           <Text style={styles.columnHeader}>Amount</Text>
         </View>
-
-        {donarDetails.map((donarDetail, index) => (
+        
+        {donar_data.map((donarDetail, index) => (
           <View key={index} style={styles.tableRow}>
             <Text style={styles.column}>{donarDetail.name}</Text>
             <Text style={styles.column}>{donarDetail.nameOnParcel}</Text>
@@ -74,7 +133,9 @@ const DonorListScreen = ({ donarDetails }) => {
           </View>
         ))}
       </View>
+       )}
     </ScrollView>
+    
   );
 };
 
@@ -116,34 +177,71 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
   },
-  tableContainer: {
-    width: '100%',
-    marginBottom: 20,
+  // Inside your styles:
+tableContainer: {
+  flex: 1,
+  padding: 16,
+  backgroundColor: '#fff',
+  borderRadius: 10,
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
   },
-  tableHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#007bff',
-    padding: 10,
-    borderRadius: 5,
-  },
-  columnHeader: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  tableRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  column: {
-    flex: 1,
-    color: '#333',
-  },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
+  marginBottom: 20,
+},
+tableHeader: {
+  flexDirection: 'row',
+  borderBottomWidth: 1,
+  borderBottomColor: '#ddd',
+  paddingBottom: 12,
+  marginBottom: 12,
+  backgroundColor: '#007bff',
+},
+columnHeader: {
+  flex: 1,
+  fontWeight: 'bold',
+  fontSize: 14,
+  color: '#fff',
+  textAlign: 'center',
+},
+tableRow: {
+  flexDirection: 'row',
+  borderBottomWidth: 1,
+  borderBottomColor: '#ddd',
+  paddingBottom: 12,
+  marginBottom: 12,
+},
+column: {
+  flex: 1,
+  fontSize: 14,
+  textAlign: 'center',
+  color: '#333',
+},
+paginationContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginTop: 16,
+},
+paginationButton: {
+  backgroundColor: '#007bff',
+  paddingVertical: 8,
+  paddingHorizontal: 16,
+  borderRadius: 5,
+},
+paginationButtonText: {
+  color: '#fff',
+},
+currentPageText: {
+  fontSize: 14,
+  color: '#333',
+},
+
 });
+  
+
 
 export default DonorListScreen;

@@ -60,32 +60,44 @@ export default function PreviewScreen({ route }) {
           <Text style={styles.detailValue}>{amount}</Text>
         </View>
         <View style={styles.invoiceDetails}>
+        <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Name:</Text>
+          
           <Text style={styles.detailValue}>{name}</Text>
-
+          
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Name On Parcel:</Text>
           <Text style={styles.detailValue}>{nameOnParcel}</Text>
-
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Mobile Number:</Text>
           <Text style={styles.detailValue}>{mobileNumber}</Text>
-
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Category:</Text>
           <Text style={styles.detailValue}>{category}</Text>
-
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Count:</Text>
           <Text style={styles.detailValue}>{count}</Text>
-
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Amount:</Text>
           <Text style={styles.detailValue}>{amount}</Text>
-
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Name Of Rm:</Text>
           <Text style={styles.detailValue}>{nameOfrm}</Text>
-
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Date of Donation:</Text>
           <Text style={styles.detailValue}>{Date_of_Donation}</Text>
-
+          </View>
+          <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Name On Parcel:</Text>
           <Text style={styles.detailValue}>{nameOnParcel}</Text>
+          </View>
           
           
         </View>
@@ -148,6 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 5,
     padding: 20,
+    
   },
   header: {
     alignItems: 'center',
@@ -163,19 +176,21 @@ const styles = StyleSheet.create({
     elevation: 3,
     padding: 15,
     backgroundColor: '#f0f0f0',
+    
   },
   detailLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 10,
+    
     flexDirection:'row',
+   
    
   },
   detailValue: {
     fontSize: 16,
-    marginBottom: 8,
+   
     textAlign: 'right',
-    flexDirection:'row',
+  
     // Aligns the text to the right
   },
   actionsheetContainer: {
@@ -194,5 +209,11 @@ const styles = StyleSheet.create({
   actionsheetItem: {
     fontSize: 18,
     padding: 10,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    padding:10,
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
 });

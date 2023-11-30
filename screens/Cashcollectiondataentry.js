@@ -25,6 +25,7 @@ export default function DetailsScreen({ navigation }) {
  //date of service
  const [selectedDate, setSelectedDate] = useState(new Date());
  const [showDatePicker, setShowDatePicker] = useState(false);
+
   //SELECT TYPE CATEGORY
   const [selectedCategory, setSelectedCategory] = useState('');
   const categories = ['HOMELESS-25', 'EGG&MILK', 'CHICKEN BIRIYANI', 'VEG BIRIYANI', 'ORPHANAGE', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING'];

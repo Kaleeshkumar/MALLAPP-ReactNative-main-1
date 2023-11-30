@@ -18,12 +18,14 @@ import PreviewScreen from '../screens/Previewscreen';
 import TodayCollectionscreen from '../screens/TodayCollectionscreen';
 import ThisMonthCollection from '../screens/ThisMonthCollection';
 import PaymentFailureScreen from '../screens/PaymentFailureScreen';
-
+import Receipt from '../screens/Receipt';
+import { stackAnimatedStyles } from 'react-native-new-snap-carousel/src/utils/animations';
 
 
 const Stack = createNativeStackNavigator();
 
 function AuthNavigator() {
+  console.log(Stack);
     const [showOnboarding, setShowOnboarding] = useState(null);
 useEffect(() => {
   checkIfAlreadyonboarded();
@@ -47,7 +49,6 @@ if(showOnboarding){
     <Stack.Navigator initialRouteName='Onboarding'>
   <Stack.Screen name="Onboarding" options={{ headerShown: false }} component={OnboardingScreen} />
   <Stack.Screen name="login" options={{ headerShown: false }} component={login} />
-  
 </Stack.Navigator>
     // Assuming you're using React Navigation
   );
@@ -55,7 +56,6 @@ if(showOnboarding){
 }else{
   return (
       <Stack.Navigator initialRouteName='Onboarding'>
-        
         
         
  <Stack.Screen name='BottomTabNav'options={{ headerShown: false }} component={BottomTabNav}/>
@@ -68,6 +68,8 @@ if(showOnboarding){
       <Stack.Screen name='Details' options={{ headerShown: false }} component={DetailsScreen} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
       <Stack.Screen name="paymentfailure" component={PaymentFailureScreen}/>
+      <Stack.Screen name="Receipt" component={Receipt}/>
+      
     </Stack.Navigator>
   
   );

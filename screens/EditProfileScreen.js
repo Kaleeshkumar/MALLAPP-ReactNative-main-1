@@ -19,8 +19,8 @@ import axios from "axios";
 
 
 const EditProfile = ({ navigation }) => {
-  
- 
+
+
   const [email, setEmail] = useState("metperters@gmail.com");
   const [password, setPassword] = useState("randompassword");
   const [country, setCountry] = useState("Nigeria");
@@ -35,7 +35,7 @@ const EditProfile = ({ navigation }) => {
 
   const { userData, setUserData } = useUser();
   const [newName, setNewName] = useState(userData.name);
-  const [newrole, setNewRole] =useState(userData.role);
+  const [newrole, setNewRole] = useState(userData.role);
   const [selectedImage, setSelectedImage] = useState(userData.profileImage);
 
 
@@ -43,13 +43,13 @@ const EditProfile = ({ navigation }) => {
   const handleChangeStartDate = (propDate) => {
     setStartedDate(propDate);
   };
-  
+
 
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
   };
 
-  
+
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -66,39 +66,39 @@ const EditProfile = ({ navigation }) => {
   };
   const userId = "123"; // Replace with the actual user ID
   // Make sure userId is properly defined and not undefined or null
-  
+
   // Add userId to the data being sent in the request
   const newData = {
     user_id: userId,
     // Other profile update data
   };
-  const handleSave =async ( ) => {
+  const handleSave = async () => {
 
     const userId = userData.userId; // Replace this with the actual way you get the user ID
     const newData = {
-      name: newName,
+      username: newName,
       role: newrole,
       // Include other fields as needed
     };
     try {
       const response = await axios.post(`http://127.0.0.1:8081/update_profile/${userId}/`, newData);
       console.log(response.data);
-     
-    if (response.data.success) {
-      updateUserData(response.data.updatedUserData);
-      setUserData(response.data.updatedUserData);
-      // Additional logic if needed
-    } else {
-      // Handle errors from the backend
+
+      if (response.data.success) {
+        updateUserData(response.data.updatedUserData);
+        setUserData(response.data.updatedUserData);
+        // Additional logic if needed
+      } else {
+        // Handle errors from the backend
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
     }
-  } catch (error) {
-    console.error('Error updating profile:', error);
-  }
     // Update user data
     setUserData({
       ...userData,
       userId,
-      name: newName,
+      username: newName,
       role: newrole,
       profileImage: selectedImage, // Include the new profile image URI
     });
@@ -110,7 +110,7 @@ const EditProfile = ({ navigation }) => {
   const handleProfileUpdate = async (newUserData) => {
     try {
       const response = await axios.post('http://127.0.0.1:8081/update-profile/', newUserData);
-  
+
       if (response.data.success) {
         updateUserData(response.data.updatedUserData);
         // Additional logic if needed
@@ -195,8 +195,8 @@ const EditProfile = ({ navigation }) => {
           justifyContent: "center",
         }}
       >
-       
-       
+
+
       </View>
 
       <ScrollView>
@@ -242,7 +242,7 @@ const EditProfile = ({ navigation }) => {
               marginBottom: 6,
             }}
           >
-            <Text style={{ ...FONTS.h4 }}>Name</Text>
+            <Text style={{ ...FONTS.h4 }}>UserName</Text>
             <View
               style={{
                 height: 44,
@@ -256,8 +256,8 @@ const EditProfile = ({ navigation }) => {
               }}
             >
               <TextInput
-                 value={newName}
-                 onChangeText={(text) => setNewName(text)}
+                value={newName}
+                onChangeText={(text) => setNewName(text)}
                 editable={true}
               />
             </View>
@@ -377,7 +377,7 @@ const EditProfile = ({ navigation }) => {
             borderRadius: 6,
             alignItems: "center",
             justifyContent: "center",
-          }}onPress={handleSave}
+          }} onPress={handleSave}
         >
           <Text
             style={{

@@ -10,24 +10,28 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { COLORS } from "../constants";
 import Homescreen from "../screens/Homescreen";
 import Paymentscreen from "../screens/Paymentscreen";
-import DetailsScreen from "../screens/Detailsscreen";
-import PreviewScreen from "../screens/Previewscreen";
+import { ROUTES } from "../constants";
+import Detailsentryscreen from "../screens/Detailsentryscreen";
 import Profile from "../screens/Profile";
 import DrawerNavigator from "./DrawerNavigator";
+import Receipt from "../screens/Receipt";
+import { Ionicons } from '@expo/vector-icons';
+
 
 const Tab = createBottomTabNavigator();
 
 const screenOptions = {
-  tabBarShowLabel: false,
+  tabBarShowLabel: true,
   headerShown: false,
   tabBarHideOnKeyboard: true,
   tabBarStyle: {
-    position: "absolute",
-    bottom: 0,
+    position: "relative",
+    bottom: 2,
     right: 0,
     left: 0,
-    elevation: 0,
+    elevation: 80,
     height: 60,
+    unmountOnBlur: true,
     backgroundColor: COLORS.white,
   },
 };
@@ -35,16 +39,17 @@ const BottomTabNav = () => {
   return (
     <Tab.Navigator screenOptions={screenOptions}>
       <Tab.Screen
-        name="DrawerNavigator"
+        name="HOME"
         component={DrawerNavigator}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <SimpleLineIcons
+              <Ionicons
                 name="home"
-                size={24}
+                size={28}
                 color={focused ? COLORS.primary : COLORS.black}
               />
+              
             );
           },
           
@@ -57,12 +62,11 @@ const BottomTabNav = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <MaterialCommunityIcons
-                name="message-text-outline"
-                
-                size={24}
-                color={focused ? COLORS.primary : COLORS.black}
-              />
+              <Ionicons
+              name="wallet"
+              size={28}
+              color={focused ? COLORS.primary : COLORS.black}
+            />
             );
           },
           tabBarLabel: 'Payment',
@@ -70,8 +74,8 @@ const BottomTabNav = () => {
       />
 
       <Tab.Screen
-        name="details"
-        component={DetailsScreen}
+        name="DETAILS"
+        component={Detailsentryscreen}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
@@ -84,7 +88,7 @@ const BottomTabNav = () => {
                   width: Platform.OS == "ios" ? 50 : 60,
                   top: Platform.OS == "ios" ? -10 : -20,
                   borderRadius: Platform.OS == "ios" ? 25 : 30,
-                  borderWidth: 2,
+                  borderWidth: 3,
                   borderColor: COLORS.white,
                 }}
               >
@@ -96,16 +100,16 @@ const BottomTabNav = () => {
       />
 
       <Tab.Screen
-        name="Settings"
-        component={PreviewScreen}
+        name="RECEIPT"
+        component={Receipt}
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <MaterialIcons
-                name="settings"
-                size={24}
-                color={focused ? COLORS.primary : COLORS.black}
-              />
+              <Ionicons
+              name="logo-ionitron"
+              size={30}
+              color={focused ? COLORS.primary : COLORS.black}
+            />
             );
           },
         }}
@@ -117,11 +121,11 @@ const BottomTabNav = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <MaterialIcons
-                name="person-outline"
-                size={24}
-                color={focused ? COLORS.primary : COLORS.black}
-              />
+              <Ionicons
+              name="person-sharp"
+              size={28}
+              color={focused ? COLORS.primary : COLORS.black}
+            />
             );
           },
         }}
