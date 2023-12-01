@@ -1,10 +1,65 @@
-import React from 'react';
+
 import { View, Text, StyleSheet ,Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { Card, Avatar, IconButton } from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
+import { ScrollView } from 'native-base';
 
 
 const { width } = Dimensions.get('window');
 const TodayCollectionscreen = () => {
+ const [todayCollection, setTodayCollection] = useState();
+
+ const TodayCollectionCard = ({ todayCollection, onlineCollectionAmount, offlineCollectionAmount, collectionDuration }) => {
+  return (
+    <Card style={styles.todayCollectionCard}>
+      <Card.Content>
+        <Card.Title
+          title="Today Collection"
+          left={(props) => <Avatar.Icon {...props} icon="folder" />}
+          right={(props) => <IconButton {...props} icon="dots-vertical"onPress={() => navigation.navigate('TodayCollection')} />}
+        />
+        <Text style={styles.todayCollectionTitle}>Today's Collection:</Text>
+        <Text style={styles.todayCollectionAmount}>₹{todayCollection}</Text>
+
+        {/* Additional Content */}
+        <View style={styles.additionalContent}>
+          <Text style={styles.contentLabel}>Online Collection:</Text>
+          <Text style={styles.contentText}>₹{onlineCollectionAmount}</Text>
+
+          <Text style={styles.contentLabel}>Offline Collection:</Text>
+          <Text style={styles.contentText}>₹{offlineCollectionAmount}</Text>
+
+          <Text style={styles.contentLabel}>Collection Duration:</Text>
+          <Text style={styles.contentText}>{collectionDuration}</Text>
+        </View>
+      </Card.Content>
+    </Card>
+  );
+};
+
+  useEffect(() => {
+    // Fetch Today Collection
+    fetch('http://127.0.0.1:8081/today_collection/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+       
+      },
+      body: JSON.stringify({}),
+    }) // Replace with your Django backend URL and endpoint
+      .then(response => response.json())
+      .then(data => {
+        console.log('Today Collection:', data.TodayCollection);
+        const todayCollectionData = data.TodayCollection;
+        setTodayCollection(todayCollectionData);
+        setApiError(null); // Reset API error state on success
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setApiError(error.message); // Set API error state on failure 
+      });
+  }, []);
   // Mock data for hourly collection with time labels
   const hourlyCollectionData = [
     { time: '12: AM', value: 10 },
@@ -36,8 +91,27 @@ const TodayCollectionscreen = () => {
   };
 
   return (
+    <ScrollView>
     <View style={styles.container}>
+        <TodayCollectionCard 
+  todayCollection={50}
+  onlineCollectionAmount={20}
+  offlineCollectionAmount={30}
+  collectionDuration={8}
+/>
       {/* Hourly Collection Line Chart */}
+      <Card style={styles.todayCollectionCard} >
+        <Card.Content>
+          <Card.Title
+            title="Today Collection"
+            left={(props) => <Avatar.Icon {...props} icon="folder" />}
+            right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
+          />
+          <Text style={styles.todayCollectionTitle}>Today's Collection:</Text>
+          <Text style={styles.todayCollectionAmount}>₹{todayCollection}</Text>
+          {/* Add additional content here */}
+        </Card.Content>
+      </Card>
       
       <View style={styles.chartContainer}>
     
@@ -73,7 +147,7 @@ const TodayCollectionscreen = () => {
       </View>
       
     </View>
-    
+    </ScrollView>
   );
 };
 
@@ -115,7 +189,42 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 20
   },
-
+ 
+  todayCollectionCard: {
+    margin: 10,
+    padding: 15,
+    backgroundColor: '#4CAF50', // Green background color, you can adjust it
+    borderRadius: 10,
+    elevation: 5,
+  },
+  todayCollectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'white', // White text color
+    marginBottom: 5,
+  },
+  todayCollectionAmount: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white', // White text color
+    marginBottom: 15,
+  },
+  additionalContent: {
+    borderTopWidth: 1,
+    borderColor: 'white', // White border color
+    paddingTop: 10,
+  },
+  contentLabel: {
+    fontSize: 14,
+    color: 'white', // White text color
+    marginBottom: 5,
+  },
+  contentText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white', // White text color
+    marginBottom: 10,
+  },
 });
 
 export default TodayCollectionscreen;

@@ -1,21 +1,17 @@
 import { View, Text, Platform } from "react-native";
 import React from "react";
 import {
-  SimpleLineIcons,
   Fontisto,
-  MaterialCommunityIcons,
-  MaterialIcons,
 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { COLORS } from "../constants";
 import Homescreen from "../screens/Homescreen";
 import Paymentscreen from "../screens/Paymentscreen";
-import { ROUTES } from "../constants";
 import Detailsentryscreen from "../screens/Detailsentryscreen";
 import Profile from "../screens/Profile";
 import DrawerNavigator from "./DrawerNavigator";
-import Receipt from "../screens/Receipt";
 import { Ionicons } from '@expo/vector-icons';
+import Donation from "../screens/Donation";
 
 
 const Tab = createBottomTabNavigator();
@@ -48,8 +44,7 @@ const BottomTabNav = () => {
                 name="home"
                 size={28}
                 color={focused ? COLORS.primary : COLORS.black}
-              />
-              
+              /> 
             );
           },
           
@@ -100,8 +95,8 @@ const BottomTabNav = () => {
       />
 
       <Tab.Screen
-        name="RECEIPT"
-        component={Receipt}
+        name="Donation"
+        component={Donation}
         options={{
           tabBarIcon: ({ focused }) => {
             return (

@@ -49,7 +49,6 @@ const Receipt = ({ data }) => {
       />
       <Text style={styles.companyName}>Thaagam Foundation</Text>
       <Text style={styles.receiptHeading}>Donation Receipt</Text>
-
       <Text style={styles.receiptText}>Donor Name: {data.name}</Text>
       <Text style={styles.receiptText}>Name on Parcel: {data.nameOnParcel}</Text>
       <Text style={styles.receiptText}>Mobile Number: {data.mobileNumber}</Text>

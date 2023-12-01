@@ -11,10 +11,9 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import { useUser } from "../components/UserContext";
-
-
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { COLORS } from '../constants';
 
 
 
@@ -43,7 +42,6 @@ const handleProfileUpdate = async (newUserData) => {
   
   const handleTellAFriend = () => {
     const websiteLink = 'https://thaagam.org/'; // Replace with your actual website link
-
     Share.share({
       message: `Check out this amazing website: ${websiteLink}`,
     })
@@ -54,7 +52,7 @@ const handleProfileUpdate = async (newUserData) => {
     <View style={{flex: 1}}>
       <DrawerContentScrollView
         {...props}
-        contentContainerStyle={{backgroundColor: '#8200d6'}}>
+        contentContainerStyle={{backgroundColor: COLORS.primary}}>
         <ImageBackground
           source={{ uri: userData.profileImage }}
           style={{padding: 20}}>
@@ -96,7 +94,7 @@ const handleProfileUpdate = async (newUserData) => {
         </View>
       </DrawerContentScrollView>
       <View style={{padding: 20, borderTopWidth: 1, borderTopColor: '#ccc'}}>
-        <TouchableOpacity onPress={handleTellAFriend} style={{paddingVertical: 1}}>
+        <TouchableOpacity onPress={handleTellAFriend} style={{paddingVertical: 10}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons name="share-social-outline" size={22} />
             <Text
@@ -109,7 +107,7 @@ const handleProfileUpdate = async (newUserData) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 55}}>
+        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 10}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons name="exit-outline" size={22} />
             <Text

@@ -65,7 +65,7 @@ function Homescreen({ navigation }) {
     { id: 2, categoryType: 'type2', /* other category data */ },
     // Add more categories as needed
   ];
-
+  
   /*
     // Fetch This Month Collection
     fetch('http://127.0.0.1:8081/ThisMonthCollection/')
@@ -125,6 +125,7 @@ function Homescreen({ navigation }) {
 
     );
   }
+  
   const renderCategory = ({ item }) => {
     let cardStyle;
 
@@ -190,20 +191,19 @@ function Homescreen({ navigation }) {
       <ScrollView style={styles.ScrollView}>
          {/* Render the ID card component */}
       <IDCard rmDetails={rmDetails} />
-        <Card style={styles.Card1} onPress={() => navigation.navigate('TodayCollection')}>
-          <Card.Content>
-            <Card.Title style={styles.cardTitle}
-              title="Today Collection"
-
-              left={(props) => <Avatar.Icon {...props} icon="folder" />}
-              right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
-            />
-            {/* Display collection amount */}
-            <Text style={styles.cardTitle} variant="titleLarge"> Today Collection:</Text>
-            <Text style={styles.totalCollection}>₹{todayCollection}</Text>
-          </Card.Content>
-        </Card>
-
+      <Card style={styles.todayCollectionCard} onPress={() => navigation.navigate('TodayCollection')}>
+        <Card.Content>
+          <Card.Title
+            title="Today Collection"
+            left={(props) => <Avatar.Icon {...props} icon="folder" />}
+            right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
+          />
+          <Text style={styles.todayCollectionTitle}>Today's Collection:</Text>
+          <Text style={styles.todayCollectionAmount}>₹{todayCollection}</Text>
+          {/* Add additional content here */}
+        </Card.Content>
+      </Card>
+     
         <Card style={styles.Card2} onPress={() => navigation.navigate('ThisMonthCollection')}>
           <Card.Content >
             <Card.Title style={styles.cardTitle}
@@ -214,7 +214,6 @@ function Homescreen({ navigation }) {
             <Text style={styles.txtmain} variant="titleLarge">This Month Collection: {thisMonthCollection}</Text>
           </Card.Content>
         </Card>
-
         <View style={styles.carouselcontainer} >
        <Carousel
         layout={'default'}
@@ -251,13 +250,8 @@ function Homescreen({ navigation }) {
               {renderCategory({ item: category })}
             </View>
           ))}
-          
         </View>
-       
-
         </SafeAreaView> 
-    
-
   )
 
 }
@@ -295,9 +289,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.55,
     shadowRadius: 14.78,
-
     elevation: 22,
-
   },
   Card2: {
     alignItems: 'left',
@@ -422,7 +414,7 @@ const styles = StyleSheet.create({
     margin: 18,
     padding: 10,
     backgroundColor: 'white',
-    elevation: 5,
+    elevation: 15,
   },
   title: {
     fontSize: 20,
@@ -434,5 +426,37 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginBottom: 5,
   },
+  todayCollectionCard: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  todayCollectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  todayCollectionAmount: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+  },
+  todayCollectionCard: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 10,
+    elevation: 5,
+  },
+  todayCollectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  todayCollectionAmount: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+  },
+});
 
-})

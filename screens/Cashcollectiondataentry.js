@@ -14,7 +14,7 @@ import { DateTimePicker } from '@react-native-community/datetimepicker';
 
 
 
-export default function DetailsScreen({ navigation }) {
+export default function Cashcollection({ navigation }) {
   const [name, setName] = useState('');
   const [nameOnParcel, setNameOnParcel] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -140,7 +140,7 @@ const handleImageUpload = async () => {
       <ScrollView>
       <View style={styles.detailscontainer}>
         <SafeAreaView style={styles.container}>
-          <Text style={styles.heading}>Details Entry Screen</Text>
+          <Text style={styles.heading}>CASH COLLECTION ENTRY</Text>
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
@@ -315,18 +315,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color:"black"
   },
-  detailscontainer: {
+  detailscontainer: 
+  {
     backgroundColor: 'skyblue',
     borderRadius: 13,
     elevation: 5,
     padding: 5,
-    marginBottom: 20,
-    
+    marginBottom: 20, 
   },
   heading: {
     fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 30,
+    backgroundColor:'lightyellow'
   },
   formContainer: {
     marginBottom: 20,
@@ -346,7 +347,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     fontSize:16,
     borderColor: '#888',
-    borderRadius: 10,
+    borderRadius:8,
     color: 'blue',
     elevation: 5,
     backgroundColor: '#fff',
@@ -369,7 +370,7 @@ const styles = StyleSheet.create({
     padding: 13,
     width:100,
     alignItems: 'center',
-    borderColor: 'green', // Change border color to green
+    borderColor: 'black', // Change border color to green
     backgroundColor: '#27ae60',
   },
  
@@ -393,7 +394,7 @@ const styles = StyleSheet.create({
     justifyContent:'flex-end',
     marginRight: 5,
     borderColor: '#3498db', // Change border color to green
-    backgroundColor: 'lightgreen',
+    backgroundColor: 'yellow',
     flex:1
   },
   previewButtonText: {

@@ -14,6 +14,7 @@ const Detailsentryscreen = () => {
       };
   const handleCashPress = () => {
     console.log('Cash Button Pressed');
+    navigation.navigate('Cashcollection', { entryType: 'online' });
     // Handle cash button press
     // Navigate to cash details screen or perform other actions
   };

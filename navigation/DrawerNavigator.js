@@ -13,19 +13,21 @@ import Contact from '../screens/contact';
 import Donorlist from '../screens/Donorlist';
 import BottomTabNav from './BottomTabNavigator';
 import Homescreen from '../screens/Homescreen';
+import { COLORS } from '../constants';
+import SettingsScreen from '../screens/settingsscreen';
 
 
 const Drawer = createDrawerNavigator();
 
 
-const DrawerNavigator= ( ) => {
+export default function DrawerNavigator( ) {
   return (
     
     <Drawer.Navigator
       drawerContent={ (props) => <CustomDrawer {...props} />}
       screenOptions={{
         headerShown: false,
-        drawerActiveBackgroundColor: '#aa18ea',
+        drawerActiveBackgroundColor: COLORS.primary,
         drawerActiveTintColor: '#fff',
         drawerInactiveTintColor: '#333',
         drawerLabelStyle: {
@@ -85,14 +87,14 @@ const DrawerNavigator= ( ) => {
         component={Contact}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="settings-outline" size={22} color={color} />
+            <Ionicons name="call" size={22} color={color} />
           ),
         }}
       />
        
        <Drawer.Screen
-        name="BottomTabNav"
-        component={BottomTabNav}
+        name="settings"
+        component={SettingsScreen}
         options={{
           drawerIcon: ({color}) => (
             <Ionicons name="settings-outline" size={22} color={color} />
@@ -106,4 +108,3 @@ const DrawerNavigator= ( ) => {
 };
 
 
-export default DrawerNavigator;

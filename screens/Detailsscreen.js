@@ -11,6 +11,7 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
 import { DateTimePicker } from '@react-native-community/datetimepicker';
+import { COLORS } from '../constants';
 
 
 
@@ -139,11 +140,11 @@ const handleImageUpload = async () => {
       <ScrollView>
       <View style={styles.detailscontainer}>
         <SafeAreaView style={styles.container}>
-          <Text style={styles.heading}>Details Entry Screen</Text>
+          <Text style={styles.heading}>ONLINE DETAILS SCREEN</Text>
           <View style={styles.formContainer}>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
-            <Ionicons name="person" size={22} color="black" />
+            <Ionicons name="person" size={22} color={COLORS.primary} />
               <Text style={styles.label}>Name:</Text>
               
               </View>
@@ -158,7 +159,7 @@ const handleImageUpload = async () => {
             </View>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
-            <Ionicons name="person" size={22} color="black" />
+            <Ionicons name="person" size={22} color={COLORS.primary} />
               <Text style={styles.label}>Name On Parcel:</Text>
               </View>
               <View style={styles.inputFieldContainer}>
@@ -172,7 +173,7 @@ const handleImageUpload = async () => {
             </View>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
-            <Ionicons name="call" size={22} color="black" />
+            <Ionicons name="call" size={22} color={COLORS.primary} />
               <Text style={styles.label}>Mobile Number:</Text>
               </View>
               <View style={styles.inputFieldContainer}>
@@ -187,7 +188,7 @@ const handleImageUpload = async () => {
             </View>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
-            <Ionicons name="list" size={24} color="black" />
+            <Ionicons name="list" size={24} color={COLORS.primary} />
               <Text style={styles.label}>Category:</Text>
               </View>
               <View style={styles.inputFieldContainer}>
@@ -205,7 +206,7 @@ const handleImageUpload = async () => {
 
            <View style={styles.inputContainer}>
   <View style={styles.labelContainer}>
-    <Ionicons name="calendar" size={24} color="black" />
+    <Ionicons name="calendar" size={24} color={COLORS.primary} />
     <Text style={styles.label}>Date of Service:</Text>
   </View>
   <View style={styles.inputFieldContainer}>
@@ -229,7 +230,7 @@ const handleImageUpload = async () => {
         )}
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
-            <Ionicons name="stats-chart" size={24} color="black" />
+            <Ionicons name="stats-chart" size={24} color={COLORS.primary}/>
               <Text style={styles.label}>Count:</Text>
               </View>
               <View style={styles.inputFieldContainer}>
@@ -244,7 +245,7 @@ const handleImageUpload = async () => {
             </View>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
-            <Ionicons name="cash" size={24} color="black" />
+            <Ionicons name="cash" size={24} color={COLORS.primary} />
               <Text style={styles.label}>Amount:</Text>
               </View>
               <View style={styles.inputFieldContainer}>
@@ -413,7 +414,6 @@ const styles = StyleSheet.create({
   uploadButtonText: {
     fontWeight: 'bold',
     color: '#fff',
-
   },
   
 });
