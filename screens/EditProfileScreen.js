@@ -76,7 +76,7 @@ const EditProfile = ({ navigation }) => {
 
     const userId = userData.userId; // Replace this with the actual way you get the user ID
     const newData = {
-      username: newName,
+      name: newName,
       role: newrole,
       // Include other fields as needed
     };
@@ -98,7 +98,7 @@ const EditProfile = ({ navigation }) => {
     setUserData({
       ...userData,
       userId,
-      username: newName,
+      name: newName,
       role: newrole,
       profileImage: selectedImage, // Include the new profile image URI
     });

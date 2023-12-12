@@ -4,12 +4,14 @@ import {
   Text,
   ImageBackground,
   Image,
+  StyleSheet,
   TouchableOpacity,Share 
 } from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
+import { Avatar } from 'react-native-paper';
 import { useUser } from "../components/UserContext";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -56,9 +58,10 @@ const handleProfileUpdate = async (newUserData) => {
         <ImageBackground
           source={{ uri: userData.profileImage }}
           style={{padding: 20}}>
-          <Image
-             source={{ uri: userData.profileImage }}
-            style={{height: 80, width: 80, borderRadius: 40, marginBottom: 10}}
+         <Avatar.Image
+            source={{ uri: userData.profileImage }}
+            size={80}  // Adjust the size as needed 
+            style={styles.avatar}
           />
           <Text
             style={{
@@ -126,3 +129,9 @@ const handleProfileUpdate = async (newUserData) => {
 };
 
 export default CustomDrawer;
+
+const styles = StyleSheet.create({
+  avatar: {
+    marginRight: 10,
+  },
+});

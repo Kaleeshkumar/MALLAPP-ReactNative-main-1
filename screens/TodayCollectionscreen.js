@@ -63,8 +63,8 @@ const TodayCollectionscreen = () => {
   // Mock data for hourly collection with time labels
   const hourlyCollectionData = [
     { time: '12: AM', value: 10 },
-    { time: '1:00 AM', value: 20 },
-    { time: '2:00 AM', value: 15 },
+    { time: '1: AM', value: 20 },
+    { time: '2: AM', value: 15 },
     { time: '3:00 AM', value: 25 },
     { time: '4:00 AM', value: 30 },
     { time: '5:00 AM', value: 18 },
@@ -130,11 +130,12 @@ const TodayCollectionscreen = () => {
             style: {
               borderRadius: 16,
               paddingHorizontal: 10,
+              
             },
             propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: '#ffa726',
+              r: '7',
+              strokeWidth: '5',
+              stroke: 'gold',
             },
           }}
         />

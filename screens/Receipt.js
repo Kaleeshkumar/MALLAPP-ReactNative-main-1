@@ -6,6 +6,7 @@ import * as Sharing from 'expo-sharing';
 const { width, height } = Dimensions.get('window');
 
 const Receipt = ({ data }) => {
+
   if (!data) {
     return (
       <View style={styles.errorContainer}>
@@ -17,7 +18,7 @@ const Receipt = ({ data }) => {
 
   const handleShareReceipt = async () => {
     // Create a text message with the receipt details
-    const message = `Donation Receipt\n\nDonor Name: ${data.name}\nName on Parcel: ${data.nameOnParcel}\nMobile Number: ${data.mobileNumber}\nCategory: ${data.selectedCategory}\nDate of Service: ${data.selectedDate.toLocaleDateString()}\nCount: ${data.count}\nAmount: ${data.amount}`;
+    const message = `Donation Receipt\n\nDonor Name: ${data.name}\nName on Parcel: ${data.nameOnParcel}\nMobile Number: ${data.mobileNumber}\nCategory: ${data.selectedCategory}\nDate of Service: ${data.startedDate.toLocaleDateString()}\nCount: ${data.count}\nAmount: ${data.amount}`;
 
     try {
       // Share the receipt image via WhatsApp
@@ -53,7 +54,7 @@ const Receipt = ({ data }) => {
       <Text style={styles.receiptText}>Name on Parcel: {data.nameOnParcel}</Text>
       <Text style={styles.receiptText}>Mobile Number: {data.mobileNumber}</Text>
       <Text style={styles.receiptText}>Category: {data.selectedCategory}</Text>
-      <Text style={styles.receiptText}>Date of Service: {data.selectedDate.toLocaleDateString()}</Text>
+      <Text style={styles.receiptText}>Date of Service: {data.startedDate ? data.startedDate.toLocaleDateString() : 'N/A'}</Text>
       <Text style={styles.receiptText}>Count: {data.count}</Text>
       <Text style={styles.receiptText}>Amount: {data.amount}</Text>
       <Text style={styles.founderSignature}>Founder's Signature</Text>

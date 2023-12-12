@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity,Modal } from 'react-native';
 import { Portal, Button, Dialog, Provider as PaperProvider } from 'react-native-paper';
 import 'react-native-gesture-handler';
 import { Picker } from '@react-native-picker/picker';
@@ -10,8 +10,9 @@ import Receipt from './Receipt';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
-import { DateTimePicker } from '@react-native-community/datetimepicker';
+import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import { COLORS } from '../constants';
+import { FONTS } from '../constants';
 
 
 
@@ -21,11 +22,28 @@ export default function DetailsScreen({ navigation }) {
   const [mobileNumber, setMobileNumber] = useState('');
   const [count, setCount] = useState('');
   //AMOUNT
-  const [amount, setAmount] = useState('');
+  
   const [visible, setVisible] = useState(false);
  //date of service
- const [selectedDate, setSelectedDate] = useState(new Date());
- const [showDatePicker, setShowDatePicker] = useState(false);
+ const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
+ const today = new Date();
+ const startDate = getFormatedDate(
+   today.setDate(today.getDate() + 1),
+   "YYYY/MM/DD"
+ );
+
+ const [startedDate, setStartedDate] = useState("12/12/2023");
+
+ 
+ const handleChangeStartDate = (propDate) => {
+  setStartedDate(propDate);
+};
+
+
+const handleOnPressStartDate = () => {
+  setOpenStartDatePicker(!openStartDatePicker);
+};
+
   //SELECT TYPE CATEGORY
   const [selectedCategory, setSelectedCategory] = useState('');
   const categories = ['HOMELESS-25', 'EGG&MILK', 'CHICKEN BIRIYANI', 'VEG BIRIYANI', 'ORPHANAGE', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING'];
@@ -34,6 +52,12 @@ export default function DetailsScreen({ navigation }) {
 
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
+   //modal open
+   
+   const showModal = () => setVisible(true);
+   const hideModal = () => setVisible(false);
+   const [transactions, setTransactions] = useState([]);
+   const containerStyle = { backgroundColor: 'skyblue', padding: 15 };
 
   const handleSave = () => {
     const data = {
@@ -42,8 +66,8 @@ export default function DetailsScreen({ navigation }) {
       mobileNumber,
       selectedCategory,
       count,
-      amount,
-      selectedDate,
+      enteredAmount,
+      startedDate,
     };
     //api to post 
    //handle Data
@@ -83,11 +107,67 @@ const handlePreview = () => {
     mobileNumber,
     selectedCategory,
     count,
-    amount,
-    selectedDate,
+    enteredAmount,
+    startedDate,
   });
 }
+function renderDatePicker() {
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={openStartDatePicker}
+    >
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <View
+          style={{
+            margin: 20,
+            backgroundColor: COLORS.primary,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: 20,
+            padding: 35,
+            width: "90%",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            elevation: 5,
+          }}
+        >
+<DatePicker
+  mode="calendar"
+  minimumDate={startDate}
+  selected={getFormatedDate(startedDate, "YYYY/MM/DD")}
+  onDateChanged={handleChangeStartDate}
+  options={{
+    backgroundColor: COLORS.primary,
+    textHeaderColor: "#469ab6",
+    textDefaultColor: COLORS.white,
+    selectedTextColor: COLORS.white,
+    mainColor: "#469ab6",
+    textSecondaryColor: COLORS.white,
+    borderColor: "rgba(122,146,165,0.1)",
+  }}
+/>
 
+          <TouchableOpacity onPress={handleOnPressStartDate}>
+            <Text style={{ ...FONTS.body3, color: COLORS.white }}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+}
 const handleImageUpload = async () => {
   try {
     // Check if permission is granted for accessing the camera roll
@@ -118,6 +198,133 @@ const handleImageUpload = async () => {
     console.error('Error selecting image:', error);
   }
 };
+
+ // Function to create Razorpay order
+ const createRazorpayOrder = async () => {
+  try {
+    const response = await axios.post('http://127.0.0.1:8081/create_razorpay_order/');
+    console.log(response.data);
+     // Assuming the response contains the order ID and other necessary details
+    const orderDetails = response.data;
+    return orderDetails; // Assuming the response contains the order ID
+  } catch (error) {
+    console.error('Error creating Razorpay order:', error);
+    return null;
+  }
+};
+ // Function to generate payment link
+const [enteredAmount, setEnteredAmount] = useState('');
+const handleAmountChange = (text) => {
+  setEnteredAmount(text);
+};
+// Function to handle the "Create Order" button press
+const handleCreateOrder = async () => {
+  try {
+    const orderDetails = await createRazorpayOrder();
+
+    if (orderDetails) {
+      const { orderId, /* other details */ } = orderDetails;
+
+      const upiId = 'kaleeshkumar1125180@okaxis';
+      const recipientName = 'Thaagamfoundation';
+      const merchantCode = 'MZpU0jiQXg4m4x';
+      const referenceId = 'your_reference_id';
+      const transactionNote = 'Transaction Note';
+
+      const qrCodeData = `upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
+     
+      const newTransaction = {
+        orderId: orderId,
+        amount: enteredAmount,
+        status: 'Pending',
+      };
+
+      setTransactions((prevTransactions) => [...prevTransactions, newTransaction]);
+      console.log('Payment Link:', qrCodeData);
+    }
+    
+      
+  } catch (error) {
+    console.error('Error creating Razorpay order:', error);
+  }
+    // Navigate to PaymentScreen and pass the necessary data
+    navigation.navigate('Payment', {
+      orderId,
+      qrCodeData,
+      
+    });
+    
+};
+
+  
+
+  // Define your payment data
+  const handlePayment = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8081/paymenthandler/', {
+        razorpay_payment_id: 'PAYMENT_ID',
+        razorpay_order_id: 'ORDER_ID',
+        razorpay_signature: 'SIGNATURE',
+      });
+
+      console.log('Entered Amount:', enteredAmount);
+
+      // Check the response to determine if payment was successful
+      if (response.data === 'success') {
+        // Payment was successful, navigate to success screen
+        // You can use React Navigation or any navigation library you prefer
+        console.log('Payment successful');
+        navigation.navigate('PaymentSuccessScreen');
+      } else {
+        // Payment failed, navigate to failure screen
+        console.log('Payment failed');
+        navigation.navigate('paymentfailure');
+      }
+    } catch (error) {
+      console.error(error);
+      // Handle error
+    }
+  };
+   // Function to handle the "View Details" button press
+   const handleViewDetails = (id) => {
+    // Implement navigation to a details screen or modal
+    console.log('View details for order:', id);
+  };
+  // Assuming you have the payment data ready
+  const paymentData = {
+    razorpay_payment_id: 'PAYMENT_ID',
+    razorpay_order_id: 'ORDER_ID',
+    razorpay_signature: 'SIGNATURE',
+  };
+
+  const orderId = "id"; // Replace with your actual order ID
+  const upiId = "kaleeshkumar1125180@okaxis"; // Replace with your actual UPI ID
+  const recipientName = "Thaagamfoundation"; // Replace with the recipient's name
+  const merchantCode = "MZpU0jiQXg4m4x"; // Replace with your actual merchant code
+  const referenceId = "your_reference_id"; // Replace with your actual reference ID
+  const transactionNote = "Transaction Note";
+
+  // Call the function with the payment data
+    const qrCodeData =`upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
+  //razor user qr code
+  const options = {
+    description: 'Sample Payment',
+    image: 'https://example.com/your-image.png',
+    currency: 'INR',
+    key: 'rzp_test_2h8n68Dp5BnsgZ',
+    amount: '2000', // Amount in paise (5000 paise = INR 50)
+    name: 'Thaagam Foundation',
+    prefill: {
+      email: 'kaleeshkumar.r@gmail.com',
+      contact: '6383333101',
+    },
+    theme: { color: '#F37254' },
+  };
+ 
+
+
+
+
 
 
   return (   
@@ -159,7 +366,7 @@ const handleImageUpload = async () => {
             </View>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
-            <Ionicons name="person" size={22} color={COLORS.primary} />
+            <Ionicons name="pizza" size={22} color={COLORS.primary} />
               <Text style={styles.label}>Name On Parcel:</Text>
               </View>
               <View style={styles.inputFieldContainer}>
@@ -210,24 +417,24 @@ const handleImageUpload = async () => {
     <Text style={styles.label}>Date of Service:</Text>
   </View>
   <View style={styles.inputFieldContainer}>
-    <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-      <Text style={styles.input}>{selectedDate.toLocaleDateString()}</Text>
-    </TouchableOpacity>
+  <TouchableOpacity
+              onPress={handleOnPressStartDate}
+              style={{
+                height: 44,
+                width: "100%",
+                borderColor: COLORS.secondaryGray,
+                borderWidth: 1,
+                borderRadius: 4,
+                marginVertical: 6,
+                justifyContent: "center",
+                paddingLeft: 8,
+              }}
+            >
+                <Text>{startedDate}</Text>
+            </TouchableOpacity>
   </View>
 </View>
-{showDatePicker && (
-          <DateTimePicker
-            value={selectedDate}
-            mode="date"
-            display="default"
-            onChange={(event, date) => {
-              if (event.type === 'set') {
-                setSelectedDate(date);
-              }
-              setShowDatePicker(false);
-            }}
-          />
-        )}
+
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
             <Ionicons name="stats-chart" size={24} color={COLORS.primary}/>
@@ -251,18 +458,28 @@ const handleImageUpload = async () => {
               <View style={styles.inputFieldContainer}>
               <TextInput
                 style={styles.input}
-                value={amount}
-                onChangeText={text => setAmount(text)}
+                value={enteredAmount}
+                onChangeText={handleAmountChange}
+               
                 keyboardType="numeric"
                 placeholder="Enter amount"
               />
               </View>
             </View>
+             
             <TouchableOpacity onPress={handleImageUpload} style={styles.uploadButton}>
   <Text style={styles.uploadButtonText}>Upload Image</Text>
 </TouchableOpacity>
+
           </View>
-          
+          <Button
+        style={styles.button}
+        mode="contained"
+        onPress={handleCreateOrder}
+        labelStyle={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}
+      >
+         Make PAYMENT
+      </Button>
           <View style={styles.btncontainer}>
           <TouchableOpacity onPress={handlePreview} style={styles.previewButton}>
             <Text style={styles.previewButtonText}>Preview</Text>
@@ -286,12 +503,16 @@ const handleImageUpload = async () => {
         <View style={styles.detailscontainer}>
         <SafeAreaView style={styles.container}>
           {/* ... (your existing code) */}
-          <Receipt data={{ name, nameOnParcel, mobileNumber, selectedCategory, selectedDate, count, amount }} />
+          <Receipt data={{ name, nameOnParcel, mobileNumber, selectedCategory, startedDate: new Date(), count, enteredAmount }} />
           {/* ... (your existing code) */}
+          
         </SafeAreaView>
+        
       </View>
       
+      
         </ScrollView>
+        {renderDatePicker()}
       </PaperProvider>
 
   );

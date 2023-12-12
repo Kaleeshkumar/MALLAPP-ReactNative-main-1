@@ -41,7 +41,7 @@ export default function DrawerNavigator( ) {
         component={Homescreen}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="home-outline" size={22} color={color} />
+            <Ionicons name="home" size={22} color={color} />
           ),
         }}
       />
@@ -51,7 +51,7 @@ export default function DrawerNavigator( ) {
         component={DetailsScreen}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="chatbox-ellipses-outline" size={22} color={color} />
+            <Ionicons name="chatbox-ellipses" size={22} color={color} />
           ),
         }}
       />
@@ -60,7 +60,7 @@ export default function DrawerNavigator( ) {
         component={Donorlist}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="timer-outline" size={22} color={color} />
+            <Ionicons name="list" size={22} color={color} />
           ),
         }}
       />
@@ -69,7 +69,7 @@ export default function DrawerNavigator( ) {
         component={PaymentFailureScreen}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="timer-outline" size={22} color={color} />
+            <Ionicons name="timer" size={22} color={color} />
           ),
         }}
       />
@@ -78,7 +78,7 @@ export default function DrawerNavigator( ) {
         component={Overall}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="settings-outline" size={22} color={color} />
+            <Ionicons name="document" size={22} color={color} />
           ),
         }}
       />
@@ -97,7 +97,7 @@ export default function DrawerNavigator( ) {
         component={SettingsScreen}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="settings-outline" size={22} color={color} />
+            <Ionicons name="settings" size={22} color={color} />
           ),
         }}
       />

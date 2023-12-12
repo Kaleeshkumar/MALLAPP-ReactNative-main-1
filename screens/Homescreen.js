@@ -9,8 +9,7 @@ import Appheader from '../components/Appheader';
 import { useEffect } from 'react';
 import LottieView from 'lottie-react-native';
 import NetInfo from '@react-native-community/netinfo';
-
-
+import { useUser } from "../components/UserContext";
 const { width } = Dimensions.get('window');
 
 
@@ -116,6 +115,7 @@ function Homescreen({ navigation }) {
     },
     // Add more items as needed
   ];
+  
 
   const _renderItem = ({ item }) => {
     return (
@@ -126,9 +126,9 @@ function Homescreen({ navigation }) {
     );
   }
   
+  
   const renderCategory = ({ item }) => {
     let cardStyle;
-
     switch (item.categoryType) {
       case 'type1':
         cardStyle = styles.categoryCardType1;
@@ -143,6 +143,9 @@ function Homescreen({ navigation }) {
         break;
     }
 
+    
+    
+
     return (
       <Card style={[styles.card, cardStyle]}>
         {/* Rest of your card content... */}
@@ -156,46 +159,58 @@ function Homescreen({ navigation }) {
       </View>
     )
   }
-  const IDCard = ({ rmDetails }) => {
+
+  const { userData, setUserData } = useUser();
+  const IDCard = () => {
     return (
-      <Card style={styles.idCard}>
-        <Card.Content>
-          <Text style={styles.title}>ID Card</Text>
-          <Text style={styles.detail}>Name: {rmDetails.name}</Text>
-          <Text style={styles.detail}>Location: {rmDetails.location}</Text>
-          <Text style={styles.detail}>Joining Date: {rmDetails.joiningDate}</Text>
-          <Text style={styles.detail}>Working Days: {rmDetails.workingDays}</Text>
-          <Text style={styles.detail}>Collection: {rmDetails.collection}</Text>
-          <Text style={styles.detail}>Salary: {rmDetails.salary}</Text>
-          <Text style={styles.detail}>Incentive: {rmDetails.incentive}</Text>
-          <Text style={styles.detail}>Target: {rmDetails.target}</Text>
+      <Card style={styles.idCard} onPress={() => navigation.navigate('Profile')} >
+        <Card.Content style={styles.idCardContent}>
+          {/* Add an Avatar.Image component for the profile picture */}
+          <Avatar.Image
+            source={{ uri: userData.profileImage }}
+            size={80}  // Adjust the size as needed 
+            style={styles.avatar}
+          />
+           <View style={styles.textContainer}>
+          <Text style={styles.title}>Welcome  {userData.name}</Text>
+        <Text style={styles.detail}>Mall Location: {userData.mallLocation}</Text>
+          {/* Other details... */}
+          </View>
         </Card.Content>
       </Card>
     );
   };
+  
   return (
     <SafeAreaView >
-      
+     
       <Appheader
-        title={"HOME"}
+        title={"HOME"} 
         headerBg={"#000000"}
         iconColor={"white"}
         navigation={navigation}
-        menu //or back
+        menu // or back
         optionalBadge={5}
         right="more-vertical"
         rightFunction={() => console.log('right')}
-        optionalIcon="bell"
+        optionalIcon="bell"  // Add this prop to enable the bell icon
         optionalFunc={() => console.log('optional')}
       />
       <ScrollView style={styles.ScrollView}>
          {/* Render the ID card component */}
-      <IDCard rmDetails={rmDetails} />
+      <IDCard rmDetails={rmDetails}/>
+
+      {/*collection */}
+      
+
+    
+      <View style={styles.container1}>
+      <View style={styles.card}>
       <Card style={styles.todayCollectionCard} onPress={() => navigation.navigate('TodayCollection')}>
         <Card.Content>
-          <Card.Title
-            title="Today Collection"
-            left={(props) => <Avatar.Icon {...props} icon="folder" />}
+          <Card.Title style={styles.cardTitle}
+           
+            left={(props) => <Avatar.Icon style={styles.todayCollectionicon} {...props} icon="wallet" size={32} />}
             right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => { }} />}
           />
           <Text style={styles.todayCollectionTitle}>Today's Collection:</Text>
@@ -203,17 +218,18 @@ function Homescreen({ navigation }) {
           {/* Add additional content here */}
         </Card.Content>
       </Card>
-     
         <Card style={styles.Card2} onPress={() => navigation.navigate('ThisMonthCollection')}>
           <Card.Content >
             <Card.Title style={styles.cardTitle}
               title="This Month Collection"
-              left={(props) => <Avatar.Icon {...props} icon="calendar" />}
+              left={(props) => <Avatar.Icon style={styles.todayCollectionicon}{...props} icon="card"size={32} />}
               right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => navigation.navigate('Profile')} />}
             />
             <Text style={styles.txtmain} variant="titleLarge">This Month Collection: {thisMonthCollection}</Text>
           </Card.Content>
         </Card>
+        </View>
+        </View>
         <View style={styles.carouselcontainer} >
        <Carousel
         layout={'default'}
@@ -251,7 +267,9 @@ function Homescreen({ navigation }) {
             </View>
           ))}
         </View>
+       
         </SafeAreaView> 
+        
   )
 
 }
@@ -262,13 +280,19 @@ const styles = StyleSheet.create({
     padding: 2,
     backgroundColor: '#fff',
   },
+  container1:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+   
+   
+  },
   txtmain: {
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: "bold",
     justifyContent: 'center',
     padding: 1,
-    marginLeft: 40
-
+    marginLeft: 50,
+    marginTop:0,
   },
   lineStyle: {
     flexDirection: 'row',
@@ -279,8 +303,8 @@ const styles = StyleSheet.create({
     alignItems: 'left',
     padding: 1,
     fontsize: 10,
-    marginLeft: 15,
-    marginRight: 15,
+    marginLeft: 5,
+    marginRight: 5,
     backgroundColor: "gold",
     shadowColor: "black",
     shadowOffset: {
@@ -291,50 +315,37 @@ const styles = StyleSheet.create({
     shadowRadius: 14.78,
     elevation: 22,
   },
-  Card2: {
-    alignItems: 'left',
-    padding: 2,
-    fontsize: 10,
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 10,
-    backgroundColor: "pink"
-
-  },
+  
   carouselItem: {
     borderRadius: 10,
     overflow: 'hidden',
     marginVertical: 5,
     
   },
+  carouselcontainer:{
 
-  card: {
-    borderRadius: 10,
-    marginLeft: 15,
-    marginRight: 15,
-    marginBottom: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 11,
-    },
-    shadowOpacity: 0.55,
-    shadowRadius: 14.78,
-
-    elevation: 22,
+    margin:5,
+    backgroundColor:'black',
+    
   },
+
   cardImage: {
     height: 200,
     borderRadius: 8,
   },
   cardTitle: {
-    fontSize: 16,
+    alignSelf: 'flex-start',
     fontWeight: 'bold',
     marginBottom: 1,
     flex: 1,
-    paddingHorizontal: 35,
-    color: 'black',
+    
+    
+    
+    fontSize: 50,
+    fontWeight: 'bold',
+   
   },
+  
   cardPrice: {
     fontSize: 16,
     color: 'black',
@@ -410,48 +421,80 @@ const styles = StyleSheet.create({
    
   },
   idCard: {
-    borderRadius: 50,
+    borderRadius: 30,
     margin: 18,
-    padding: 10,
-    backgroundColor: 'white',
+    padding: 8,
+    backgroundColor: 'lightgreen',
     elevation: 15,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
+  idCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  detail: {
-    fontSize: 13,
+  avatar: {
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 20, // Adjust the margin as needed
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 5,
   },
-  todayCollectionCard: {
-    margin: 16,
-    padding: 16,
+  detail: {
+    fontSize: 14,
+  },
+  card: { 
     borderRadius: 10,
+   
+ 
+    padding: 2,
+    marginBottom: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 11,
+    },
+    shadowOpacity: 0.55,
+    shadowRadius: 14.78,
+    elevation: 22,
+  },
+  Card2: {
+   
+    
+    margin:5,
+    fontsize: 10,
+    borderRadius: 18,
     elevation: 5,
+    width:200,
+    flexDirection:'row',
+    backgroundColor:'yellow',
+  },
+  todayCollectionCard: {
+    padding: 2,
+    margin:5,
+    fontsize: 10,
+    borderRadius: 18,
+    elevation: 5,
+    width:200,
+    flexDirection:'row',
+    backgroundColor:'yellow',
+  },
+  todayCollectionicon:{
+    padding:5,
+    size:5,
+    backgroundColor: '#000',
   },
   todayCollectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  todayCollectionAmount: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-  },
-  todayCollectionCard: {
-    margin: 16,
-    padding: 16,
-    borderRadius: 10,
-    elevation: 5,
-  },
-  todayCollectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    padding:5,
+    flexDirection:'row',
+    
   },
   todayCollectionAmount: {
     fontSize: 24,

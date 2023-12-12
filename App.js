@@ -20,7 +20,7 @@ export default function App() {
       // For example, check authentication status, load data, etc.
 
       // Simulate a delay (you can replace it with actual tasks)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Set the app ready state
       setAppReady(true);

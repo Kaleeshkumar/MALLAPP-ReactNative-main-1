@@ -7,17 +7,24 @@ import QRCode from 'react-native-qrcode-svg';
 import AppHeader from '../components/Appheader';
 import axios from 'axios';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Paymentscreen({ navigation }) {
+const Paymentscreen=({ route })=>
+ {
   // State variables for user ID and transaction details
-  const [userId, setUserId] = useState('123456'); // Replace with actual user ID
+  const { orderId, qrCodeData } = route.params || {};
+  const navigation = useNavigation();
+  const [userId, setUserId] = useState('123456');
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+ // Replace with actual user ID
   const [transactionDetails, setTransactionDetails] = useState({
-    orderId: 'ORDER_ID',
+    
     amount: '2000', // Amount in paise (5000 paise = INR 50)
     status: 'Pending', // You can update this based on the payment status
   });
+  const [hasEnteredPage, setHasEnteredPage] = useState(false);
 
   //modal open
   const [visible, setVisible] = React.useState(false);
@@ -67,16 +74,11 @@ export default function Paymentscreen({ navigation }) {
       return null;
     }
   };
-
    // Function to generate payment link
- 
-
   const [enteredAmount, setEnteredAmount] = useState('');
   const handleAmountChange = (text) => {
     setEnteredAmount(text);
   };
-
-  
   // Function to handle the "Create Order" button press
   const handleCreateOrder = async () => {
     try {
@@ -92,7 +94,6 @@ export default function Paymentscreen({ navigation }) {
         const transactionNote = 'Transaction Note';
   
         const qrCodeData = `upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
-  
         showModal();
         const newTransaction = {
           orderId: orderId,
@@ -113,8 +114,36 @@ export default function Paymentscreen({ navigation }) {
   // Function to handle the "Show QR Code" button press
   const handleShowQRCode = () => {
     showModal();
-    handlePayment(); // Call handlePayment when the button is clicked
+     // Call handlePayment when the button is clicked
   };
+  useEffect(() => {
+    if (hasEnteredPage) {
+      // If the user has already entered the page, do nothing
+      return; 
+    }
+    // Show QR code automatically after 3 seconds
+    setTimeout(() => {
+      handleShowQRCode();
+      setHasEnteredPage(true); // Set the flag to true after showing the QR code
+    }, 3000);
+  }, [hasEnteredPage]);
+
+    // Function to handle the "Show QR Code" button press
+    useEffect(() => {
+      let timeoutId;
+      if (visible) {
+        // Auto-hide the modal after 3 seconds
+        timeoutId = setTimeout(() => {
+          hideModal();
+          // Call your payment handler function here
+         handlePayment();
+        }, 20000);
+        // Clear the timeout when the component is unmounted
+        return () => clearTimeout(timeoutId);
+      }
+     
+    }, [visible]);
+    
 
 
   // Define your payment data
@@ -145,7 +174,8 @@ export default function Paymentscreen({ navigation }) {
     }
   };
    // Function to handle the "View Details" button press
-   const handleViewDetails = (id) => {
+   const handleViewDetails = (id,transaction) => {
+    setSelectedTransaction(transaction);
     // Implement navigation to a details screen or modal
     console.log('View details for order:', id);
   };
@@ -156,7 +186,7 @@ export default function Paymentscreen({ navigation }) {
     razorpay_signature: 'SIGNATURE',
   };
 
-  const orderId = "id"; // Replace with your actual order ID
+  // Replace with your actual order ID
   const upiId = "kaleeshkumar1125180@okaxis"; // Replace with your actual UPI ID
   const recipientName = "Thaagamfoundation"; // Replace with the recipient's name
   const merchantCode = "MZpU0jiQXg4m4x"; // Replace with your actual merchant code
@@ -164,7 +194,7 @@ export default function Paymentscreen({ navigation }) {
   const transactionNote = "Transaction Note";
 
   // Call the function with the payment data
-    const qrCodeData =`upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
+    
   //razor user qr code
   const options = {
     description: 'Sample Payment',
@@ -222,7 +252,8 @@ export default function Paymentscreen({ navigation }) {
           <SafeAreaView style={styles.QR}>
             {/* Display User ID */}
             {/* QR Code */}
-            <QRCode value={qrCodeData} size={250} />
+            
+      <QRCode value={qrCodeData} />
             <Text style={styles.QRText}>Scan & pay using UPI app</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.downloadButton}>
@@ -236,6 +267,7 @@ export default function Paymentscreen({ navigation }) {
           </SafeAreaView>
         </Modal>
       </Portal>
+
       <TextInput
         style={styles.amountInput}
         placeholder="Enter Amount"
@@ -269,16 +301,14 @@ export default function Paymentscreen({ navigation }) {
         colors={['#24C6DC', '#514A9D', '#24C6DC']}
         style={styles.btnGrad}
         start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
+        end={{ x: 1, y: 0.5 }} 
       >
         <Text style={styles.btnText}>Transaction Details</Text>
       </LinearGradient>
     </TouchableOpacity>
-      
+    <ScrollView> 
       {/* Improved Transaction History Section */}
       <View style={styles.transactionHistoryContainer}>
-        
-        <ScrollView>
           {transactions.map((transaction, index) => (
             <Card key={index} style={styles.transactionCard}>
               <Card.Content>
@@ -297,12 +327,38 @@ export default function Paymentscreen({ navigation }) {
                 </TouchableOpacity>
               </Card.Content>
             </Card>
+            
           ))}
-        </ScrollView>
+
+
+  <Modal
+    visible={selectedTransaction !== null}
+    onRequestClose={() => setSelectedTransaction(null)}
+    onDismiss={hideModal}
+    style={styles.modalContainer1}
+    contentContainerStyle={containerStyle}
+  >
+    {/* Display details from selectedTransaction */}
+    <Text>Transaction ID: {selectedTransaction?.transactionId}</Text>
+    <Text>Order ID: {selectedTransaction?.orderId}</Text>
+    <Text>Date: {selectedTransaction?.date}</Text>
+    <Text>Time: {selectedTransaction?.time}</Text>
+    <Text>Source of Payment: {selectedTransaction?.source}</Text>
+
+    {/* Add a button to close the modal */}
+    <TouchableOpacity onPress={() => setSelectedTransaction(null)} style={styles.downloadButton}>
+      <Text style={styles.buttonText}>Close</Text>
+    </TouchableOpacity>
+  </Modal>
+
+        
       </View>
+      </ScrollView>
     </PaperProvider>
   )
 }
+
+export default Paymentscreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -310,7 +366,7 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   QR: {
-    padding: 10,
+    padding: 50,
     fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
@@ -428,23 +484,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
   },
-  downloadButton: {
-    backgroundColor: '#5e69ee',
-    padding: 12,
-    borderRadius: 10,
-  },
-  shareButton: {
-    backgroundColor: '#5e69ee',
-    padding: 10,
-    borderRadius: 10,
-  },
- 
-  upiIdText: {
-    marginTop: 10,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'black',
-  },
   closeButton: {
     position: 'absolute',
     top: 2,
@@ -474,7 +513,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   upiIdText: {
-    marginTop: 20,
+    marginTop: 10,
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
@@ -483,8 +522,19 @@ const styles = StyleSheet.create({
   logo: {
     height: 40, // Adjust the height as needed
     width: '100%', // Make it take the full width
-    marginBottom: 50, // Adjust margin as needed
+    marginBottom: 10, // Adjust margin as needed
   },
+  modalContainer1: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 10,
+    margin:50,
+    height:300,
+    marginBottom:50,
+    alignItems:'center'
+  },
+
 });
   
   

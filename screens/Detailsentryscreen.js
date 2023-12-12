@@ -4,7 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Ionicons } from '@expo/vector-icons'; 
-
+import { useState } from 'react';
+import { useUser } from "../components/UserContext";
 
 const Detailsentryscreen = () => {
     const navigation = useNavigation();
@@ -18,7 +19,7 @@ const Detailsentryscreen = () => {
     // Handle cash button press
     // Navigate to cash details screen or perform other actions
   };
-
+  const { userData, setUserData } = useUser();
   // Get current date and time
   const currentDate = new Date().toDateString();
   const currentTime = new Date().toLocaleTimeString();
@@ -28,7 +29,7 @@ const Detailsentryscreen = () => {
       {/* Header Section */}
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Details Entry Screen</Text>
-        <Text style={styles.screenName}>Username</Text>
+        <Text style={styles.screenName}>{userData.name}</Text>
         <Text style={styles.dateTimeText}>{currentDate}</Text>
         <Text style={styles.dateTimeText}>{currentTime}</Text>
       </View>
