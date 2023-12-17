@@ -8,6 +8,7 @@ import AppHeader from '../components/Appheader';
 import axios from 'axios';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useState ,useEffect} from 'react';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 
@@ -32,6 +33,7 @@ const Paymentscreen=({ route })=>
   const hideModal = () => setVisible(false);
   const [transactions, setTransactions] = useState([]);
   const containerStyle = { backgroundColor: 'skyblue', padding: 15 };
+  
 
   /*
   const createRazorpayOrder = async () => {
@@ -64,7 +66,7 @@ const Paymentscreen=({ route })=>
   // Function to create Razorpay order
   const createRazorpayOrder = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8081/create_razorpay_order/');
+      const response = await axios.post('https://18b1-115-96-6-60.ngrok-free.app/create_razorpay_order/', { amount: enteredAmount }, { headers: { 'Content-Type': 'application/json' } });
       console.log(response.data);
        // Assuming the response contains the order ID and other necessary details
       const orderDetails = response.data;
@@ -92,7 +94,6 @@ const Paymentscreen=({ route })=>
         const merchantCode = 'MZpU0jiQXg4m4x';
         const referenceId = 'your_reference_id';
         const transactionNote = 'Transaction Note';
-  
         const qrCodeData = `upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
         showModal();
         const newTransaction = {
@@ -110,7 +111,10 @@ const Paymentscreen=({ route })=>
   };
   
 
-
+  const handleShowcontainer = () => {
+    showModal();
+     // Call handlePayment when the button is clicked
+  };
   // Function to handle the "Show QR Code" button press
   const handleShowQRCode = () => {
     showModal();
@@ -149,7 +153,7 @@ const Paymentscreen=({ route })=>
   // Define your payment data
   const handlePayment = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8081/paymenthandler/', {
+      const response = await axios.post('https://18b1-115-96-6-60.ngrok-free.app/paymenthandler/', {
         razorpay_payment_id: 'PAYMENT_ID',
         razorpay_order_id: 'ORDER_ID',
         razorpay_signature: 'SIGNATURE',
@@ -194,20 +198,20 @@ const Paymentscreen=({ route })=>
   const transactionNote = "Transaction Note";
 
   // Call the function with the payment data
-    
+ /*   
   //razor user qr code
   const options = {
     description: 'Sample Payment',
     image: 'https://example.com/your-image.png',
     currency: 'INR',
     key: 'rzp_test_2h8n68Dp5BnsgZ',
-    amount: '2000', // Amount in paise (5000 paise = INR 50)
-    name: 'Thaagam Foundation',
+    amount: '1000', // Amount in paise (5000 paise = INR 50)
+    name: 'Thaagam ',
     prefill: {
       email: 'kaleeshkumar.r@gmail.com',
       contact: '6383333101',
     },
-    theme: { color: '#F37254' },
+    theme: { color: 'blue' },
   };
   RazorpayCheckout.open(options).then((data) => {
     // Handle success
@@ -216,6 +220,7 @@ const Paymentscreen=({ route })=>
     // Handle failure
     console.log(`Error: ${error}`);
   });
+  */
 
   return (
     <PaperProvider>
@@ -224,9 +229,9 @@ const Paymentscreen=({ route })=>
           title={"Payment"}
           headerBg={"#000000"}
           iconColor={"white"}
-          menu //or back
+          back
           optionalBadge={5}
-          navigation={navigation}
+          onPress={() => navigation.goBack()}
           right="more-vertical"
           rightFunction={() => console.log('right')}
           optionalIcon="bell"
@@ -253,7 +258,8 @@ const Paymentscreen=({ route })=>
             {/* Display User ID */}
             {/* QR Code */}
             
-      <QRCode value={qrCodeData} />
+      <QRCode value={qrCodeData} size={280} />
+      
             <Text style={styles.QRText}>Scan & pay using UPI app</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.downloadButton}>
@@ -268,6 +274,8 @@ const Paymentscreen=({ route })=>
         </Modal>
       </Portal>
 
+      <Portal style={styles.container}>
+        <Modal visible={visible} onDismiss={hideModal} style={styles.modalContainer} contentContainerStyle={containerStyle}>
       <TextInput
         style={styles.amountInput}
         placeholder="Enter Amount"
@@ -294,9 +302,12 @@ const Paymentscreen=({ route })=>
       >
         SHOW THE QR CODE
       </Button>
+      </Modal>
+      </Portal>
 
       <Text style={styles.QRText}>User ID: {userId}</Text>
       <TouchableOpacity style={styles.btnGradContainer}>
+
       <LinearGradient
         colors={['#24C6DC', '#514A9D', '#24C6DC']}
         style={styles.btnGrad}
@@ -305,7 +316,18 @@ const Paymentscreen=({ route })=>
       >
         <Text style={styles.btnText}>Transaction Details</Text>
       </LinearGradient>
+      
+      
     </TouchableOpacity>
+    <Button
+        style={styles.button}
+        mode="contained"
+        onPress={handleShowcontainer}
+        labelStyle={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}
+      >
+        QUICK PAY
+      </Button>
+    
     <ScrollView> 
       {/* Improved Transaction History Section */}
       <View style={styles.transactionHistoryContainer}>
@@ -363,16 +385,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
-    padding: 40,
+    padding: 20,
   },
   QR: {
-    padding: 50,
+    padding: 20,
     fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
+    size:10
   },
   QRText: {
-    marginTop: 10,
+    marginTop: 0,
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
@@ -385,15 +408,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5e69ee',
     borderRadius: 40,
   },
-  transactionCard: {
-    margin: 10,
-    padding: 2,
-    backgroundColor: '#E0E0E0', // Change the color to your desired color
-    borderRadius: 15, // Optional: Add border radius for rounded corners
-  },
-  headerContainer: {
-    marginBottom: 20,
-  },
+
   companyName: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -420,7 +435,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: '#000000',
     borderWidth: 1,
-    margin: 20,
+    margin: 25,
     padding: 10,
   },
   btnGradContainer: {
@@ -434,7 +449,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textTransform: 'uppercase',
     color: 'white',
-    boxShadow: '0 0 20px #eee', // boxShadow doesn't work in React Native, you can use elevation for shadow
+    // boxShadow doesn't work in React Native, you can use elevation for shadow
     borderRadius: 10,
   },
   btnText: {
@@ -442,18 +457,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   transactionHistoryContainer: {
-    marginTop: 20,
-    padding: 10,
+    marginTop: 28,
+    padding: 15,
   },
   transactionHistoryTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
   },
   transactionCard: {
     marginBottom: 10,
-    borderRadius: 15,
-    elevation: 2,
+    borderRadius: 25,
+    elevation: 20,
   },
   transactionHeader: {
     flexDirection: 'row',
@@ -468,7 +483,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   viewDetailsButton: {
-    marginTop: 10,
+    marginTop: 12,
     padding: 8,
     backgroundColor: '#5e69ee',
     borderRadius: 5,
@@ -503,7 +518,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5e69ee',
     padding: 18,
     
-    borderRadius: 15,
+    borderRadius: 18,
     marginVertical: 15,
     marginRight:5
   },
@@ -513,7 +528,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   upiIdText: {
-    marginTop: 10,
+    marginTop: 18,
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',

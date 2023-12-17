@@ -15,7 +15,7 @@ const handleLogin = async ({username, password, navigation}) => {
     const cache = new WeakSet();
 
     try {
-        const response = await fetch('http://127.0.0.1:8081/handle_login/', {
+        const response = await fetch('https://18b1-115-96-6-60.ngrok-free.app/handle_login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

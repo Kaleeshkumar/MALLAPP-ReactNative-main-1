@@ -19,11 +19,10 @@ import axios from "axios";
 
 
 const EditProfile = ({ navigation }) => {
-
-
-  const [email, setEmail] = useState("metperters@gmail.com");
-  const [password, setPassword] = useState("randompassword");
-  const [country, setCountry] = useState("Nigeria");
+  const { userData, setUserData } = useUser();
+  const [newName, setNewName] = useState(userData.name);
+  const [newrole, setNewRole] = useState(userData.role);
+  const [selectedImage, setSelectedImage] = useState(userData.profileImage);
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
   const today = new Date();
   const startDate = getFormatedDate(
@@ -32,24 +31,18 @@ const EditProfile = ({ navigation }) => {
   );
   const [selectedStartDate, setSelectedStartDate] = useState("01/01/1990");
   const [startedDate, setStartedDate] = useState("12/12/2023");
+  const [password, setPassword] = useState("randompassword");
+  const [number, setnumber] = useState(userData.number);
 
-  const { userData, setUserData } = useUser();
-  const [newName, setNewName] = useState(userData.name);
-  const [newrole, setNewRole] = useState(userData.role);
-  const [selectedImage, setSelectedImage] = useState(userData.profileImage);
 
 
 
   const handleChangeStartDate = (propDate) => {
     setStartedDate(propDate);
   };
-
-
   const handleOnPressStartDate = () => {
     setOpenStartDatePicker(!openStartDatePicker);
   };
-
-
   const handleImageSelection = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -72,55 +65,53 @@ const EditProfile = ({ navigation }) => {
     user_id: userId,
     // Other profile update data
   };
+
   const handleSave = async () => {
-
-    const userId = userData.userId; // Replace this with the actual way you get the user ID
-    const newData = {
-      name: newName,
-      role: newrole,
-      // Include other fields as needed
-    };
-    try {
-      const response = await axios.post(`http://127.0.0.1:8081/update_profile/${userId}/`, newData);
-      console.log(response.data);
-
-      if (response.data.success) {
-        updateUserData(response.data.updatedUserData);
-        setUserData(response.data.updatedUserData);
-        // Additional logic if needed
-      } else {
-        // Handle errors from the backend
-      }
-    } catch (error) {
-      console.error('Error updating profile:', error);
-    }
-    // Update user data
-    setUserData({
-      ...userData,
-      userId,
-      name: newName,
-      role: newrole,
-      profileImage: selectedImage, // Include the new profile image URI
-    });
-
-    // Navigate back to the profile screen
-    navigation.goBack();
+  const userId = userData.userId;
+  const newData = {
+    name: newName,
+    role: newrole,
+    mobile:userMobile,
   };
 
-  const handleProfileUpdate = async (newUserData) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:8081/update-profile/', newUserData);
+  try {
+    await handleProfileUpdate(userId, newData);
+    // Additional logic if needed
+  } catch (error) {
+    console.error('Error updating profile:', error);
+  }
 
-      if (response.data.success) {
-        updateUserData(response.data.updatedUserData);
-        // Additional logic if needed
-      } else {
-        // Handle errors
-      }
-    } catch (error) {
-      console.error('Error updating profile:', error);
+  // Update user data
+  setUserData({
+    ...userData,
+    userId,
+    name: newName,
+    role: newrole,
+    mobile: userMobile,
+  });
+
+  // Navigate back to the profile screen
+  navigation.goBack();
+};
+
+const handleProfileUpdate = async (userId, newData) => {
+  try {
+    const response = await axios.post(`https://18b1-115-96-6-60.ngrok-free.app/update-profile/${userId}/`, newData);
+
+    if (response.data.success) {
+      updateUserData(response.data.updatedUserData);
+      // Additional logic if needed
+    } else {
+      // Handle errors
+      throw new Error('Profile update failed');
     }
-  };
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    throw error;
+  }
+};
+
+
   function renderDatePicker() {
     return (
       <Modal
@@ -349,7 +340,7 @@ const EditProfile = ({ navigation }) => {
             marginBottom: 6,
           }}
         >
-          <Text style={{ ...FONTS.h4 }}>Country</Text>
+          <Text style={{ ...FONTS.h4 }}>Mobile Number</Text>
           <View
             style={{
               height: 44,
@@ -363,8 +354,8 @@ const EditProfile = ({ navigation }) => {
             }}
           >
             <TextInput
-              value={country}
-              onChangeText={(value) => setCountry(value)}
+              value={number}
+              onChangeText={(value) => setnumber(value)}
               editable={true}
             />
           </View>

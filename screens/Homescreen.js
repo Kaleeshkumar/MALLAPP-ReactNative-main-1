@@ -38,7 +38,7 @@ function Homescreen({ navigation }) {
   //api section
   useEffect(() => {
     // Fetch Today Collection
-    fetch('http://127.0.0.1:8081/today_collection/', {
+    fetch('https://18b1-115-96-6-60.ngrok-free.app/today_collection/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ function Homescreen({ navigation }) {
   
   /*
     // Fetch This Month Collection
-    fetch('http://127.0.0.1:8081/ThisMonthCollection/')
+    fetch('https://699a-115-96-6-60.ngrok-free.app/ThisMonthCollection/')
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -191,7 +191,7 @@ function Homescreen({ navigation }) {
         navigation={navigation}
         menu // or back
         optionalBadge={5}
-        right="more-vertical"
+        right="bell" 
         rightFunction={() => console.log('right')}
         optionalIcon="bell"  // Add this prop to enable the bell icon
         optionalFunc={() => console.log('optional')}
@@ -202,8 +202,6 @@ function Homescreen({ navigation }) {
 
       {/*collection */}
       
-
-    
       <View style={styles.container1}>
       <View style={styles.card}>
       <Card style={styles.todayCollectionCard} onPress={() => navigation.navigate('TodayCollection')}>
@@ -283,8 +281,6 @@ const styles = StyleSheet.create({
   container1:{
     flexDirection: 'row',
     justifyContent: 'space-between',
-   
-   
   },
   txtmain: {
     fontSize: 16,

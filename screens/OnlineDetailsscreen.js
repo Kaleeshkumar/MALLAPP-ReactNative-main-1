@@ -16,7 +16,7 @@ import { FONTS } from '../constants';
 
 
 
-export default function DetailsScreen({ navigation }) {
+export default function OnlineDetailsscreen({ navigation }) {
   const [name, setName] = useState('');
   const [nameOnParcel, setNameOnParcel] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -71,7 +71,7 @@ const handleOnPressStartDate = () => {
     };
     //api to post 
    //handle Data
-   axios.post('http://127.0.0.1:8081/handle_data/', JSON.stringify(data),
+   axios.post('https://18b1-115-96-6-60.ngrok-free.app/handle_data/', JSON.stringify(data),
      {
       method: 'POST',
       headers: {
@@ -80,16 +80,16 @@ const handleOnPressStartDate = () => {
       
     })
     .then(response => {
-      console.log('Full Response from API:', response);
+      console.log('Full Response from API:', data);
       if (response.status === 200) {
        console.log('donar data saved succesfully')
-        return response.json();
+       
       } else {
         throw new Error('Network response was not ok');
-      }
+      }return response; 
     })
       .then(responseData => {
-        console.log('Response from API:', responseData);
+        console.log('Response from API:', 'success');
         showDialog();
       })
       .catch(error => {
@@ -202,7 +202,7 @@ const handleImageUpload = async () => {
  // Function to create Razorpay order
  const createRazorpayOrder = async () => {
   try {
-    const response = await axios.post('http://127.0.0.1:8081/create_razorpay_order/');
+    const response = await axios.post('https://18b1-115-96-6-60.ngrok-free.app/create_razorpay_order/', { amount: enteredAmount }, { headers: { 'Content-Type': 'application/json' } });
     console.log(response.data);
      // Assuming the response contains the order ID and other necessary details
     const orderDetails = response.data;
@@ -224,15 +224,22 @@ const handleCreateOrder = async () => {
 
     if (orderDetails) {
       const { orderId, /* other details */ } = orderDetails;
-
       const upiId = 'kaleeshkumar1125180@okaxis';
-      const recipientName = 'Thaagamfoundation';
+      const recipientName = 'Thaagam foundation';
       const merchantCode = 'MZpU0jiQXg4m4x';
       const referenceId = 'your_reference_id';
       const transactionNote = 'Transaction Note';
-
       const qrCodeData = `upi://pay?pa=${upiId}&pn=${recipientName}&mc=${merchantCode}&tid=${orderId}&tr=${referenceId}&tn=${transactionNote}&am=${enteredAmount}`;
-     
+      showModal();
+        // Navigate to PaymentScreen and pass the necessary data
+      navigation.navigate('Payment', {
+        orderId,
+        qrCodeData,
+   
+       
+
+        
+      });
       const newTransaction = {
         orderId: orderId,
         amount: enteredAmount,
@@ -248,20 +255,12 @@ const handleCreateOrder = async () => {
     console.error('Error creating Razorpay order:', error);
   }
     // Navigate to PaymentScreen and pass the necessary data
-    navigation.navigate('Payment', {
-      orderId,
-      qrCodeData,
-      
-    });
-    
-};
-
   
-
+};
   // Define your payment data
   const handlePayment = async () => {
     try {
-      const response = await axios.post('http://127.0.0.1:8081/paymenthandler/', {
+      const response = await axios.post('https://18b1-115-96-6-60.ngrok-free.app/paymenthandler/', {
         razorpay_payment_id: 'PAYMENT_ID',
         razorpay_order_id: 'ORDER_ID',
         razorpay_signature: 'SIGNATURE',
@@ -312,8 +311,8 @@ const handleCreateOrder = async () => {
     image: 'https://example.com/your-image.png',
     currency: 'INR',
     key: 'rzp_test_2h8n68Dp5BnsgZ',
-    amount: '2000', // Amount in paise (5000 paise = INR 50)
-    name: 'Thaagam Foundation',
+    amount: '2500', // Amount in paise (5000 paise = INR 50)
+    name: 'Thaagam ',
     prefill: {
       email: 'kaleeshkumar.r@gmail.com',
       contact: '6383333101',
@@ -321,12 +320,6 @@ const handleCreateOrder = async () => {
     theme: { color: '#F37254' },
   };
  
-
-
-
-
-
-
   return (   
       <PaperProvider>
       <SafeAreaView>

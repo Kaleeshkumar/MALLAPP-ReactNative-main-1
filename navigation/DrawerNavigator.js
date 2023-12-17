@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import homescreen from '../screens/Homescreen';
 import Overall from '../screens/Overall';
-import DetailsScreen from '../screens/Detailsscreen';
+import DetailsScreen from '../screens/OnlineDetailsscreen';
 import PaymentScreen from '../screens/Paymentscreen';
 import CustomDrawer from '../components/CustomDrawer';
 import PreviewScreen from '../screens/Previewscreen';

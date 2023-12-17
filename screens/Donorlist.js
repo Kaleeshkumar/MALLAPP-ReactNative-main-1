@@ -20,7 +20,7 @@ const DonorListScreen = () => {
 }, []);
 const fetchDonarList = async () => {
   try {
-      const response = await axios.get('http://127.0.0.1:8081/donar_data/');
+      const response = await axios.get('https://18b1-115-96-6-60.ngrok-free.app/donar_data/');
       setDonarDetails(response.data.donor_data);
   } catch (error) {
       console.error('Error fetching donor data:', error);
@@ -43,7 +43,7 @@ const renderRowsForPage = () => {
       <Text style={styles.column}>{donarDetail.mobileNumber}</Text>
       <Text style={styles.column}>{donarDetail.selectedCategory}</Text>
       <Text style={styles.column}>{donarDetail.count}</Text>
-      <Text style={styles.column}>{donarDetail.amount}</Text>
+      <Text style={styles.column}>{donarDetail.enteredAmount }</Text>
     </View>
   ));
 };
@@ -115,11 +115,12 @@ const handlePrevPage = () => {
       <View style={styles.tableContainer}>
         <View style={styles.tableHeader}>
           <Text style={styles.columnHeader}>Name</Text>
-          <Text style={styles.columnHeader}>Name On Parcel</Text>
-          <Text style={styles.columnHeader}>Mobile Number</Text>
-          <Text style={styles.columnHeader}>Selected Category</Text>
+          <Text style={styles.columnHeader}>Parcel Name</Text>
+          <Text style={styles.columnHeader}>Mobile</Text>
+          <Text style={styles.columnHeader}>Category</Text>
           <Text style={styles.columnHeader}>Count</Text>
           <Text style={styles.columnHeader}>Amount</Text>
+          <Text style={styles.columnHeader}>paymood</Text>
         </View>
         
         {donar_data.map((donarDetail, index) => (
@@ -129,7 +130,8 @@ const handlePrevPage = () => {
             <Text style={styles.column}>{donarDetail.mobileNumber}</Text>
             <Text style={styles.column}>{donarDetail.selectedCategory}</Text>
             <Text style={styles.column}>{donarDetail.count}</Text>
-            <Text style={styles.column}>{donarDetail.amount}</Text>
+            <Text style={styles.column}>{donarDetail.enteredAmount }</Text>
+            <Text style={styles.column}>{donarDetail.paymentMethod }</Text>
           </View>
         ))}
       </View>
@@ -180,7 +182,7 @@ const styles = StyleSheet.create({
   // Inside your styles:
 tableContainer: {
   flex: 1,
-  padding: 16,
+  padding: 8,
   backgroundColor: '#fff',
   borderRadius: 10,
   shadowColor: '#000',
@@ -198,13 +200,13 @@ tableHeader: {
   borderBottomWidth: 1,
   borderBottomColor: '#ddd',
   paddingBottom: 12,
-  marginBottom: 12,
+  marginBottom: 15,
   backgroundColor: '#007bff',
 },
 columnHeader: {
   flex: 1,
   fontWeight: 'bold',
-  fontSize: 14,
+  fontSize: 11,
   color: '#fff',
   textAlign: 'center',
 },
@@ -239,7 +241,6 @@ currentPageText: {
   fontSize: 14,
   color: '#333',
 },
-
 });
   
 

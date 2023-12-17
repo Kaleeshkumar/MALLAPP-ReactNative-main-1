@@ -5,7 +5,7 @@ import  { useEffect } from 'react';
 import login from '../screens/login';
 import Signup from '../screens/Signup';
 
-import DetailsScreen from '../screens/Detailsscreen';
+import DetailsScreen from '../screens/OnlineDetailsscreen';
 import PaymentScreen from '../screens/Paymentscreen';
 import 'react-native-gesture-handler';
 import { getItem } from '../screens/utils/asysncStorage';

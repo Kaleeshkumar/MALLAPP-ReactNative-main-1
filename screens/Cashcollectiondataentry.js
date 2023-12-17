@@ -20,7 +20,7 @@ export default function Cashcollection({ navigation }) {
   const [mobileNumber, setMobileNumber] = useState('');
   const [count, setCount] = useState('');
   //AMOUNT
-  const [amount, setAmount] = useState('');
+  const [enteredAmount, setAmount] = useState('');
   const [visible, setVisible] = useState(false);
  //date of service
  const [selectedDate, setSelectedDate] = useState(new Date());
@@ -42,18 +42,18 @@ export default function Cashcollection({ navigation }) {
       mobileNumber,
       selectedCategory,
       count,
-      amount,
+      enteredAmount,
       selectedDate,
     };
     //api to post 
    //handle Data
-   axios.post('http://127.0.0.1:8081/handle_data/', JSON.stringify(data),
+   axios.post('https://18b1-115-96-6-60.ngrok-free.app/handle_data_cash/', JSON.stringify(data),
      {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      
+       
     })
     .then(response => {
       console.log('Full Response from API:', response);
@@ -62,7 +62,7 @@ export default function Cashcollection({ navigation }) {
         return response.json();
       } else {
         throw new Error('Network response was not ok');
-      }
+      }return response; 
     })
       .then(responseData => {
         console.log('Response from API:', responseData);
@@ -83,7 +83,7 @@ const handlePreview = () => {
     mobileNumber,
     selectedCategory,
     count,
-    amount,
+    enteredAmount,
     selectedDate,
   });
 }
@@ -251,7 +251,7 @@ const handleImageUpload = async () => {
               <View style={styles.inputFieldContainer}>
               <TextInput
                 style={styles.input}
-                value={amount}
+                value={enteredAmount}
                 onChangeText={text => setAmount(text)}
                 keyboardType="numeric"
                 placeholder="Enter amount"
@@ -286,7 +286,7 @@ const handleImageUpload = async () => {
         <View style={styles.detailscontainer}>
         <SafeAreaView style={styles.container}>
           {/* ... (your existing code) */}
-          <Receipt data={{ name, nameOnParcel, mobileNumber, selectedCategory, selectedDate, count, amount }} />
+          <Receipt data={{ name, nameOnParcel, mobileNumber, selectedCategory, selectedDate, count, enteredAmount }} />
           {/* ... (your existing code) */}
         </SafeAreaView>
       </View>
