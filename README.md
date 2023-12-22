@@ -36,7 +36,7 @@ Provide instructions on how to clone, install, and run your project locally.
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/your-repo.git
+git clone https://github.com/Kaleeshkumar/MALLAPP-ReactNative-main.git
 
 # Navigate to the project directory
 cd your-repo
