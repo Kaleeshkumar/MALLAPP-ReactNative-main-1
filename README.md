@@ -12,7 +12,10 @@
 - [OnlineDetailsScreen](#OnlineDetailsScreen)
 - [Cashcollectionscreen](#cashcollectionScreen)
 - [previewscreen](#previewscreen)
-- [previewscreen](#previewscreen)
+- [Donorlist](#Donorlist)
+- [contact](#contact)
+- [settings](#settings)
+- [profile](#profilescreen)
 
 ## Introduction
 
