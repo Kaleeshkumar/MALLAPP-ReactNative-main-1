@@ -17,7 +17,7 @@ const TodayCollectionscreen = () => {
         <Card.Title
           title="Today Collection"
           left={(props) => <Avatar.Icon {...props} icon="folder" />}
-          right={(props) => <IconButton {...props} icon="dots-vertical"onPress={() => navigation.navigate('TodayCollection')} />}
+          right={(props) => <IconButton {...props} icon="dots-vertical" onPress={() => navigation.navigate('TodayCollection')} />}
         />
         <Text style={styles.todayCollectionTitle}>Today's Collection:</Text>
         <Text style={styles.todayCollectionAmount}>₹{todayCollection}</Text>
@@ -40,7 +40,7 @@ const TodayCollectionscreen = () => {
 
   useEffect(() => {
     // Fetch Today Collection
-    fetch('http://127.0.0.1:8081/today_collection/', {
+    fetch('https://d659-115-96-6-60.ngrok-free.app/today_collection/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   todayCollectionCard: {
     margin: 10,
     padding: 15,
-    backgroundColor: '#4CAF50', // Green background color, you can adjust it
+    backgroundColor: '#4CAF50', // Change this color to your desired background color
     borderRadius: 10,
     elevation: 5,
   },

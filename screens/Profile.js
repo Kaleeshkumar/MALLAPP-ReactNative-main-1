@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   FlatList,
-  StyleSheet
+  StyleSheet,
+  ScrollView
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -71,7 +72,7 @@ const Profile = ({ navigation }) => {
 
   const handleProfileUpdate = async (newUserData) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8081/update-profile/', newUserData);
+      const response = await axios.post('https://d659-115-96-6-60.ngrok-free.app/update-profile/', newUserData);
 
       if (response.data.success) {
         updateUserData(response.data.updatedUserData);
@@ -88,6 +89,25 @@ const Profile = ({ navigation }) => {
     { key: "first", title: "online collection" },
     { key: "second", title: "offline collection" },
   ]);
+
+  const iconSectionStyles = StyleSheet.create({
+    container: {
+      marginVertical: 20,
+      alignItems: 'center',
+     
+      
+    },
+    text: {
+      color: COLORS.black,
+      ...FONTS.body4,
+     
+    },
+    icon: {
+      marginBottom: 5,
+      padding:5,
+      
+    },
+  }); 
 
 
 
@@ -120,7 +140,7 @@ const Profile = ({ navigation }) => {
         backgroundColor: COLORS.white,
       }}
     >
-
+<ScrollView>
       <StatusBar backgroundColor={COLORS.gray} />
       <View style={{ width: "100%" }}>
         <Image
@@ -149,7 +169,6 @@ const Profile = ({ navigation }) => {
 
       </View>
 
-
       <View style={{ flex: 1, alignItems: "center" }}>
         <Image
           source={{ uri: userData.profileImage }}
@@ -164,8 +183,6 @@ const Profile = ({ navigation }) => {
           }}
         />
 <View style={styles.container}>
-
-
         <Text
           style={{
             ...FONTS.h1,
@@ -185,22 +202,27 @@ const Profile = ({ navigation }) => {
           {userData.role}
         </Text>
         {/* Additional Details */}
-      <View style={{ marginVertical: 20, alignItems: "center" }}>
-       
-      
-        <Text style={{ color: COLORS.black, ...FONTS.body4 }}>
-          salary: {userData.salary}
-        </Text>
-        <Text style={{ color: COLORS.black, ...FONTS.body4 }}>
-          Target: {userData.target}
-        </Text>
-        <Text style={{ color: COLORS.black, ...FONTS.body4 }}>
-          Working Days: {userData .workingDays}
-        </Text>
-        <Text style={{ color: COLORS.black, ...FONTS.body4 }}>
-          Joining Date: {userData.joiningDate}
-        </Text>
-      </View>
+        <View style={iconSectionStyles.container}>
+          <View style={iconSectionStyles.icon}>
+            <MaterialIcons name="attach-money" size={24} color={COLORS.black} />
+          </View>
+          <Text style={iconSectionStyles.text}>Salary: {userData.salary}</Text>
+
+          <View style={iconSectionStyles.icon}>
+            <MaterialIcons name="assignment" size={24} color={COLORS.black} />
+          </View>
+          <Text style={iconSectionStyles.text}>Target: {userData.target}</Text>
+
+          <View style={iconSectionStyles.icon}>
+            <MaterialIcons name="date-range" size={24} color={COLORS.black} />
+          </View>
+          <Text style={iconSectionStyles.text}>Working Days: {userData.workingDays}</Text>
+
+          <View style={iconSectionStyles.icon}>
+            <MaterialIcons name="event" size={24} color={COLORS.black} />
+          </View>
+          <Text style={iconSectionStyles.text}>Joining Date: {userData.joiningDate}</Text>
+        </View>
 
         <View
           style={{
@@ -290,7 +312,6 @@ const Profile = ({ navigation }) => {
 
             }}
           >
-
           </View>
         </View>
 
@@ -341,14 +362,10 @@ const Profile = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-
+      </ScrollView>
       {/* ... existing code */}
-
-
-
-
-
     </SafeAreaView>
+    
   );
 };
 
@@ -360,6 +377,6 @@ borderColor: '#3498db',
 margin:5,
 alignItems:'center',
 backgroundColor: 'lightyellow',
-borderRadius:20
+borderRadius:30
   }
 })

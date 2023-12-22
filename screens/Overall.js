@@ -10,7 +10,7 @@ export default function Overall({ navigation }) {
 
   useEffect(() => {
     // Fetch data for each report when the component mounts
-    fetchData('http://127.0.0.1:8081/today_collection/');
+    fetchData('https://d659-115-96-6-60.ngrok-free.app/today_collection_report/');
     fetchData('thisMonthCollection');
     fetchData('totalCollection');
     fetchData('collectionByCategory');

@@ -22,6 +22,8 @@ import Receipt from '../screens/Receipt';
 import { stackAnimatedStyles } from 'react-native-new-snap-carousel/src/utils/animations';
 import Cashcollectiondataentry from '../screens/Cashcollectiondataentry';
 import Profile from '../screens/Profile';
+import OnlineDetailsscreen from '../screens/OnlineDetailsscreen';
+import notification from '../screens/notification';
 
 
 const Stack = createNativeStackNavigator();
@@ -58,19 +60,20 @@ if(showOnboarding){
 }else{
   return (
       <Stack.Navigator initialRouteName='Onboarding'>
-        
+ 
         
  <Stack.Screen name='BottomTabNav'options={{ headerShown: false }} component={BottomTabNav}/>
       <Stack.Screen name="Home" options={{ headerShown: false }} component={Homescreen} />
       <Stack.Screen name="TodayCollection"  component={TodayCollectionscreen} />
       <Stack.Screen name='ThisMonthCollection' component={ThisMonthCollection}/>
       <Stack.Screen name='Payment'options={{ headerShown: false }} component={PaymentScreen} />
-      <Stack.Screen name='Preview' component={PreviewScreen}/>
+      <Stack.Screen name='Preview' options={{ headerShown: false }}component={PreviewScreen}/>
       <Stack.Screen name='Signup' component={Signup} />
       <Stack.Screen name='Details' options={{ headerShown: false }} component={DetailsScreen} />
+      <Stack.Screen name='Online' options={{ headerShown: false }} component={OnlineDetailsscreen} />
       <Stack.Screen name='Cashcollection' options={{ headerShown: false }} component={Cashcollectiondataentry} />
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />
-      
+      <Stack.Screen name="notification" component={notification} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="paymentfailure" component={PaymentFailureScreen}/>
       <Stack.Screen name="Receipt" component={Receipt}/>

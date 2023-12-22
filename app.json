@@ -3,6 +3,8 @@
     "name": "MALLAPP",
     "slug": "MALLAPP",
     "version": "1.0.0",
+    "sdkVersion": "49.0.0",
+    "runtimeVersion": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -11,7 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "permissions": ["LOCATION"],
+  
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -34,11 +36,10 @@
         "projectId": "7eefc7c1-d818-4a71-8726-9238823ce8f2"
       }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+   
     "updates": {
       "url": "https://u.expo.dev/7eefc7c1-d818-4a71-8726-9238823ce8f2"
-    }
+    },
+    "owner": "kaleesh6"
   }
 }

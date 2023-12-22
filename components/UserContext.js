@@ -1,4 +1,7 @@
 import React,{createContext, useState, useContext } from "react";
+// Check that the file is named UserContext.js
+
+
 
 const UserContext =createContext();
 
@@ -12,7 +15,8 @@ export const UserProvider = ({children})=>{
         Dob:'date',
         joiningDate: '01/01/2022',
         workingDays: 20,
-        
+       
+       
         salary: '$5,000',
         incentive: '$500',
         target: '$15,000',

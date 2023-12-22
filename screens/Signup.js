@@ -21,7 +21,7 @@ function Signupscreen() {
 
     const fetchCSRFToken = async () => {
       try {
-        const response = await axios.get('https://18b1-115-96-6-60.ngrok-free.app/csrf_token/');
+        const response = await axios.get('https://d659-115-96-6-60.ngrok-free.app/csrf_token/');
         const csrfToken = response.headers['x-csrftoken'];
     
         // Use the retrieved CSRF token in your subsequent requests
@@ -47,7 +47,7 @@ function Signupscreen() {
             // Fetch CSRF token from your Django backend
 
         console.log('Data to be sent:', data); // Add this line to print the data
-        const response = await axios.post('https://18b1-115-96-6-60.ngrok-free.app/create_user_profile/',data, 
+        const response = await axios.post('https://d659-115-96-6-60.ngrok-free.app/create_user_profile/',data, 
         {
           headers: {
             'Content-Type': 'application/json',

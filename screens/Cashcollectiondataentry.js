@@ -11,6 +11,7 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons'; 
 import * as ImagePicker from 'expo-image-picker';
 import { DateTimePicker } from '@react-native-community/datetimepicker';
+import { COLORS } from '../constants';
 
 
 
@@ -29,6 +30,19 @@ export default function Cashcollection({ navigation }) {
   //SELECT TYPE CATEGORY
   const [selectedCategory, setSelectedCategory] = useState('');
   const categories = ['HOMELESS-25', 'EGG&MILK', 'CHICKEN BIRIYANI', 'VEG BIRIYANI', 'ORPHANAGE', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING'];
+
+  const [selectedmallname, setSelectedmallname] = useState('');
+  const mall = ['vr mall', 'foroum', 'phoenix', 'EA_Mall', 'Sky', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING'];
+
+  const [location, setLocation] = useState('');
+  const [paymentConfirmation, setPaymentConfirmation] = useState(null);
+
+  const handleLocationChange = (text) => {
+    setLocation(text);
+  };
+
+
+  
   //navigate to preveiw screen
   
 
@@ -47,7 +61,7 @@ export default function Cashcollection({ navigation }) {
     };
     //api to post 
    //handle Data
-   axios.post('https://18b1-115-96-6-60.ngrok-free.app/handle_data_cash/', JSON.stringify(data),
+   axios.post('https://bf33-115-96-6-60.ngrok-free.app/handle_data_cash/', JSON.stringify(data),
      {
       method: 'POST',
       headers: {
@@ -258,10 +272,35 @@ const handleImageUpload = async () => {
               />
               </View>
             </View>
-            <TouchableOpacity onPress={handleImageUpload} style={styles.uploadButton}>
-  <Text style={styles.uploadButtonText}>Upload Image</Text>
-</TouchableOpacity>
+            <TouchableOpacity
+                onPress={handleImageUpload}
+                style={styles.uploadButton}
+              >
+                <Text style={styles.uploadButtonText}>Upload Image</Text>
+              </TouchableOpacity>
           </View>
+
+          <View style={styles.inputContainer}>
+                <View style={styles.labelContainer}>
+                  <Ionicons
+                    name="location"
+                    size={24}
+                    color={COLORS.primary}
+                  />
+                  <Text style={styles.label}>Mall Name:</Text>
+                </View>
+                <View style={styles.inputFieldContainer}>
+              <Picker
+                selectedValue={selectedmallname}
+                onValueChange={(itemValue) => setSelectedmallname(itemValue)}
+              >
+                <Picker.Item label="Select a category" value="" />
+                {categories.map((category, index) => (
+                  <Picker.Item key={index} label={category} value={category} />
+                ))}
+              </Picker>
+              </View>
+              </View>
           
           <View style={styles.btncontainer}>
           <TouchableOpacity onPress={handlePreview} style={styles.previewButton}>
@@ -291,7 +330,9 @@ const handleImageUpload = async () => {
         </SafeAreaView>
       </View>
       
+      
         </ScrollView>
+        
       </PaperProvider>
 
   );
@@ -415,7 +456,24 @@ const styles = StyleSheet.create({
   uploadButtonText: {
     fontWeight: 'bold',
     color: '#fff',
-
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    borderRadius: 10,
+  },
+  paymentConfirmationContainer: {
+    padding: 20,
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  confirmationText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.success,
+    marginBottom: 10,
   },
   
 });

@@ -71,7 +71,8 @@ const EditProfile = ({ navigation }) => {
   const newData = {
     name: newName,
     role: newrole,
-    mobile:userMobile,
+    profileImage: selectedImage,
+   
   };
 
   try {
@@ -87,7 +88,8 @@ const EditProfile = ({ navigation }) => {
     userId,
     name: newName,
     role: newrole,
-    mobile: userMobile,
+    profileImage: selectedImage,
+ 
   });
 
   // Navigate back to the profile screen
@@ -96,7 +98,7 @@ const EditProfile = ({ navigation }) => {
 
 const handleProfileUpdate = async (userId, newData) => {
   try {
-    const response = await axios.post(`https://18b1-115-96-6-60.ngrok-free.app/update-profile/${userId}/`, newData);
+    const response = await axios.post(`https://bf33-115-96-6-60.ngrok-free.app/update-profile/${userId}/`, newData);
 
     if (response.data.success) {
       updateUserData(response.data.updatedUserData);

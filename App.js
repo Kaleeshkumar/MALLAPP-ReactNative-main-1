@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { UserProvider } from "../MALLAPP-main/components/UserContext";
+import { UserProvider } from './components/UserContext';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthNavigator from './navigation/AuthNavigator';
 import DrawerNavigator from './navigation/DrawerNavigator'; // Import your DrawerNavigator
@@ -24,3 +24,4 @@ export default function App() {
     </NativeBaseProvider>
   );
 }
+

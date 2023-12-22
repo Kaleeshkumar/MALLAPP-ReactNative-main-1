@@ -1,15 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet ,Dimensions} from 'react-native';
+import { View, Text, StyleSheet ,Dimensions,Image} from 'react-native';
 import  { useState } from 'react';
 import { Button, Modal, TouchableOpacity } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Center } from 'native-base';
+import { COLORS, FONTS, SIZES, images } from "../constants";
+import { Center, ScrollView } from 'native-base';
 import SaveComponent from '../components/SaveComponent';
 import * as Sharing from 'expo-sharing';
+import { useNavigation } from '@react-navigation/native';
+
 
 
 const { width, height } = Dimensions.get('window');
+
 export default function PreviewScreen({ route }) {
     // Check if route.params is defined
    if (!route.params) {
@@ -24,40 +28,54 @@ export default function PreviewScreen({ route }) {
     
   );
 }
+// Set today's date as the default date of donation
+const today = new Date();
+const [Date_of_Donation, setDate_Of_Donation] = useState(today);
 
-  const { name, nameOnParcel, mobileNumber, category, count, amount, nameOfrm, Date_of_Donation } = route.params;
+
+  const { name, nameOnParcel, mobileNumber,selectedCategory, count, enteredAmount, nameOfrm  } = route.params;
   const [isActionsheetVisible, setActionsheetVisible] = useState(false);
-
+  const navigation = useNavigation();
   const openActionsheet = () => setActionsheetVisible(true);
   const closeActionsheet = () => setActionsheetVisible(false);
  
   //share data through whatsapp
 
-  const shareData = () => {
-    const message = `Name: ${name}\nName On Parcel: ${nameOnParcel}\nMobile Number: ${mobileNumber}\nCategory: ${category}\nCount: ${count}\nAmount: ${amount}\nName Of Rm: ${nameOfrm}\nDate of Donation: ${Date_of_Donation}`;
+  const shareData = async () => {
+    try {
+      const message = `Name: ${name}\nName On Parcel: ${nameOnParcel}\nMobile Number: ${mobileNumber}\nCategory: ${selectedCategory}\nCount: ${count}\nAmount: ${enteredAmount}\nName Of Rm: ${nameOfrm}\nDate of Donation: ${Date_of_Donation}`;
   
-    Share.open({
-      title: 'Share via',
-      message: message,
-      url: '', // You can include a URL if needed
-      subject: 'Preview Data',
-    })
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((error) => {
+      const options = {
+        title: 'Share via',
+        message: message,
+        url: '', // You can include a URL if needed
+        subject: 'Preview Data',
+      };
+  
+      await Share.open(options);
+    } catch (error) {
       console.error(error);
-    });
+    }
   };
   
 
   return (
+    <SafeAreaView>
+    <ScrollView>
     <View style={styles.container}>
       <View style={styles.invoiceContainer}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Donor Deatails Preview</Text>
+          <Text style={styles.headerText}>DONOR DETAILS PREVIEW</Text>
           <Text style={styles.detailLabel}>Amounted donated:</Text>
-          <Text style={styles.detailValue}>{amount}</Text>
+          <Text style={styles.detailValue}>{enteredAmount}</Text>
+          <Image
+          source={images.cover}
+          resizeMode="contain"
+          style={{
+            height: 200,
+            width: "100%",
+          }}
+        />
         </View>
         <View style={styles.invoiceDetails}>
         <View style={styles.detailRow}>
@@ -76,7 +94,7 @@ export default function PreviewScreen({ route }) {
           </View>
           <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Category:</Text>
-          <Text style={styles.detailValue}>{category}</Text>
+          <Text style={styles.detailValue}>{selectedCategory}</Text>
           </View>
           <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Count:</Text>
@@ -84,7 +102,7 @@ export default function PreviewScreen({ route }) {
           </View>
           <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Amount:</Text>
-          <Text style={styles.detailValue}>{amount}</Text>
+          <Text style={styles.detailValue}>{enteredAmount}</Text>
           </View>
           <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Name Of Rm:</Text>
@@ -92,19 +110,39 @@ export default function PreviewScreen({ route }) {
           </View>
           <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>Date of Donation:</Text>
-          <Text style={styles.detailValue}>{Date_of_Donation}</Text>
+          <Text style={styles.detailValue}>
+              {Date_of_Donation.toISOString().split('T')[0]}
+            </Text>
           </View>
           <View style={styles.detailRow}>
-          <Text style={styles.detailLabel}>Name On Parcel:</Text>
+          <Text style={styles.detailLabel}>Mall Name:</Text>
           <Text style={styles.detailValue}>{nameOnParcel}</Text>
           </View>
           
           
         </View>
        
-        <Button onPress={shareData}>Share Data</Button>
-
-        <Button onPress={openActionsheet}>Open Actionsheet</Button>
+        <Button
+          style={styles.button} // Added style prop for the button
+          onPress={shareData}
+          mode="contained" // Added mode prop for the contained button style
+        >
+          Share Data
+        </Button>
+        <Button
+          style={styles.button} // Added style prop for the button
+          onPress={openActionsheet}
+          mode="contained" // Added mode prop for the contained button style
+        >
+          Open Actionsheet
+        </Button>
+        <Button
+          style={styles.goBackButton} // Custom style for the go back button
+          onPress={() => navigation.goBack()}
+          mode="outlined" // Outlined button style
+        >
+          Go back
+        </Button>
       <Modal
         animationType="slide"
         transparent={true}
@@ -133,9 +171,12 @@ export default function PreviewScreen({ route }) {
       </Modal>
     </View>
       </View>
+      </ScrollView>
+      </SafeAreaView>
       
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -153,7 +194,6 @@ const styles = StyleSheet.create({
     fontStyle:'italic',
     fontWeight:'bold',
     fontSize:20
-    
   },
   invoiceContainer: {
     backgroundColor: '#fff',
@@ -187,8 +227,9 @@ const styles = StyleSheet.create({
    
   },
   detailValue: {
-    fontSize: 16,
-   
+    fontSize: 18,
+   color:'green',
+   fontWeight:'bold',
     textAlign: 'right',
   
     // Aligns the text to the right
@@ -215,5 +256,16 @@ const styles = StyleSheet.create({
     padding:10,
     justifyContent: 'space-between',
     marginBottom: 8,
+  },
+  button: {
+    marginTop: 10,
+    backgroundColor: '#5e69ee',
+    borderRadius: 5,
+  },
+  goBackButton: {
+    marginTop: 10,
+    borderColor: '#5e69ee',
+    borderWidth: 2,
+    borderRadius: 5,
   },
 });

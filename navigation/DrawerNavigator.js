@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import homescreen from '../screens/Homescreen';
 import Overall from '../screens/Overall';
-import DetailsScreen from '../screens/OnlineDetailsscreen';
+import nearbydonors from '../screens/nearbydonors';
 import PaymentScreen from '../screens/Paymentscreen';
 import CustomDrawer from '../components/CustomDrawer';
 import PreviewScreen from '../screens/Previewscreen';
@@ -15,14 +15,18 @@ import BottomTabNav from './BottomTabNavigator';
 import Homescreen from '../screens/Homescreen';
 import { COLORS } from '../constants';
 import SettingsScreen from '../screens/settingsscreen';
+import { useWindowDimensions } from 'react-native';
+import LocationAccess from '../screens/locationaccess';
 
 
 const Drawer = createDrawerNavigator();
 
 
 export default function DrawerNavigator( ) {
+  const dimensions = useWindowDimensions();
+  const isLargeScreen = dimensions.width >= 768; 
+  
   return (
-    
     <Drawer.Navigator
       drawerContent={ (props) => <CustomDrawer {...props} />}
       screenOptions={{
@@ -47,11 +51,11 @@ export default function DrawerNavigator( ) {
       />
       
       <Drawer.Screen
-        name="DetailsEntry"
-        component={DetailsScreen}
+        name="nearbydonors"
+        component={nearbydonors}
         options={{
           drawerIcon: ({color}) => (
-            <Ionicons name="chatbox-ellipses" size={22} color={color} />
+            <Ionicons name="location" size={22} color={color} />
           ),
         }}
       />
@@ -65,8 +69,8 @@ export default function DrawerNavigator( ) {
         }}
       />
       <Drawer.Screen
-        name="paymentfailure"
-        component={PaymentFailureScreen}
+        name="LocationAccess"
+        component={LocationAccess}
         options={{
           drawerIcon: ({color}) => (
             <Ionicons name="timer" size={22} color={color} />

@@ -6,60 +6,59 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import ViewPropTypes from 'deprecated-react-native-prop-types';
+import axios from 'axios';
 
 
 
 
 
-const handleLogin = async ({username, password, navigation}) => {
-    const cache = new WeakSet();
 
+const handleLogin = async ({ username, password, navigation }) => {
     try {
-        const response = await fetch('https://18b1-115-96-6-60.ngrok-free.app/handle_login/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({username, password }, (key, value) => {
-                // Check for circular references and handle them
-                if (typeof value === 'object' && value !== null) {
-                    if (cache.has(value)) {
-                        return '[home]';
-                    }
-                    cache.add(value);
-                }
-                return value;
-            }),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            // Authentication successful, navigate to home screen or perform any other action
-            navigation.navigate('Home');
-        } else {
-            // Authentication failed, show an alert
-            Alert.alert('Error', 'Invalid credentials');
-        }
+      // Fetch CSRF token
+      const csrfResponse = await axios.get('https://d659-115-96-6-60.ngrok-free.app/csrf_token/');
+      const csrfToken = csrfResponse.headers['x-csrftoken'];
+  
+      // Make login request with CSRF token
+      const response = await fetch('https://d659-115-96-6-60.ngrok-free.app/MyapiloginlView/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({ username, password }),
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        // Authentication successful, navigate to home screen or perform any other action
+        console.log ('success',data)
+        navigation.navigate('profile');
+      } else {
+        // Authentication failed, show an alert
+        console.log('failed')
+        Alert.alert('Error', 'Invalid credentials');
+      }
     } catch (error) {
-        console.error('Error:', error);
+      console.error('Error:', error);
     }
-};
-
-
-
-function Login() {
-     const navigation = useNavigation();
-    const [username, setEmail] = useState('');
+  };
+  
+  
+  function Login() {
+    const navigation = useNavigation();
+    const [username,  setusername] = useState('');
     const [password, setPassword] = useState('');
   
     const handleLoginButtonPress = async () => {
-        try {
-          await handleLogin({ username, password, navigation });
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      };
+      try {
+        await handleLogin({ username, password, navigation });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
     return (
         <View style={styles.container}>
             <View style={styles.container}>
@@ -91,7 +90,7 @@ function Login() {
                             }
                             variant="outline"
                             value={username}
-                            onChangeText={text => setEmail(text)}
+                            onChangeText={text => setusername(text)}
                             placeholder="email"
                             _light={{
                                 placeholderTextColor: "blueGray.400",

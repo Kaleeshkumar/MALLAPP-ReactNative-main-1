@@ -13,10 +13,11 @@ import * as ImagePicker from 'expo-image-picker';
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import { COLORS } from '../constants';
 import { FONTS } from '../constants';
+import { education } from '../constants/icons';
 
 
 
-export default function OnlineDetailsscreen({ navigation }) {
+export default function OnlineDetailsScreen({ navigation }) {
   const [name, setName] = useState('');
   const [nameOnParcel, setNameOnParcel] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -46,7 +47,7 @@ const handleOnPressStartDate = () => {
 
   //SELECT TYPE CATEGORY
   const [selectedCategory, setSelectedCategory] = useState('');
-  const categories = ['HOMELESS-25', 'EGG&MILK', 'CHICKEN BIRIYANI', 'VEG BIRIYANI', 'ORPHANAGE', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING'];
+  const categories = ['HOMELESS-25', 'EGG&MILK', 'CHICKEN BIRIYANI', 'VEG BIRIYANI', 'ORPHANAGE', 'BLANKETS', 'DOGFOOD', 'TREE PLANTING','EDUCATION'];
   //navigate to preveiw screen
   
 
@@ -71,7 +72,7 @@ const handleOnPressStartDate = () => {
     };
     //api to post 
    //handle Data
-   axios.post('https://18b1-115-96-6-60.ngrok-free.app/handle_data/', JSON.stringify(data),
+   axios.post('https://f02a-115-96-6-60.ngrok-free.app/handle_data/', JSON.stringify(data),
      {
       method: 'POST',
       headers: {
@@ -202,7 +203,7 @@ const handleImageUpload = async () => {
  // Function to create Razorpay order
  const createRazorpayOrder = async () => {
   try {
-    const response = await axios.post('https://18b1-115-96-6-60.ngrok-free.app/create_razorpay_order/', { amount: enteredAmount }, { headers: { 'Content-Type': 'application/json' } });
+    const response = await axios.post('https://d659-115-96-6-60.ngrok-free.app/create_razorpay_order/', { amount: enteredAmount }, { headers: { 'Content-Type': 'application/json' } });
     console.log(response.data);
      // Assuming the response contains the order ID and other necessary details
     const orderDetails = response.data;
@@ -213,6 +214,7 @@ const handleImageUpload = async () => {
   }
 };
  // Function to generate payment link
+ 
 const [enteredAmount, setEnteredAmount] = useState('');
 const handleAmountChange = (text) => {
   setEnteredAmount(text);
@@ -235,9 +237,6 @@ const handleCreateOrder = async () => {
       navigation.navigate('Payment', {
         orderId,
         qrCodeData,
-   
-       
-
         
       });
       const newTransaction = {
@@ -255,12 +254,17 @@ const handleCreateOrder = async () => {
     console.error('Error creating Razorpay order:', error);
   }
     // Navigate to PaymentScreen and pass the necessary data
+navigation.navigate('Payment', {
+      orderId,
+      qrCodeData,
+      
+    });
   
 };
   // Define your payment data
   const handlePayment = async () => {
     try {
-      const response = await axios.post('https://18b1-115-96-6-60.ngrok-free.app/paymenthandler/', {
+      const response = await axios.post('https://f02a-115-96-6-60.ngrok-free.app/paymenthandler/', {
         razorpay_payment_id: 'PAYMENT_ID',
         razorpay_order_id: 'ORDER_ID',
         razorpay_signature: 'SIGNATURE',
@@ -391,7 +395,7 @@ const handleCreateOrder = async () => {
             <Ionicons name="list" size={24} color={COLORS.primary} />
               <Text style={styles.label}>Category:</Text>
               </View>
-              <View style={styles.inputFieldContainer}>
+              <View style={styles.inputcategoryContainer}>
               <Picker
                 selectedValue={selectedCategory}
                 onValueChange={(itemValue) => setSelectedCategory(itemValue)}
@@ -445,6 +449,21 @@ const handleCreateOrder = async () => {
             </View>
             <View style={styles.inputContainer}>
             <View style={styles.labelContainer}>
+            <Ionicons name="stats-chart" size={24} color={COLORS.primary}/>
+              <Text style={styles.label}>SPECIAL CATEGORY</Text>
+              </View>
+              <View style={styles.inputFieldContainer}>
+              <TextInput
+                style={styles.input}
+                value={count}
+                onChangeText={text => setCount(text)}
+                keyboardType="numeric"
+                placeholder="Enter count"
+              />
+              </View>
+            </View>
+            <View style={styles.inputContainer}>
+            <View style={styles.labelContainer}>
             <Ionicons name="cash" size={24} color={COLORS.primary} />
               <Text style={styles.label}>Amount:</Text>
               </View>
@@ -466,7 +485,7 @@ const handleCreateOrder = async () => {
 
           </View>
           <Button
-        style={styles.button}
+        style={styles.paybutton}
         mode="contained"
         onPress={handleCreateOrder}
         labelStyle={{ color: 'black', fontWeight: 'bold', fontSize: 18 }}
@@ -498,12 +517,9 @@ const handleCreateOrder = async () => {
           {/* ... (your existing code) */}
           <Receipt data={{ name, nameOnParcel, mobileNumber, selectedCategory, startedDate: new Date(), count, enteredAmount }} />
           {/* ... (your existing code) */}
-          
         </SafeAreaView>
         
       </View>
-      
-      
         </ScrollView>
         {renderDatePicker()}
       </PaperProvider>
@@ -515,12 +531,14 @@ const handleCreateOrder = async () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
+    padding: 15,
     backgroundColor: '#f0f0f0',
+    
   },
   labelContainer: {
     flex: 1,
-    flexDirection:"row"
+    flexDirection:"row",
+    
   },
   label: {
     fontSize: 16,  // Adjust font size
@@ -528,6 +546,7 @@ const styles = StyleSheet.create({
     marginLeft:10, // Add some spacing between label and input
     fontWeight: 'bold',
     color:"black"
+
   },
   detailscontainer: {
     backgroundColor: 'skyblue',
@@ -536,14 +555,17 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 20,
     
+    
   },
   heading: {
     fontSize: 25,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 20,
+    
   },
   formContainer: {
     marginBottom: 20,
+    
    
   },
   inputContainer: {
@@ -553,7 +575,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 20,
     fontWeight: 'bold',
+    
    
+  },
+  inputcategoryContainer:{
+   
+    flex: 2,
+    backgroundColor:'lightyellow',
+    marginBottom: 10,
+    borderRadius: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+
   },
   input: {
     padding: 1,
@@ -565,6 +598,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: '#fff',
     elevation: 15,
+    
   },
   inputFieldContainer: {
     flex: 2,
@@ -583,7 +617,7 @@ const styles = StyleSheet.create({
     padding: 13,
     width:100,
     alignItems: 'center',
-    borderColor: 'green', // Change border color to green
+    borderColor: 'black', // Change border color to green
     backgroundColor: '#27ae60',
   },
  
@@ -606,8 +640,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent:'flex-end',
     marginRight: 5,
-    borderColor: '#3498db', // Change border color to green
-    backgroundColor: 'lightgreen',
+    borderColor: 'black', // Change border color to green
+    backgroundColor: 'gold',
+    flex:1
+  },
+  paybutton: {
+    borderWidth: 2,
+   borderRadius:30,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent:'flex-end',
+    marginRight: 5,
+    borderColor: 'black', // Change border color to green
+    backgroundColor: 'lightyellow',
     flex:1
   },
   previewButtonText: {
@@ -629,6 +674,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
-  
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    borderRadius: 10,
+  },
+  paymentConfirmationContainer: {
+    padding: 20,
+    backgroundColor: COLORS.lightGray,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  confirmationText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: COLORS.success,
+    marginBottom: 10,
+  },
 });
+  
+
 

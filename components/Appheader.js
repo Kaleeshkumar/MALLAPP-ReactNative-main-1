@@ -6,12 +6,10 @@ import { useNavigation} from '@react-navigation/native'
 
 
 
-
-
 const IconSize = 24;
 
 
-const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn, optionalBtnPress, rightComponent, headerBg, iconColor, titleAlight, optionalBadge  }) => {
+const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn, optionalBtnPress, rightComponent, headerBg, iconColor, titleAlight, optionalBadge, onNotificationPress,  }) => {
   const navigation = useNavigation();
 
 
@@ -27,22 +25,20 @@ const Appheader = ({ style, menu, back, title, right, onRightPress, optionalBtn,
     </View>
   )
   const RightView = () => (
-    rightComponent ? rightComponent :
+    rightComponent ? rightComponent() : // Call rightComponent as a function
       <View style={[styles.view, styles.rightView]}>
         {optionalBtn && <TouchableOpacity style={styles.rowView} onPress={optionalBtnPress}>
           <Feather name={optionalBtn} size={IconSize} color={iconColor} />
           {optionalBadge && <Badge style={{ position: 'absolute', top: -5, right: -10 }}>{optionalBadge}</Badge>}
         </TouchableOpacity>}
-        {right && <TouchableOpacity onPress={() => navigation.rightComponent()}>
+        {right && <TouchableOpacity onPress={onRightPress}>
           <Feather name={right} size={IconSize} color={iconColor} />
         </TouchableOpacity>}
       </View>
   )
   const TitleView = () => (
-    <View style={styles.titleView}>
-       
+    <View style={styles.titleView}>     
       <Title style={{ color: iconColor, textAlign: titleAlight }}>{title}</Title>
-
     </View>
     
   )

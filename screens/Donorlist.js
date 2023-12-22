@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity , ActivityIndicator} from 'react-native';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const DonorListScreen = () => {
 
@@ -14,13 +14,13 @@ const DonorListScreen = () => {
   }, []);
 
   console.log('Type of donardetails:',typeof donar_data)
-  console.log('DonorDetails:',  donar_data) 
+  console.log('DonorDetails:', donar_data) 
   useEffect(() => {
     fetchDonarList();
 }, []);
 const fetchDonarList = async () => {
   try {
-      const response = await axios.get('https://18b1-115-96-6-60.ngrok-free.app/donar_data/');
+      const response = await axios.get('https://d659-115-96-6-60.ngrok-free.app/donar_data/');
       setDonarDetails(response.data.donor_data);
   } catch (error) {
       console.error('Error fetching donor data:', error);

@@ -11,7 +11,7 @@ const Detailsentryscreen = () => {
     const navigation = useNavigation();
     const handleOnlinePress = () => {
         console.log('Online Button Pressed');
-        navigation.navigate('DetailsEntry', { entryType: 'online' });
+        navigation.navigate('Online', { entryType: 'online' });
       };
   const handleCashPress = () => {
     console.log('Cash Button Pressed');
@@ -55,12 +55,17 @@ const Detailsentryscreen = () => {
      
       {/* Additional Instructions */}
       <View style={styles.additionalInstructions}>
-        <Text style={styles.instructionText}>Additional Instructions:</Text>
-        <Text style={styles.instructionText}>
-          1. Make sure to provide accurate details.
+      <Text style={styles.instructionText}>
+          1. On the details screen, click the "Online" button to retrieve donor details. If not, click the "Cash" button.
         </Text>
         <Text style={styles.instructionText}>
-          2. Contact support if you face any issues.
+          2. If you clicked the "Online" button, after getting donor details, proceed to payment.
+        </Text>
+        <Text style={styles.instructionText}>
+          3. After payment, navigate to the preview screen, review the information, and save the details. Share the details through WhatsApp.
+        </Text>
+        <Text style={styles.instructionText}>
+          4. If you chose the "Cash" button, enter donor details, then upload an image. Proceed to preview, save the details, and share via WhatsApp.
         </Text>
       </View>
     </SafeAreaView>
@@ -75,9 +80,17 @@ const styles = StyleSheet.create({
   headerContainer: {
     alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: 'lightgrey', // Header background color
-    paddingVertical: 10, // Add padding to the header
-    borderRadius: 10, // Add border radius for a rounded look
+    backgroundColor: 'lightyellow', // Updated color
+    paddingVertical: 10,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   headerText: {
     fontSize: 24,
@@ -97,10 +110,14 @@ const styles = StyleSheet.create({
   instructionContainer: {
     marginBottom: 15,
     
+    
   },
   instructionText: {
     fontSize: 16,
     marginBottom: 5,
+    marginLeft:10,
+    padding:15,
+    
   },
   buttonContainer: {
     flexDirection: 'row',
