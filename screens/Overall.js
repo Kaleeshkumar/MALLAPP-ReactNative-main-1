@@ -31,6 +31,55 @@ export default function Overall({ navigation }) {
       setLoading(false);
     }
   };
+   // Generate PDF report for all collection categories
+   const generatePDFReport = async () => {
+    try {
+      setLoading(true);
+
+      // Prepare HTML content for the PDF
+      const htmlContent = `
+        <html>
+          <head>
+            <style>
+              /* Add any styling you want for the PDF */
+              body { font-family: Arial, sans-serif; }
+              .report-container { margin: 20px; padding: 10px; background-color: lightgray; border-radius: 10px; }
+              .report-title { font-size: 20px; font-weight: bold; color: black; margin-bottom: 10px; }
+              .report-text { font-size: 16px; color: black; }
+            </style>
+          </head>
+          <body>
+            ${reports.map(({ type, data }) => `
+              <div class="report-container">
+                <div class="report-title">${type}</div>
+                <div class="report-text">${JSON.stringify(data, null, 2)}</div>
+              </div>
+            `).join('')}
+          </body>
+        </html>
+      `;
+
+      // Generate PDF file
+      const options = {
+        html: htmlContent,
+        fileName: 'collection_report',
+        directory: 'Documents',
+      };
+
+      const pdfFile = await RNHTMLtoPDF.convert(options);
+
+      // Display a success message
+      Alert.alert(
+        'PDF Report Generated',
+        `The PDF report has been generated and saved at: ${pdfFile.filePath}`,
+      );
+    } catch (error) {
+      console.error('Error generating PDF report:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <SafeAreaView style={styles.body}>
@@ -89,6 +138,12 @@ export default function Overall({ navigation }) {
         onPress={() => fetchData('collectionByCategory')}
       >
         <Text style={styles.buttonText}>Collection by Category</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={generatePDFReport}
+      >
+        <Text style={styles.buttonText}>Generate PDF Report</Text>
       </TouchableOpacity>
      
     </SafeAreaView>
